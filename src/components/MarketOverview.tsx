@@ -1,20 +1,60 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { TrendingUp, TrendingDown, Activity } from 'lucide-react';
+import { fetchKSE100Data, StockData } from '@/services/tradingViewService';
 
 const MarketOverview = () => {
+  const [kseData, setKseData] = useState<StockData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadKSEData = async () => {
+      try {
+        const data = await fetchKSE100Data();
+        setKseData(data);
+      } catch (error) {
+        console.error('Failed to load KSE-100 data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadKSEData();
+    // Refresh data every 30 seconds
+    const interval = setInterval(loadKSEData, 30000);
+    
+    return () => clearInterval(interval);
+  }, []);
+
+  const formatNumber = (num: number) => {
+    return new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(num);
+  };
+
+  const formatVolume = (volume: number) => {
+    if (volume >= 1000000) {
+      return `${(volume / 1000000).toFixed(1)}M`;
+    }
+    if (volume >= 1000) {
+      return `${(volume / 1000).toFixed(1)}K`;
+    }
+    return volume.toString();
+  };
+
   const marketData = [
     {
       name: 'KSE-100',
-      value: '79,843.25',
-      change: '+423.67',
-      changePercent: '+0.53%',
-      isPositive: true
+      value: loading ? 'Loading...' : kseData ? formatNumber(kseData.close) : '79,843.25',
+      change: loading ? '...' : kseData ? `${kseData.change_abs >= 0 ? '+' : ''}${formatNumber(kseData.change_abs)}` : '+423.67',
+      changePercent: loading ? '...' : kseData ? `${kseData.change >= 0 ? '+' : ''}${kseData.change.toFixed(2)}%` : '+0.53%',
+      isPositive: loading ? true : kseData ? kseData.change >= 0 : true
     },
     {
       name: 'Volume',
-      value: '312.5M',
+      value: loading ? 'Loading...' : kseData ? formatVolume(kseData.volume) : '312.5M',
       change: '+18.7M',
       changePercent: '+6.4%',
       isPositive: true
