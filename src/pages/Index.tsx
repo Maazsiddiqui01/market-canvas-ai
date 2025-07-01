@@ -2,6 +2,7 @@
 import React from 'react';
 import DashboardHeader from '../components/DashboardHeader';
 import TradingViewHeatmap from '../components/TradingViewHeatmap';
+import TechnicalAnalysis from '../components/TechnicalAnalysis';
 import MarketOverview from '../components/MarketOverview';
 import TopGainers from '../components/TopGainers';
 import TopLosers from '../components/TopLosers';
@@ -32,11 +33,16 @@ const Index = () => {
           </div>
         </div>
         
-        {/* Gainers/Losers and News */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Technical Analysis and News */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <TechnicalAnalysis />
+          <NewsWidget />
+        </div>
+        
+        {/* Gainers/Losers */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <TopGainers />
           <TopLosers />
-          <NewsWidget />
         </div>
       </div>
     </div>
