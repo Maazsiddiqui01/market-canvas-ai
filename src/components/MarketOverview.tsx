@@ -7,36 +7,22 @@ const MarketOverview = () => {
   const marketData = [
     {
       name: 'KSE-100',
-      value: '45,234.56',
-      change: '+234.12',
-      changePercent: '+0.52%',
-      isPositive: true
-    },
-    {
-      name: 'KSE-ALL',
-      value: '32,123.45',
-      change: '-156.78',
-      changePercent: '-0.49%',
-      isPositive: false
-    },
-    {
-      name: 'KMI-30',
-      value: '78,901.23',
-      change: '+445.67',
-      changePercent: '+0.57%',
+      value: '79,843.25',
+      change: '+423.67',
+      changePercent: '+0.53%',
       isPositive: true
     },
     {
       name: 'Volume',
-      value: '156.7M',
-      change: '+12.3M',
-      changePercent: '+8.5%',
+      value: '312.5M',
+      change: '+18.7M',
+      changePercent: '+6.4%',
       isPositive: true
     }
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
       {marketData.map((market, index) => (
         <Card key={index} className="bg-slate-800/50 border-slate-600 hover:bg-slate-800/70 transition-all duration-200">
           <CardContent className="p-6">
