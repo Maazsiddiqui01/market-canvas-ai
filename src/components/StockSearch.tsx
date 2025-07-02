@@ -59,7 +59,21 @@ const StockSearch = () => {
       }
 
       const data = await response.json();
-      setStockData(data);
+      console.log('Received data:', data);
+      
+      // Handle the response data properly
+      if (data && typeof data === 'object') {
+        // Extract stock data from the response
+        // Adjust this based on your actual response structure
+        setStockData({
+          symbol: ticker.toUpperCase(),
+          price: data.price || 0,
+          change: data.change || 0,
+          volume: data.volume || 0
+        });
+      } else {
+        setError('Invalid response format');
+      }
     } catch (err) {
       console.error('Error fetching stock data:', err);
       setError('Failed to fetch stock data. Please try again.');
