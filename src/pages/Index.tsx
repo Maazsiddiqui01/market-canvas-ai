@@ -7,8 +7,6 @@ import MarketOverview from '../components/MarketOverview';
 import TopGainers from '../components/TopGainers';
 import TopLosers from '../components/TopLosers';
 import NewsWidget from '../components/NewsWidget';
-import PortfolioWidget from '../components/PortfolioWidget';
-import WatchlistWidget from '../components/WatchlistWidget';
 
 const Index = () => {
   return (
@@ -19,23 +17,18 @@ const Index = () => {
         {/* Market Overview Cards */}
         <MarketOverview />
         
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* TradingView Heatmap - Takes up more space */}
-          <div className="lg:col-span-2">
-            <TradingViewHeatmap />
-          </div>
-          
-          {/* Portfolio Summary */}
-          <div className="space-y-6">
-            <PortfolioWidget />
-            <WatchlistWidget />
-          </div>
+        {/* TradingView Heatmap - Full width */}
+        <div className="w-full">
+          <TradingViewHeatmap />
         </div>
         
-        {/* Technical Analysis and News */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Technical Analysis - Increased height */}
+        <div className="w-full">
           <TechnicalAnalysis />
+        </div>
+        
+        {/* News Widget - Full width */}
+        <div className="w-full">
           <NewsWidget />
         </div>
         

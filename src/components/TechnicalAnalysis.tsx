@@ -43,7 +43,7 @@ const TechnicalAnalysis = () => {
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0">
-        <div className="tradingview-widget-container h-[600px]" ref={containerRef}>
+        <div className="tradingview-widget-container h-[800px]" ref={containerRef}>
           <div className="tradingview-widget-container__widget h-full"></div>
         </div>
       </CardContent>
