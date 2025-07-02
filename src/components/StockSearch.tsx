@@ -36,7 +36,7 @@ const StockSearch = () => {
     setResponseData(null);
 
     try {
-      const response = await fetch('https://n8n-maaz.duckdns.org/webhook-test/a1524f8c-3162-4c9d-b58c-b59cc01b0973', {
+      const response = await fetch('https://n8n-maaz.duckdns.org/webhook/a1524f8c-3162-4c9d-b58c-b59cc01b0973', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
