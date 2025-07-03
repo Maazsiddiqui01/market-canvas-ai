@@ -63,82 +63,107 @@ const StockSearch = () => {
     }
   };
 
+  const parseHtmlContent = (htmlString: string) => {
+    // Create a temporary div to parse HTML
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = htmlString;
+    
+    const elements = [];
+    const children = tempDiv.children;
+    
+    for (let i = 0; i < children.length; i++) {
+      const element = children[i];
+      if (element.tagName.match(/^H[1-6]$/)) {
+        elements.push({
+          type: 'heading',
+          level: parseInt(element.tagName.charAt(1)),
+          content: element.textContent || ''
+        });
+      } else if (element.tagName === 'P' || element.tagName === 'DIV') {
+        const textContent = element.textContent || '';
+        if (textContent.trim()) {
+          elements.push({
+            type: 'paragraph',
+            content: textContent
+          });
+        }
+      } else if (element.tagName === 'BR') {
+        elements.push({
+          type: 'break'
+        });
+      } else {
+        // For other elements, extract text content
+        const textContent = element.textContent || '';
+        if (textContent.trim()) {
+          elements.push({
+            type: 'paragraph',
+            content: textContent
+          });
+        }
+      }
+    }
+    
+    return elements;
+  };
+
   const renderFormattedData = (data: any) => {
     if (!data) return null;
 
+    // Check if data is an array with HTML content
+    if (Array.isArray(data) && data.length > 0 && data[0].htmlBody) {
+      const htmlContent = data[0].htmlBody;
+      const parsedElements = parseHtmlContent(htmlContent);
+      
+      return (
+        <div className="space-y-4">
+          <div className="bg-slate-700/30 p-6 rounded-lg">
+            <div className="space-y-4">
+              {parsedElements.map((element, index) => {
+                if (element.type === 'heading') {
+                  const HeadingTag = `h${element.level}` as keyof JSX.IntrinsicElements;
+                  const headingClasses = {
+                    1: 'text-2xl font-bold text-white mb-4',
+                    2: 'text-xl font-semibold text-white mb-3',
+                    3: 'text-lg font-semibold text-white mb-2',
+                    4: 'text-base font-semibold text-white mb-2',
+                    5: 'text-sm font-semibold text-white mb-1',
+                    6: 'text-sm font-semibold text-white mb-1'
+                  };
+                  
+                  return (
+                    <HeadingTag 
+                      key={index} 
+                      className={headingClasses[element.level as keyof typeof headingClasses]}
+                    >
+                      {element.content}
+                    </HeadingTag>
+                  );
+                } else if (element.type === 'paragraph') {
+                  return (
+                    <p key={index} className="text-slate-200 leading-relaxed mb-3">
+                      {element.content}
+                    </p>
+                  );
+                } else if (element.type === 'break') {
+                  return <br key={index} />;
+                }
+                return null;
+              })}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Fallback to original JSON display
     return (
       <div className="space-y-4">
-        {/* Display raw JSON data in a formatted way */}
         <div className="bg-slate-700/30 p-4 rounded-lg">
           <h4 className="text-white font-semibold mb-3">Response Data:</h4>
           <pre className="text-slate-300 text-sm whitespace-pre-wrap overflow-x-auto">
             {JSON.stringify(data, null, 2)}
           </pre>
         </div>
-
-        {/* Try to extract and display specific data if available */}
-        {data.kse100 && (
-          <div className="bg-slate-700/30 p-4 rounded-lg">
-            <h4 className="text-white font-semibold mb-3 flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-blue-500" />
-              KSE-100 Data
-            </h4>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {data.kse100.price && (
-                <div className="bg-slate-600/30 p-3 rounded">
-                  <p className="text-slate-400 text-sm">Price</p>
-                  <p className="text-white font-semibold">PKR {data.kse100.price}</p>
-                </div>
-              )}
-              {data.kse100.change && (
-                <div className="bg-slate-600/30 p-3 rounded">
-                  <p className="text-slate-400 text-sm">Change</p>
-                  <p className={`font-semibold ${data.kse100.change >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                    {data.kse100.change >= 0 ? '+' : ''}{data.kse100.change}%
-                  </p>
-                </div>
-              )}
-              {data.kse100.volume && (
-                <div className="bg-slate-600/30 p-3 rounded">
-                  <p className="text-slate-400 text-sm">Volume</p>
-                  <p className="text-white font-semibold">{data.kse100.volume.toLocaleString()}</p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Display individual stock data if available */}
-        {data.stockData && (
-          <div className="bg-slate-700/30 p-4 rounded-lg">
-            <h4 className="text-white font-semibold mb-3 flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-green-500" />
-              Stock Data: {data.stockData.symbol || selectedStock || customStock}
-            </h4>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {data.stockData.price && (
-                <div className="bg-slate-600/30 p-3 rounded">
-                  <p className="text-slate-400 text-sm">Price</p>
-                  <p className="text-white font-semibold">PKR {data.stockData.price}</p>
-                </div>
-              )}
-              {data.stockData.change && (
-                <div className="bg-slate-600/30 p-3 rounded">
-                  <p className="text-slate-400 text-sm">Change</p>
-                  <p className={`font-semibold ${data.stockData.change >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                    {data.stockData.change >= 0 ? '+' : ''}{data.stockData.change}%
-                  </p>
-                </div>
-              )}
-              {data.stockData.volume && (
-                <div className="bg-slate-600/30 p-3 rounded">
-                  <p className="text-slate-400 text-sm">Volume</p>
-                  <p className="text-white font-semibold">{data.stockData.volume.toLocaleString()}</p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
       </div>
     );
   };
