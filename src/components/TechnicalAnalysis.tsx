@@ -3,13 +3,26 @@ import React, { useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TrendingUp } from 'lucide-react';
 
-const TechnicalAnalysis = () => {
+interface TechnicalAnalysisProps {
+  ticker?: string;
+}
+
+const TechnicalAnalysis = ({ ticker = 'KSE100' }: TechnicalAnalysisProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (containerRef.current) {
+      // Clear previous widget
+      containerRef.current.innerHTML = '';
+    }
+
     const script = document.createElement('script');
     script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js';
     script.async = true;
+    
+    // Format ticker for TradingView
+    const tvSymbol = ticker === 'KSE100' ? 'PSX:KSE100' : `PSX:${ticker}`;
+    
     script.innerHTML = JSON.stringify({
       "colorTheme": "dark",
       "displayMode": "multiple",
@@ -19,7 +32,7 @@ const TechnicalAnalysis = () => {
       "disableInterval": false,
       "width": "100%",
       "height": "100%",
-      "symbol": "PSX:KSE100",
+      "symbol": tvSymbol,
       "showIntervalTabs": true
     });
 
@@ -32,18 +45,18 @@ const TechnicalAnalysis = () => {
         script.parentNode.removeChild(script);
       }
     };
-  }, []);
+  }, [ticker]);
 
   return (
-    <Card className="bg-slate-800/50 border-slate-600">
+    <Card className="bg-card border-border">
       <CardHeader>
-        <CardTitle className="text-white flex items-center gap-2">
-          <TrendingUp className="h-5 w-5 text-blue-500" />
-          Technical Analysis
+        <CardTitle className="text-foreground flex items-center gap-2">
+          <TrendingUp className="h-5 w-5 text-primary" />
+          Technical Analysis for {ticker}
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0">
-        <div className="tradingview-widget-container h-[4000px]" ref={containerRef}>
+        <div className="tradingview-widget-container h-[600px]" ref={containerRef}>
           <div className="tradingview-widget-container__widget h-full"></div>
         </div>
       </CardContent>

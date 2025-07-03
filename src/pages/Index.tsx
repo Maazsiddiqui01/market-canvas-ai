@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import DashboardHeader from '../components/DashboardHeader';
 import TradingViewHeatmap from '../components/TradingViewHeatmap';
 import TechnicalAnalysis from '../components/TechnicalAnalysis';
@@ -9,9 +9,11 @@ import TopLosers from '../components/TopLosers';
 import NewsWidget from '../components/NewsWidget';
 
 const Index = () => {
+  const [selectedTicker, setSelectedTicker] = useState('KSE100');
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      <DashboardHeader />
+    <div className="min-h-screen bg-gradient-to-br from-background via-secondary to-background">
+      <DashboardHeader onTickerChange={setSelectedTicker} />
       
       <div className="container mx-auto px-4 py-6 space-y-6">
         {/* Market Overview Cards */}
@@ -22,9 +24,9 @@ const Index = () => {
           <TradingViewHeatmap />
         </div>
         
-        {/* Technical Analysis - Increased height */}
+        {/* Technical Analysis - Bigger and Dynamic */}
         <div className="w-full">
-          <TechnicalAnalysis />
+          <TechnicalAnalysis ticker={selectedTicker} />
         </div>
         
         {/* News Widget - Full width */}
