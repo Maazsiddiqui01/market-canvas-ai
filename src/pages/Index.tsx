@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import DashboardHeader from '../components/DashboardHeader';
+import HeroSection from '../components/HeroSection';
 import TradingViewHeatmap from '../components/TradingViewHeatmap';
 import TechnicalAnalysis from '../components/TechnicalAnalysis';
 import MarketOverview from '../components/MarketOverview';
@@ -13,7 +13,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary to-background">
-      <DashboardHeader onTickerChange={setSelectedTicker} />
+      <HeroSection onTickerChange={setSelectedTicker} />
       
       <div className="container mx-auto px-4 py-6 space-y-6">
         {/* Market Overview Cards */}
