@@ -78,26 +78,96 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
   };
 
   const parseHtmlContent = (htmlString: string) => {
-    // Split by <br> tags and handle links
-    const parts = htmlString.split('<br>').filter(part => part.trim());
-    
-    return parts.map(part => {
-      const trimmedPart = part.trim();
-      if (!trimmedPart) return null;
+    const content = htmlString.replace(/<br>/g, '\n');
+    const sections = {
+      stockPrices: [],
+      technicalAnalysis: null,
+      chartLink: null,
+      marketOverview: [],
+      industryHighlights: [],
+      stockSpecific: [],
+      expertRecommendation: [],
+      newsLinks: []
+    };
+
+    const lines = content.split('\n').filter(line => line.trim());
+    let currentSection = '';
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
       
-      // Check if this part contains links
-      if (trimmedPart.includes('<a href=')) {
-        return {
-          type: 'html',
-          content: trimmedPart
-        };
-      } else {
-        return {
-          type: 'text',
-          content: trimmedPart
-        };
+      // Stock prices (lines with 📈)
+      if (line.includes('📈')) {
+        sections.stockPrices.push(line);
       }
-    }).filter(Boolean);
+      // Section headers
+      else if (line.includes('Technical Analysis:')) {
+        currentSection = 'technical';
+      }
+      else if (line.includes('Chart Link:')) {
+        currentSection = 'chart';
+      }
+      else if (line.includes('Market Overview:')) {
+        currentSection = 'market';
+      }
+      else if (line.includes('Industry Highlights')) {
+        currentSection = 'industry';
+      }
+      else if (line.includes('Stock-Specific Mentions:')) {
+        currentSection = 'stock';
+      }
+      else if (line.includes('Expert Recommendation:')) {
+        currentSection = 'expert';
+      }
+      else if (line.includes('Relevant News Links:')) {
+        currentSection = 'news';
+      }
+      // Content based on current section
+      else if (line && !line.includes('News Insights:')) {
+        switch (currentSection) {
+          case 'technical':
+            if (line.includes('Overall Signal:') || line.includes('Moving Average:') || line.includes('Oscillators:')) {
+              const signal = line.split(':')[1]?.trim();
+              const type = line.split(':')[0]?.trim();
+              if (!sections.technicalAnalysis) sections.technicalAnalysis = [];
+              sections.technicalAnalysis.push({ type, signal });
+            }
+            break;
+          case 'chart':
+            if (line.includes('<a href=')) {
+              sections.chartLink = line;
+            }
+            break;
+          case 'market':
+            if (line.startsWith('-')) {
+              sections.marketOverview.push(line.substring(1).trim());
+            }
+            break;
+          case 'industry':
+            if (line.startsWith('-')) {
+              sections.industryHighlights.push(line.substring(1).trim());
+            }
+            break;
+          case 'stock':
+            if (line.startsWith('-')) {
+              sections.stockSpecific.push(line.substring(1).trim());
+            }
+            break;
+          case 'expert':
+            if (!line.includes('Relevant News Links:')) {
+              sections.expertRecommendation.push(line);
+            }
+            break;
+          case 'news':
+            if (line.startsWith('-') && line.includes('http')) {
+              sections.newsLinks.push(line.substring(1).trim());
+            }
+            break;
+        }
+      }
+    }
+
+    return sections;
   };
 
   const renderFormattedData = (data: any) => {
@@ -106,34 +176,180 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
     // Check if data is an array with HTML content
     if (Array.isArray(data) && data.length > 0 && data[0].htmlBody) {
       const htmlContent = data[0].htmlBody;
-      const parsedElements = parseHtmlContent(htmlContent);
+      const sections = parseHtmlContent(htmlContent);
+      
+      const getSignalColor = (signal: string) => {
+        const lowerSignal = signal.toLowerCase();
+        if (lowerSignal.includes('buy')) return 'text-green-500';
+        if (lowerSignal.includes('sell')) return 'text-red-500';
+        return 'text-yellow-500';
+      };
+
+      const getSignalIcon = (signal: string) => {
+        const lowerSignal = signal.toLowerCase();
+        if (lowerSignal.includes('buy')) return '📈';
+        if (lowerSignal.includes('sell')) return '📉';
+        return '➡️';
+      };
       
       return (
-        <div className="space-y-4">
-          <div className="bg-secondary/30 p-6 rounded-lg">
-            <div className="space-y-3">
-              {parsedElements.map((element, index) => {
-                if (element.type === 'html') {
-                  // Handle HTML content with links
-                  return (
-                    <div 
-                      key={index} 
-                      className="text-muted-foreground leading-relaxed"
-                      dangerouslySetInnerHTML={{ __html: element.content }}
-                    />
-                  );
-                } else if (element.type === 'text') {
-                  // Handle plain text content
-                  return (
-                    <p key={index} className="text-muted-foreground leading-relaxed">
-                      {element.content}
+        <div className="space-y-6">
+          {/* Stock Prices */}
+          {sections.stockPrices.length > 0 && (
+            <Card className="bg-primary/5 border-primary/20">
+              <CardContent className="p-4">
+                <h4 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
+                  📊 Stock Prices
+                </h4>
+                <div className="space-y-2">
+                  {sections.stockPrices.map((price, index) => (
+                    <p key={index} className="text-foreground font-mono text-lg">
+                      {price}
                     </p>
-                  );
-                }
-                return null;
-              })}
-            </div>
-          </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Technical Analysis */}
+          {sections.technicalAnalysis && sections.technicalAnalysis.length > 0 && (
+            <Card className="bg-secondary/20 border-secondary">
+              <CardContent className="p-4">
+                <h4 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
+                  📊 Technical Analysis
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {sections.technicalAnalysis.map((item, index) => (
+                    <div key={index} className="bg-card p-3 rounded-lg border">
+                      <p className="text-sm text-muted-foreground mb-1">{item.type}</p>
+                      <div className={`flex items-center gap-2 ${getSignalColor(item.signal)}`}>
+                        <span className="text-lg">{getSignalIcon(item.signal)}</span>
+                        <span className="font-semibold">{item.signal}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Chart Link */}
+          {sections.chartLink && (
+            <Card className="bg-accent/10 border-accent/20">
+              <CardContent className="p-4">
+                <h4 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
+                  📈 Chart
+                </h4>
+                <div 
+                  className="text-accent hover:text-accent/80 underline"
+                  dangerouslySetInnerHTML={{ __html: sections.chartLink }}
+                />
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Market Overview */}
+          {sections.marketOverview.length > 0 && (
+            <Card className="bg-blue-500/10 border-blue-500/20">
+              <CardContent className="p-4">
+                <h4 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
+                  🌍 Market Overview
+                </h4>
+                <div className="space-y-2">
+                  {sections.marketOverview.map((item, index) => (
+                    <p key={index} className="text-muted-foreground leading-relaxed">
+                      • {item}
+                    </p>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Industry Highlights */}
+          {sections.industryHighlights.length > 0 && (
+            <Card className="bg-purple-500/10 border-purple-500/20">
+              <CardContent className="p-4">
+                <h4 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
+                  🏭 Industry Highlights
+                </h4>
+                <div className="space-y-2">
+                  {sections.industryHighlights.map((item, index) => (
+                    <p key={index} className="text-muted-foreground leading-relaxed">
+                      • {item}
+                    </p>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Stock-Specific Mentions */}
+          {sections.stockSpecific.length > 0 && (
+            <Card className="bg-orange-500/10 border-orange-500/20">
+              <CardContent className="p-4">
+                <h4 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
+                  🎯 Stock-Specific Mentions
+                </h4>
+                <div className="space-y-2">
+                  {sections.stockSpecific.map((item, index) => (
+                    <p key={index} className="text-muted-foreground leading-relaxed">
+                      • {item}
+                    </p>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Expert Recommendation */}
+          {sections.expertRecommendation.length > 0 && (
+            <Card className="bg-green-500/10 border-green-500/20">
+              <CardContent className="p-4">
+                <h4 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
+                  💡 Expert Recommendation
+                </h4>
+                <div className="space-y-2">
+                  {sections.expertRecommendation.map((item, index) => (
+                    <p key={index} className="text-muted-foreground leading-relaxed">
+                      {item}
+                    </p>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* News Links */}
+          {sections.newsLinks.length > 0 && (
+            <Card className="bg-cyan-500/10 border-cyan-500/20">
+              <CardContent className="p-4">
+                <h4 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
+                  📰 Relevant News Links
+                </h4>
+                <div className="space-y-3">
+                  {sections.newsLinks.map((link, index) => {
+                    const parts = link.split(': ');
+                    const title = parts[0];
+                    const url = parts[1];
+                    return (
+                      <div key={index} className="border-l-2 border-cyan-500/30 pl-3">
+                        <a 
+                          href={url} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-cyan-400 hover:text-cyan-300 underline font-medium"
+                        >
+                          {title}
+                        </a>
+                      </div>
+                    );
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
       );
     }
