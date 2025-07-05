@@ -10,7 +10,7 @@ interface DashboardHeaderProps {
 
 const DashboardHeader = ({ onTickerChange }: DashboardHeaderProps) => {
   return (
-    <div className="border-b border-border bg-background/95 backdrop-blur-sm sticky top-0 z-50">
+    <div className="border-b border-border bg-background/95 backdrop-blur-sm">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between mb-4">
           {/* Logo and Title */}

@@ -78,46 +78,26 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
   };
 
   const parseHtmlContent = (htmlString: string) => {
-    // Create a temporary div to parse HTML
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = htmlString;
+    // Split by <br> tags and handle links
+    const parts = htmlString.split('<br>').filter(part => part.trim());
     
-    const elements = [];
-    const children = tempDiv.children;
-    
-    for (let i = 0; i < children.length; i++) {
-      const element = children[i];
-      if (element.tagName.match(/^H[1-6]$/)) {
-        elements.push({
-          type: 'heading',
-          level: parseInt(element.tagName.charAt(1)),
-          content: element.textContent || ''
-        });
-      } else if (element.tagName === 'P' || element.tagName === 'DIV') {
-        const textContent = element.textContent || '';
-        if (textContent.trim()) {
-          elements.push({
-            type: 'paragraph',
-            content: textContent
-          });
-        }
-      } else if (element.tagName === 'BR') {
-        elements.push({
-          type: 'break'
-        });
+    return parts.map(part => {
+      const trimmedPart = part.trim();
+      if (!trimmedPart) return null;
+      
+      // Check if this part contains links
+      if (trimmedPart.includes('<a href=')) {
+        return {
+          type: 'html',
+          content: trimmedPart
+        };
       } else {
-        // For other elements, extract text content
-        const textContent = element.textContent || '';
-        if (textContent.trim()) {
-          elements.push({
-            type: 'paragraph',
-            content: textContent
-          });
-        }
+        return {
+          type: 'text',
+          content: trimmedPart
+        };
       }
-    }
-    
-    return elements;
+    }).filter(Boolean);
   };
 
   const renderFormattedData = (data: any) => {
@@ -131,35 +111,24 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
       return (
         <div className="space-y-4">
           <div className="bg-secondary/30 p-6 rounded-lg">
-            <div className="space-y-4">
+            <div className="space-y-3">
               {parsedElements.map((element, index) => {
-                if (element.type === 'heading') {
-                  const HeadingTag = `h${element.level}` as keyof JSX.IntrinsicElements;
-                  const headingClasses = {
-                    1: 'text-2xl font-bold text-foreground mb-4',
-                    2: 'text-xl font-semibold text-foreground mb-3',
-                    3: 'text-lg font-semibold text-foreground mb-2',
-                    4: 'text-base font-semibold text-foreground mb-2',
-                    5: 'text-sm font-semibold text-foreground mb-1',
-                    6: 'text-sm font-semibold text-foreground mb-1'
-                  };
-                  
+                if (element.type === 'html') {
+                  // Handle HTML content with links
                   return (
-                    <HeadingTag 
+                    <div 
                       key={index} 
-                      className={headingClasses[element.level as keyof typeof headingClasses]}
-                    >
-                      {element.content}
-                    </HeadingTag>
+                      className="text-muted-foreground leading-relaxed"
+                      dangerouslySetInnerHTML={{ __html: element.content }}
+                    />
                   );
-                } else if (element.type === 'paragraph') {
+                } else if (element.type === 'text') {
+                  // Handle plain text content
                   return (
-                    <p key={index} className="text-muted-foreground leading-relaxed mb-3">
+                    <p key={index} className="text-muted-foreground leading-relaxed">
                       {element.content}
                     </p>
                   );
-                } else if (element.type === 'break') {
-                  return <br key={index} />;
                 }
                 return null;
               })}
