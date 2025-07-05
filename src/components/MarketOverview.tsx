@@ -4,17 +4,16 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { TrendingUp, TrendingDown, Activity, RefreshCw } from 'lucide-react';
 
+interface KSEData {
+  kse100_close: string;
+  kse100_change_percent: string;
+  kse100_change_absolute: string;
+}
+
 interface MarketData {
-  kse100?: {
-    value: number;
-    change: number;
-    changePercent: number;
-  };
-  volume?: {
-    value: number;
-    change: number;
-    changePercent: number;
-  };
+  kse100_close?: string;
+  kse100_change_percent?: string;
+  kse100_change_absolute?: string;
 }
 
 interface MarketOverviewProps {
@@ -24,23 +23,6 @@ interface MarketOverviewProps {
 const MarketOverview = ({ refreshTrigger }: MarketOverviewProps) => {
   const [marketData, setMarketData] = useState<MarketData>({});
   const [loading, setLoading] = useState(false);
-
-  const formatNumber = (num: number) => {
-    return new Intl.NumberFormat('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(num);
-  };
-
-  const formatVolume = (volume: number) => {
-    if (volume >= 1000000) {
-      return `${(volume / 1000000).toFixed(1)}M`;
-    }
-    if (volume >= 1000) {
-      return `${(volume / 1000).toFixed(1)}K`;
-    }
-    return volume.toString();
-  };
 
   const fetchMarketData = async () => {
     setLoading(true);
@@ -57,12 +39,12 @@ const MarketOverview = ({ refreshTrigger }: MarketOverviewProps) => {
       });
 
       if (response.ok) {
-        const data = await response.json();
+        const data: KSEData[] = await response.json();
         console.log('Market data received:', data);
         
-        // Parse the JSON response and update market data
-        if (data.kse100) {
-          setMarketData(data);
+        // Parse the JSON array response and update market data
+        if (data && data.length > 0) {
+          setMarketData(data[0]);
         }
       }
     } catch (error) {
@@ -76,23 +58,27 @@ const MarketOverview = ({ refreshTrigger }: MarketOverviewProps) => {
     fetchMarketData();
   }, [refreshTrigger]);
 
+  const parseNumber = (numStr: string) => {
+    return parseFloat(numStr.replace(/,/g, ''));
+  };
+
+  const isPositiveChange = (value: string) => {
+    return !value.startsWith('-');
+  };
+
   const kseData = {
     name: 'KSE-100',
-    value: marketData.kse100?.value ? formatNumber(marketData.kse100.value) : '79,843.25',
-    change: marketData.kse100?.change ? `${marketData.kse100.change >= 0 ? '+' : ''}${formatNumber(marketData.kse100.change)}` : '+423.67',
-    changePercent: marketData.kse100?.changePercent ? `${marketData.kse100.changePercent >= 0 ? '+' : ''}${marketData.kse100.changePercent.toFixed(2)}%` : '+0.53%',
-    isPositive: marketData.kse100?.change ? marketData.kse100.change >= 0 : true
+    value: marketData.kse100_close || '79,843.25',
+    change: marketData.kse100_change_absolute 
+      ? `${isPositiveChange(marketData.kse100_change_absolute) ? '+' : ''}${marketData.kse100_change_absolute}`
+      : '+423.67',
+    changePercent: marketData.kse100_change_percent 
+      ? `${isPositiveChange(marketData.kse100_change_percent) ? '+' : ''}${marketData.kse100_change_percent}`
+      : '+0.53%',
+    isPositive: marketData.kse100_change_absolute ? isPositiveChange(marketData.kse100_change_absolute) : true
   };
 
-  const volumeData = {
-    name: 'Volume',
-    value: marketData.volume?.value ? formatVolume(marketData.volume.value) : '312.5M',
-    change: marketData.volume?.change ? `${marketData.volume.change >= 0 ? '+' : ''}${formatVolume(marketData.volume.change)}` : '+18.7M',
-    changePercent: marketData.volume?.changePercent ? `${marketData.volume.changePercent >= 0 ? '+' : ''}${marketData.volume.changePercent.toFixed(1)}%` : '+6.4%',
-    isPositive: marketData.volume?.change ? marketData.volume.change >= 0 : true
-  };
-
-  const cards = [kseData, volumeData];
+  const cards = [kseData];
 
   return (
     <div className="space-y-4">
@@ -109,7 +95,7 @@ const MarketOverview = ({ refreshTrigger }: MarketOverviewProps) => {
         </Button>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+      <div className="grid grid-cols-1 gap-4 max-w-lg mx-auto">
         {cards.map((market, index) => (
           <Card key={index} className="bg-card border-border hover:bg-secondary/50 transition-all duration-200">
             <CardContent className="p-6">
