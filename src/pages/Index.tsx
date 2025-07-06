@@ -4,8 +4,7 @@ import HeroSection from '../components/HeroSection';
 import TradingViewHeatmap from '../components/TradingViewHeatmap';
 import TechnicalAnalysis from '../components/TechnicalAnalysis';
 import MarketOverview from '../components/MarketOverview';
-import TopGainers from '../components/TopGainers';
-import TopLosers from '../components/TopLosers';
+import TopBottom5 from '../components/TopBottom5';
 import NewsWidget from '../components/NewsWidget';
 
 const Index = () => {
@@ -34,10 +33,9 @@ const Index = () => {
           <NewsWidget />
         </div>
         
-        {/* Gainers/Losers */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <TopGainers />
-          <TopLosers />
+        {/* Top/Bottom 5 - Full width tabular format */}
+        <div className="w-full">
+          <TopBottom5 />
         </div>
       </div>
     </div>
