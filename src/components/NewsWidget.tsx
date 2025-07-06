@@ -1,10 +1,13 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Newspaper, Clock, ExternalLink } from 'lucide-react';
 import { fetchPSXNews, NewsItem } from '@/services/newsService';
 
-const NewsWidget = () => {
+interface NewsWidgetProps {
+  refreshTrigger?: number;
+}
+
+const NewsWidget = ({ refreshTrigger }: NewsWidgetProps) => {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -23,7 +26,7 @@ const NewsWidget = () => {
     };
 
     loadNews();
-  }, []);
+  }, [refreshTrigger]);
 
   if (loading) {
     return (

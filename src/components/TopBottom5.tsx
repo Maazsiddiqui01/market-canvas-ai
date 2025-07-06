@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { TrendingUp, TrendingDown, RefreshCw } from 'lucide-react';
+import { TrendingUp, TrendingDown } from 'lucide-react';
 import { fetchTopBottom5, TopBottomStock } from '@/services/topBottomService';
 
-const TopBottom5 = () => {
+interface TopBottom5Props {
+  refreshTrigger?: number;
+}
+
+const TopBottom5 = ({ refreshTrigger }: TopBottom5Props) => {
   const [stocks, setStocks] = useState<TopBottomStock[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -25,7 +28,7 @@ const TopBottom5 = () => {
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [refreshTrigger]);
 
   const formatNumber = (numStr: string) => {
     return numStr.replace(/,/g, '');
@@ -41,18 +44,7 @@ const TopBottom5 = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-foreground">Top & Bottom Performers</h2>
-        <Button 
-          onClick={loadData}
-          disabled={loading}
-          variant="ghost"
-          size="sm"
-          className="text-muted-foreground hover:text-foreground"
-        >
-          <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
-        </Button>
-      </div>
+      <h2 className="text-lg font-semibold text-foreground">Top & Bottom Performers</h2>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Top 5 Gainers */}

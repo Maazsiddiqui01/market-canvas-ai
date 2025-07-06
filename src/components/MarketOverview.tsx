@@ -1,8 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { TrendingUp, TrendingDown, Activity, RefreshCw } from 'lucide-react';
+import { TrendingUp, TrendingDown, Activity } from 'lucide-react';
 
 interface KSEData {
   kse100_close: string;
@@ -82,18 +80,7 @@ const MarketOverview = ({ refreshTrigger }: MarketOverviewProps) => {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-foreground">Market Overview</h2>
-        <Button 
-          onClick={fetchMarketData}
-          disabled={loading}
-          variant="ghost"
-          size="sm"
-          className="text-muted-foreground hover:text-foreground"
-        >
-          <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
-        </Button>
-      </div>
+      <h2 className="text-lg font-semibold text-foreground">Market Overview</h2>
       
       <div className="grid grid-cols-1 gap-4 max-w-lg mx-auto">
         {cards.map((market, index) => (
