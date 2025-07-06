@@ -52,7 +52,7 @@ const FinancialAnalysis = ({ ticker = 'MEBL' }: FinancialAnalysisProps) => {
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0">
-        <div className="tradingview-widget-container h-[600px]" ref={containerRef}>
+        <div className="tradingview-widget-container h-[3000px]" ref={containerRef}>
           <div className="tradingview-widget-container__widget h-full"></div>
         </div>
       </CardContent>
