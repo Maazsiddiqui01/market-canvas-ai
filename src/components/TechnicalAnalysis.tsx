@@ -1,7 +1,8 @@
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TrendingUp } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface TechnicalAnalysisProps {
   ticker?: string;
@@ -9,8 +10,10 @@ interface TechnicalAnalysisProps {
 
 const TechnicalAnalysis = ({ ticker = 'KSE100' }: TechnicalAnalysisProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
     if (containerRef.current) {
       // Clear previous widget
       containerRef.current.innerHTML = '';
@@ -36,6 +39,10 @@ const TechnicalAnalysis = ({ ticker = 'KSE100' }: TechnicalAnalysisProps) => {
       "showIntervalTabs": true
     });
 
+    script.onload = () => {
+      setTimeout(() => setIsLoading(false), 2000);
+    };
+
     if (containerRef.current) {
       containerRef.current.appendChild(script);
     }
@@ -48,15 +55,26 @@ const TechnicalAnalysis = ({ ticker = 'KSE100' }: TechnicalAnalysisProps) => {
   }, [ticker]);
 
   return (
-    <Card className="bg-card border-border">
+    <Card className="bg-card border-border transition-all duration-300 hover:shadow-lg hover-scale">
       <CardHeader>
         <CardTitle className="text-foreground flex items-center gap-2">
-          <TrendingUp className="h-5 w-5 text-primary" />
+          <TrendingUp className="h-5 w-5 text-primary animate-pulse" />
           Technical Analysis for {ticker}
         </CardTitle>
       </CardHeader>
-      <CardContent className="p-0">
-        <div className="tradingview-widget-container h-[3000px]" ref={containerRef}>
+      <CardContent className="p-0 relative">
+        {isLoading && (
+          <div className="absolute inset-0 z-10 bg-card/80 flex items-center justify-center">
+            <div className="space-y-4 w-full p-4">
+              <Skeleton className="h-8 w-3/4" />
+              <Skeleton className="h-6 w-1/2" />
+              <Skeleton className="h-32 w-full" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-3/4" />
+            </div>
+          </div>
+        )}
+        <div className="tradingview-widget-container h-[400px]" ref={containerRef}>
           <div className="tradingview-widget-container__widget h-full"></div>
         </div>
       </CardContent>

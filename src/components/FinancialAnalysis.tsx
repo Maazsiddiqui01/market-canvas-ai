@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DollarSign } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface FinancialAnalysisProps {
   ticker?: string;
@@ -8,8 +9,10 @@ interface FinancialAnalysisProps {
 
 const FinancialAnalysis = ({ ticker = 'MEBL' }: FinancialAnalysisProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
     if (containerRef.current) {
       // Clear previous widget
       containerRef.current.innerHTML = '';
@@ -32,6 +35,10 @@ const FinancialAnalysis = ({ ticker = 'MEBL' }: FinancialAnalysisProps) => {
       "height": "100%"
     });
 
+    script.onload = () => {
+      setTimeout(() => setIsLoading(false), 2000);
+    };
+
     if (containerRef.current) {
       containerRef.current.appendChild(script);
     }
@@ -44,15 +51,29 @@ const FinancialAnalysis = ({ ticker = 'MEBL' }: FinancialAnalysisProps) => {
   }, [ticker]);
 
   return (
-    <Card className="bg-card border-border">
+    <Card className="bg-card border-border transition-all duration-300 hover:shadow-lg hover-scale">
       <CardHeader>
         <CardTitle className="text-foreground flex items-center gap-2">
-          <DollarSign className="h-5 w-5 text-primary" />
+          <DollarSign className="h-5 w-5 text-primary animate-pulse" />
           Financial Analysis for {ticker}
         </CardTitle>
       </CardHeader>
-      <CardContent className="p-0">
-        <div className="tradingview-widget-container h-[3000px]" ref={containerRef}>
+      <CardContent className="p-0 relative">
+        {isLoading && (
+          <div className="absolute inset-0 z-10 bg-card/80 flex items-center justify-center">
+            <div className="space-y-4 w-full p-4">
+              <Skeleton className="h-8 w-3/4" />
+              <Skeleton className="h-6 w-1/2" />
+              <Skeleton className="h-24 w-full" />
+              <div className="grid grid-cols-2 gap-4">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-full" />
+              </div>
+              <Skeleton className="h-4 w-2/3" />
+            </div>
+          </div>
+        )}
+        <div className="tradingview-widget-container h-[400px]" ref={containerRef}>
           <div className="tradingview-widget-container__widget h-full"></div>
         </div>
       </CardContent>
