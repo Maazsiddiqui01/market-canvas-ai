@@ -50,7 +50,7 @@ const Index = () => {
         </div>
         
         {/* Technical and Financial Analysis - Side by side */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 min-h-[3000px]">
           <TechnicalAnalysis ticker={selectedTicker} />
           <FinancialAnalysis ticker={selectedTicker} />
         </div>
