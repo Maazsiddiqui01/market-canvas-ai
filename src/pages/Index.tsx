@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { RefreshCw } from 'lucide-react';
@@ -8,6 +7,7 @@ import TechnicalAnalysis from '../components/TechnicalAnalysis';
 import MarketOverview from '../components/MarketOverview';
 import TopBottom5 from '../components/TopBottom5';
 import NewsWidget from '../components/NewsWidget';
+import FinancialAnalysis from '../components/FinancialAnalysis';
 
 const Index = () => {
   const [selectedTicker, setSelectedTicker] = useState('KSE100');
@@ -49,9 +49,10 @@ const Index = () => {
           <TradingViewHeatmap />
         </div>
         
-        {/* Technical Analysis - Bigger and Dynamic */}
-        <div className="w-full">
+        {/* Technical and Financial Analysis - Side by side */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <TechnicalAnalysis ticker={selectedTicker} />
+          <FinancialAnalysis ticker={selectedTicker} />
         </div>
         
         {/* News Widget - Full width */}

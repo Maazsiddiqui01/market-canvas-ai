@@ -1,13 +1,12 @@
-
 import React, { useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { TrendingUp } from 'lucide-react';
+import { DollarSign } from 'lucide-react';
 
-interface TechnicalAnalysisProps {
+interface FinancialAnalysisProps {
   ticker?: string;
 }
 
-const TechnicalAnalysis = ({ ticker = 'KSE100' }: TechnicalAnalysisProps) => {
+const FinancialAnalysis = ({ ticker = 'MEBL' }: FinancialAnalysisProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -17,23 +16,20 @@ const TechnicalAnalysis = ({ ticker = 'KSE100' }: TechnicalAnalysisProps) => {
     }
 
     const script = document.createElement('script');
-    script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js';
+    script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-financials.js';
     script.async = true;
     
-    // Format ticker for TradingView
+    // Format ticker for TradingView - keep KSE100 as is, add PSX: prefix for others
     const tvSymbol = ticker === 'KSE100' ? 'PSX:KSE100' : `PSX:${ticker}`;
     
     script.innerHTML = JSON.stringify({
+      "symbol": tvSymbol,
       "colorTheme": "dark",
-      "displayMode": "multiple",
+      "displayMode": "regular",
       "isTransparent": false,
       "locale": "en",
-      "interval": "30m",
-      "disableInterval": false,
       "width": "100%",
-      "height": "100%",
-      "symbol": tvSymbol,
-      "showIntervalTabs": true
+      "height": "100%"
     });
 
     if (containerRef.current) {
@@ -51,8 +47,8 @@ const TechnicalAnalysis = ({ ticker = 'KSE100' }: TechnicalAnalysisProps) => {
     <Card className="bg-card border-border">
       <CardHeader>
         <CardTitle className="text-foreground flex items-center gap-2">
-          <TrendingUp className="h-5 w-5 text-primary" />
-          Technical Analysis for {ticker}
+          <DollarSign className="h-5 w-5 text-primary" />
+          Financial Analysis for {ticker}
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0">
@@ -64,4 +60,4 @@ const TechnicalAnalysis = ({ ticker = 'KSE100' }: TechnicalAnalysisProps) => {
   );
 };
 
-export default TechnicalAnalysis;
+export default FinancialAnalysis;
