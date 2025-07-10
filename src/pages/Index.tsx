@@ -62,7 +62,7 @@ const Index = () => {
         </div>
         
         {/* TradingView Heatmap with dynamic effects */}
-        <div className="w-full animate-fade-in group hover:scale-[1.01] transition-all duration-300" style={{ animationDelay: '400ms' }}>
+        <div id="heatmap" className="w-full animate-fade-in group hover:scale-[1.01] transition-all duration-300" style={{ animationDelay: '400ms' }}>
           <div className="relative overflow-hidden rounded-lg">
             <TradingViewHeatmap />
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
@@ -71,16 +71,16 @@ const Index = () => {
         
         {/* Technical and Financial Analysis with staggered animations */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="animate-fade-in hover:scale-[1.02] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10" style={{ animationDelay: '600ms' }}>
+          <div id="technical-analysis" className="animate-fade-in hover:scale-[1.02] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10" style={{ animationDelay: '600ms' }}>
             <TechnicalAnalysis ticker={selectedTicker} />
           </div>
-          <div className="animate-fade-in hover:scale-[1.02] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10" style={{ animationDelay: '700ms' }}>
+          <div id="financial-analysis" className="animate-fade-in hover:scale-[1.02] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10" style={{ animationDelay: '700ms' }}>
             <FinancialAnalysis ticker={selectedTicker} />
           </div>
         </div>
         
         {/* News Widget with interactive hover */}
-        <div className="w-full animate-fade-in hover:scale-[1.01] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10" style={{ animationDelay: '800ms' }}>
+        <div id="news" className="w-full animate-fade-in hover:scale-[1.01] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10" style={{ animationDelay: '800ms' }}>
           <NewsWidget refreshTrigger={refreshTrigger} />
         </div>
         
