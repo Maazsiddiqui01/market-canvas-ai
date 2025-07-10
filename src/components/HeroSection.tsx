@@ -9,85 +9,90 @@ interface HeroSectionProps {
 
 const HeroSection = ({ onTickerChange }: HeroSectionProps) => {
   return (
-    <div className="relative bg-gradient-to-br from-background via-card to-background border-b border-border">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,.02)_25%,rgba(255,255,255,.02)_50%,transparent_50%,transparent_75%,rgba(255,255,255,.02)_75%)] bg-[length:20px_20px]"></div>
+    <div className="relative min-h-[80vh] bg-gradient-to-br from-background to-card/30 border-b border-border overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0">
+        {/* Floating geometric shapes */}
+        <div className="absolute top-20 left-10 w-20 h-20 bg-primary/5 rounded-full animate-[float_6s_ease-in-out_infinite]"></div>
+        <div className="absolute top-40 right-20 w-16 h-16 bg-accent/5 rounded-lg rotate-45 animate-[float_8s_ease-in-out_infinite_reverse]"></div>
+        <div className="absolute bottom-40 left-20 w-12 h-12 bg-primary/10 rounded-full animate-[float_7s_ease-in-out_infinite]"></div>
+        <div className="absolute bottom-20 right-10 w-24 h-24 bg-accent/5 rounded-lg animate-[float_9s_ease-in-out_infinite_reverse]"></div>
+        
+        {/* Subtle grid overlay */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px] opacity-30"></div>
+      </div>
       
-      <div className="container mx-auto px-4 py-12 relative">
-        {/* Main Hero Content */}
-        <div className="text-center mb-12">
-          {/* Logo and Badge */}
-          <div className="flex items-center justify-center mb-6">
-            <div className="bg-gradient-to-r from-primary to-accent p-3 rounded-2xl shadow-lg mr-4">
-              <TrendingUp className="h-8 w-8 text-primary-foreground" />
+      <div className="container mx-auto px-4 py-20 relative z-10">
+        <div className="text-center max-w-4xl mx-auto">
+          {/* Clean Logo Section */}
+          <div className="flex items-center justify-center mb-8">
+            <div className="bg-primary/10 p-4 rounded-2xl mr-4">
+              <TrendingUp className="h-10 w-10 text-primary" />
             </div>
             <div className="text-left">
-              <div className="flex items-center gap-2 mb-1">
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                  PSX Analytics Pro
-                </h1>
-                <div className="bg-gradient-to-r from-primary/20 to-accent/20 text-primary text-xs px-2 py-1 rounded-full border border-primary/30">
-                  LIVE
-                </div>
+              <h1 className="text-4xl font-bold text-foreground">
+                PSX Analytics 
+                <span className="text-primary"> Pro</span>
+              </h1>
+              <div className="flex items-center gap-2 mt-1">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span className="text-sm text-muted-foreground">Live Market Data</span>
               </div>
-              <p className="text-muted-foreground text-sm">Pakistan Stock Exchange • Real-time Insights</p>
             </div>
           </div>
 
-          {/* Hero Description */}
-          <div className="max-w-3xl mx-auto mb-8">
-            <h2 className="text-xl text-foreground/90 mb-4 leading-relaxed">
-              Advanced technical analysis and market insights for the 
-              <span className="text-primary font-semibold"> Pakistan Stock Exchange</span>
+          {/* Main Headline */}
+          <div className="mb-12">
+            <h2 className="text-2xl md:text-3xl text-foreground/90 mb-6 leading-relaxed font-light">
+              We provide <span className="text-primary font-semibold">real-time insights</span> for 
+              <br />Pakistan Stock Exchange using <span className="text-primary font-semibold">data-driven</span> analysis
             </h2>
-            <p className="text-muted-foreground">
-              Get real-time market data, technical analysis, and expert recommendations for PSX stocks
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Advanced technical analysis, market trends, and expert recommendations for informed trading decisions
             </p>
           </div>
 
-          {/* Feature Icons */}
-          <div className="flex items-center justify-center gap-8 mb-8">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <div className="bg-primary/10 p-2 rounded-lg">
-                <BarChart3 className="h-4 w-4 text-primary" />
-              </div>
-              <span>Live Charts</span>
+          {/* Key Statistics */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            <div className="text-center">
+              <div className="text-4xl font-bold text-primary mb-2">500+</div>
+              <div className="text-sm text-muted-foreground">PSX Stocks Tracked</div>
             </div>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <div className="bg-primary/10 p-2 rounded-lg">
-                <Activity className="h-4 w-4 text-primary" />
-              </div>
-              <span>Technical Analysis</span>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-primary mb-2">99.9%</div>
+              <div className="text-sm text-muted-foreground">Real-time Accuracy</div>
             </div>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <div className="bg-primary/10 p-2 rounded-lg">
-                <Target className="h-4 w-4 text-primary" />
-              </div>
-              <span>Expert Insights</span>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-primary mb-2">24/7</div>
+              <div className="text-sm text-muted-foreground">Market Monitoring</div>
             </div>
           </div>
 
-          {/* Stock Search - Enhanced */}
-          <div className="max-w-2xl mx-auto">
-            <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl p-6 shadow-lg">
-              <div className="mb-4">
-                <h3 className="text-lg font-semibold text-foreground mb-2">Analyze Any PSX Stock</h3>
-                <p className="text-sm text-muted-foreground">Enter a ticker symbol to get comprehensive analysis and insights</p>
-              </div>
-              <StockSearch onTickerChange={onTickerChange} />
-            </div>
+          {/* Stock Search */}
+          <div className="max-w-xl mx-auto mb-8">
+            <StockSearch onTickerChange={onTickerChange} />
           </div>
 
-          {/* Quick Stats */}
-          <div className="mt-8 flex items-center justify-center gap-6 text-sm text-muted-foreground">
-            <div className="flex items-center gap-1">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span>Market Open</span>
+          {/* Feature Icons - Simplified */}
+          <div className="flex items-center justify-center gap-12">
+            <div className="flex flex-col items-center gap-2">
+              <div className="bg-primary/10 p-3 rounded-full">
+                <BarChart3 className="h-6 w-6 text-primary" />
+              </div>
+              <span className="text-sm text-muted-foreground">Live Charts</span>
             </div>
-            <div className="w-px h-4 bg-border"></div>
-            <span>KSE-100 Live</span>
-            <div className="w-px h-4 bg-border"></div>
-            <span>Real-time Data</span>
+            <div className="flex flex-col items-center gap-2">
+              <div className="bg-primary/10 p-3 rounded-full">
+                <Activity className="h-6 w-6 text-primary" />
+              </div>
+              <span className="text-sm text-muted-foreground">Technical Analysis</span>
+            </div>
+            <div className="flex flex-col items-center gap-2">
+              <div className="bg-primary/10 p-3 rounded-full">
+                <Target className="h-6 w-6 text-primary" />
+              </div>
+              <span className="text-sm text-muted-foreground">Expert Insights</span>
+            </div>
           </div>
         </div>
       </div>
