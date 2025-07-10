@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Newspaper, Clock, ExternalLink } from 'lucide-react';
+import { Newspaper, Clock, ExternalLink, Search, ChevronDown, ChevronUp } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { fetchPSXNews, NewsItem } from '@/services/newsService';
 
 interface NewsWidgetProps {
@@ -10,6 +13,32 @@ interface NewsWidgetProps {
 const NewsWidget = ({ refreshTrigger }: NewsWidgetProps) => {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  // Filter and limit news based on search and expansion state
+  const filteredNews = useMemo(() => {
+    let filtered = news;
+    
+    if (searchTerm.trim()) {
+      filtered = news.filter(item => 
+        item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.source.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    
+    return isExpanded ? filtered : filtered.slice(0, 5);
+  }, [news, searchTerm, isExpanded]);
+
+  const totalFilteredCount = useMemo(() => {
+    if (searchTerm.trim()) {
+      return news.filter(item => 
+        item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.source.toLowerCase().includes(searchTerm.toLowerCase())
+      ).length;
+    }
+    return news.length;
+  }, [news, searchTerm]);
 
   useEffect(() => {
     const loadNews = async () => {
@@ -18,7 +47,6 @@ const NewsWidget = ({ refreshTrigger }: NewsWidgetProps) => {
         setNews(newsData);
       } catch (error) {
         console.error('Failed to fetch news:', error);
-        // Fallback to empty array if fetch fails
         setNews([]);
       } finally {
         setLoading(false);
@@ -56,31 +84,71 @@ const NewsWidget = ({ refreshTrigger }: NewsWidgetProps) => {
           <Newspaper className="h-5 w-5 text-primary" />
           Latest PSX News
         </CardTitle>
+        <div className="mt-4 relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search news (e.g., Meezan, MEBL)..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+          />
+        </div>
       </CardHeader>
       <CardContent className="space-y-3">
-        {news.map((item, index) => (
-          <a 
-            key={index} 
-            href={item.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors group"
+        {searchTerm && (
+          <div className="text-sm text-muted-foreground">
+            {totalFilteredCount} result{totalFilteredCount !== 1 ? 's' : ''} found
+          </div>
+        )}
+        
+        <ScrollArea className={isExpanded ? "h-80" : "h-auto"}>
+          <div className="space-y-3">
+            {filteredNews.map((item, index) => (
+              <a 
+                key={index} 
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors group"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <h4 className="text-foreground font-medium text-sm leading-5 mb-2 group-hover:text-primary transition-colors">
+                    {item.title}
+                  </h4>
+                  <ExternalLink className="h-3 w-3 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0 mt-1" />
+                </div>
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                  <span>{item.source}</span>
+                  <div className="flex items-center gap-1">
+                    <Clock className="h-3 w-3" />
+                    <span>{item.time}</span>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </ScrollArea>
+
+        {!searchTerm && totalFilteredCount > 5 && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="w-full mt-3 text-muted-foreground hover:text-primary"
           >
-            <div className="flex items-start justify-between gap-2">
-              <h4 className="text-foreground font-medium text-sm leading-5 mb-2 group-hover:text-primary transition-colors">
-                {item.title}
-              </h4>
-              <ExternalLink className="h-3 w-3 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0 mt-1" />
-            </div>
-            <div className="flex items-center justify-between text-xs text-muted-foreground">
-              <span>{item.source}</span>
-              <div className="flex items-center gap-1">
-                <Clock className="h-3 w-3" />
-                <span>{item.time}</span>
-              </div>
-            </div>
-          </a>
-        ))}
+            {isExpanded ? (
+              <>
+                <ChevronUp className="h-4 w-4 mr-2" />
+                Show Less
+              </>
+            ) : (
+              <>
+                <ChevronDown className="h-4 w-4 mr-2" />
+                Show All ({totalFilteredCount} total)
+              </>
+            )}
+          </Button>
+        )}
       </CardContent>
     </Card>
   );

@@ -25,8 +25,8 @@ export const fetchPSXNews = async (): Promise<NewsItem[]> => {
     const newsData = await response.json();
     
     // Parse and format the response to match NewsItem interface
-    // Take only top 5 most relevant news
-    const formattedNews: NewsItem[] = newsData.slice(0, 5).map((item: any) => ({
+    // Return all news items for search and filtering
+    const formattedNews: NewsItem[] = newsData.map((item: any) => ({
       title: item.title || item.headline || 'News Update',
       time: item.time || item.publishedAt || 'Recently',
       source: item.source || item.publisher || 'PSX News',
