@@ -1,5 +1,5 @@
 import React from 'react';
-import { TrendingUp, BarChart3, Activity, Target } from 'lucide-react';
+import { TrendingUp, BarChart3, Activity, Target, Search, RefreshCw, Newspaper, TrendingDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import StockSearch from './StockSearch';
 
@@ -60,19 +60,51 @@ const HeroSection = ({ onTickerChange }: HeroSectionProps) => {
             </p>
           </div>
 
-          {/* Key Statistics with hover animations */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            <div className="text-center group hover:scale-105 transition-transform duration-300 cursor-pointer">
-              <div className="text-4xl font-bold text-primary mb-2 group-hover:animate-bounce">500+</div>
-              <div className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">PSX Stocks Tracked</div>
-            </div>
-            <div className="text-center group hover:scale-105 transition-transform duration-300 cursor-pointer">
-              <div className="text-4xl font-bold text-primary mb-2 group-hover:animate-bounce">99.9%</div>
-              <div className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">Real-time Accuracy</div>
-            </div>
-            <div className="text-center group hover:scale-105 transition-transform duration-300 cursor-pointer">
-              <div className="text-4xl font-bold text-primary mb-2 group-hover:animate-bounce">24/7</div>
-              <div className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">Market Monitoring</div>
+          {/* How to Use Section with Infographics */}
+          <div className="mb-12">
+            <h3 className="text-2xl font-semibold text-foreground mb-8">How to Use PSX Analytics Pro</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {/* Step 1 */}
+              <div className="text-center group hover:scale-105 transition-all duration-300 cursor-pointer">
+                <div className="relative mb-4">
+                  <div className="bg-primary/10 p-6 rounded-full mx-auto w-24 h-24 flex items-center justify-center group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110">
+                    <Search className="h-10 w-10 text-primary transition-transform duration-300 group-hover:scale-110" />
+                  </div>
+                  <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full font-bold">1</div>
+                </div>
+                <h4 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">Search & Select Stock</h4>
+                <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
+                  Enter stock symbol in the search box or use dropdown to get detailed analysis of any PSX listed company
+                </p>
+              </div>
+
+              {/* Step 2 */}
+              <div className="text-center group hover:scale-105 transition-all duration-300 cursor-pointer">
+                <div className="relative mb-4">
+                  <div className="bg-primary/10 p-6 rounded-full mx-auto w-24 h-24 flex items-center justify-center group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110">
+                    <RefreshCw className="h-10 w-10 text-primary transition-transform duration-300 group-hover:scale-110" />
+                  </div>
+                  <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full font-bold">2</div>
+                </div>
+                <h4 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">Refresh & Analyze</h4>
+                <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
+                  View market heatmap, technical analysis & fundamentals. Click refresh data button for latest information
+                </p>
+              </div>
+
+              {/* Step 3 */}
+              <div className="text-center group hover:scale-105 transition-all duration-300 cursor-pointer">
+                <div className="relative mb-4">
+                  <div className="bg-primary/10 p-6 rounded-full mx-auto w-24 h-24 flex items-center justify-center group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110">
+                    <Newspaper className="h-10 w-10 text-primary transition-transform duration-300 group-hover:scale-110" />
+                  </div>
+                  <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full font-bold">3</div>
+                </div>
+                <h4 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">News & Rankings</h4>
+                <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
+                  Browse latest news, search specific articles, and view top 5 gainers/losers for comprehensive market insights
+                </p>
+              </div>
             </div>
           </div>
 
