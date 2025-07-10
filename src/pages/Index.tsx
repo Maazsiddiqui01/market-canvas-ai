@@ -61,36 +61,36 @@ const Index = () => {
           </Button>
         </div>
 
-        {/* Market Overview Cards with hover animations */}
-        <div className="animate-fade-in hover:scale-[1.01] transition-transform duration-300" style={{ animationDelay: '200ms' }}>
+        {/* Market Overview Cards with enhanced entrance animation */}
+        <div className="animate-slide-in-left hover:scale-[1.01] transition-transform duration-300" style={{ animationDelay: '200ms' }}>
           <MarketOverview refreshTrigger={refreshTrigger} />
         </div>
         
-        {/* TradingView Heatmap with dynamic effects */}
-        <div id="heatmap" className="w-full animate-fade-in group hover:scale-[1.01] transition-all duration-300" style={{ animationDelay: '400ms' }}>
+        {/* TradingView Heatmap with dramatic entrance */}
+        <div id="heatmap" className="w-full animate-fade-in-scale group hover:scale-[1.01] transition-all duration-300" style={{ animationDelay: '400ms' }}>
           <div className="relative overflow-hidden rounded-lg">
             <TradingViewHeatmap />
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
           </div>
         </div>
         
-        {/* Technical and Financial Analysis with staggered animations */}
+        {/* Technical and Financial Analysis with opposing slide animations */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div id="technical-analysis" className="animate-fade-in hover:scale-[1.02] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10" style={{ animationDelay: '600ms' }}>
+          <div id="technical-analysis" className="animate-slide-in-left hover:scale-[1.02] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10" style={{ animationDelay: '600ms' }}>
             <TechnicalAnalysis ticker={selectedTicker} />
           </div>
-          <div id="financial-analysis" className="animate-fade-in hover:scale-[1.02] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10" style={{ animationDelay: '700ms' }}>
+          <div id="financial-analysis" className="animate-slide-in-right hover:scale-[1.02] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10" style={{ animationDelay: '700ms' }}>
             <FinancialAnalysis ticker={selectedTicker} />
           </div>
         </div>
         
-        {/* News Widget with interactive hover */}
-        <div id="news" className="w-full animate-fade-in hover:scale-[1.01] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10" style={{ animationDelay: '800ms' }}>
+        {/* News Widget with bottom slide entrance */}
+        <div id="news" className="w-full animate-slide-in-bottom hover:scale-[1.01] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10" style={{ animationDelay: '800ms' }}>
           <NewsWidget refreshTrigger={refreshTrigger} />
         </div>
         
-        {/* Top/Bottom 5 with final animation */}
-        <div id="top-bottom-5" className="w-full animate-fade-in hover:scale-[1.01] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10" style={{ animationDelay: '1000ms' }}>
+        {/* Top/Bottom 5 with floating entrance */}
+        <div id="top-bottom-5" className="w-full animate-float-in hover:scale-[1.01] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10" style={{ animationDelay: '1000ms' }}>
           <TopBottom5 refreshTrigger={refreshTrigger} />
         </div>
       </div>

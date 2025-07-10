@@ -2,7 +2,6 @@
 import React from 'react';
 import { TrendingUp, BarChart3, Newspaper, Calculator, TrendingUp as TechnicalIcon, TrendingDown, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import StockSearch from './StockSearch';
 
 interface DashboardHeaderProps {
   onTickerChange?: (ticker: string) => void;
@@ -52,9 +51,6 @@ const DashboardHeader = ({ onTickerChange }: DashboardHeaderProps) => {
             </Button>
           </nav>
         </div>
-        
-        {/* Stock Search */}
-        <StockSearch onTickerChange={onTickerChange} />
       </div>
     </div>
   );
