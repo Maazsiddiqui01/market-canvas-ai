@@ -1,9 +1,24 @@
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const TradingViewHeatmap = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isMarketOpen, setIsMarketOpen] = useState(false);
+
+  // Check if market is open (9 AM to 5 PM Pakistan time)
+  const checkMarketHours = () => {
+    const now = new Date();
+    const pakistanTime = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Karachi"}));
+    const hour = pakistanTime.getHours();
+    setIsMarketOpen(hour >= 9 && hour < 17);
+  };
+
+  useEffect(() => {
+    checkMarketHours();
+    const interval = setInterval(checkMarketHours, 60000); // Check every minute
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -42,7 +57,7 @@ const TradingViewHeatmap = () => {
     <Card className="bg-slate-800/50 border-slate-600">
       <CardHeader>
         <CardTitle className="text-white flex items-center gap-2">
-          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+          {isMarketOpen && <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>}
           Market Heatmap
         </CardTitle>
       </CardHeader>

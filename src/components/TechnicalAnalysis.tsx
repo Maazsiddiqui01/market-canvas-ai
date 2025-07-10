@@ -74,7 +74,7 @@ const TechnicalAnalysis = ({ ticker = 'KSE100' }: TechnicalAnalysisProps) => {
             </div>
           </div>
         )}
-        <div className="tradingview-widget-container h-[400px]" ref={containerRef}>
+        <div className="tradingview-widget-container h-[600px]" ref={containerRef}>
           <div className="tradingview-widget-container__widget h-full"></div>
         </div>
       </CardContent>
