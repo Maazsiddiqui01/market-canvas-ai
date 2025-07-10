@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { RefreshCw } from 'lucide-react';
+import DashboardHeader from '../components/DashboardHeader';
 import HeroSection from '../components/HeroSection';
 import TradingViewHeatmap from '../components/TradingViewHeatmap';
 import TechnicalAnalysis from '../components/TechnicalAnalysis';
@@ -41,6 +42,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary to-background animate-fade-in">
+      <DashboardHeader onTickerChange={setSelectedTicker} />
       <HeroSection onTickerChange={setSelectedTicker} />
       
       <div className="container mx-auto px-4 py-6 space-y-6">
