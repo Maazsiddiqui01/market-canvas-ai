@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { TrendingUp, Bell, Settings, BarChart3, Newspaper, Calculator, TrendingUp as TechnicalIcon } from 'lucide-react';
+import { TrendingUp, BarChart3, Newspaper, Calculator, TrendingUp as TechnicalIcon, TrendingDown, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import StockSearch from './StockSearch';
 
@@ -42,17 +42,15 @@ const DashboardHeader = ({ onTickerChange }: DashboardHeaderProps) => {
               <Newspaper className="h-4 w-4 mr-2" />
               News
             </Button>
+            <Button variant="ghost" className="text-muted-foreground hover:text-foreground" onClick={() => document.getElementById('top-bottom-5')?.scrollIntoView({ behavior: 'smooth' })}>
+              <TrendingDown className="h-4 w-4 mr-2" />
+              Top & Bottom 5
+            </Button>
+            <Button variant="ghost" className="text-muted-foreground hover:text-foreground" onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}>
+              <Mail className="h-4 w-4 mr-2" />
+              Contact
+            </Button>
           </nav>
-          
-          {/* Action Buttons */}
-          <div className="flex items-center space-x-2">
-            <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
-              <Bell className="h-5 w-5" />
-            </Button>
-            <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
-              <Settings className="h-5 w-5" />
-            </Button>
-          </div>
         </div>
         
         {/* Stock Search */}

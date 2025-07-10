@@ -90,13 +90,15 @@ const Index = () => {
         </div>
         
         {/* Top/Bottom 5 with final animation */}
-        <div className="w-full animate-fade-in hover:scale-[1.01] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10" style={{ animationDelay: '1000ms' }}>
+        <div id="top-bottom-5" className="w-full animate-fade-in hover:scale-[1.01] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10" style={{ animationDelay: '1000ms' }}>
           <TopBottom5 refreshTrigger={refreshTrigger} />
         </div>
       </div>
       
       {/* Footer */}
-      <Footer />
+      <div id="contact">
+        <Footer />
+      </div>
     </div>
   );
 };
