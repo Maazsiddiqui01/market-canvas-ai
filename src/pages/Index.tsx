@@ -10,6 +10,7 @@ import TopBottom5 from '../components/TopBottom5';
 import NewsWidget from '../components/NewsWidget';
 import FinancialAnalysis from '../components/FinancialAnalysis';
 import LoadingScreen from '../components/LoadingScreen';
+import Footer from '../components/Footer';
 
 const Index = () => {
   const [selectedTicker, setSelectedTicker] = useState('KSE100');
@@ -93,6 +94,9 @@ const Index = () => {
           <TopBottom5 refreshTrigger={refreshTrigger} />
         </div>
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };
