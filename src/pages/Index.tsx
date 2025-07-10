@@ -44,41 +44,48 @@ const Index = () => {
       <HeroSection onTickerChange={setSelectedTicker} />
       
       <div className="container mx-auto px-4 py-6 space-y-6">
-        {/* Unified Refresh Button */}
+        {/* Unified Refresh Button with enhanced animations */}
         <div className="flex justify-center animate-slide-in-right">
           <Button 
             onClick={handleRefreshAll}
             disabled={isRefreshing}
-            className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 transition-all duration-300 hover-scale"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/25 active:scale-95"
           >
-            <RefreshCw className={`h-4 w-4 mr-2 transition-transform duration-500 ${isRefreshing ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`h-4 w-4 mr-2 transition-transform duration-500 ${isRefreshing ? 'animate-spin' : 'hover:rotate-180'}`} />
             {isRefreshing ? 'Refreshing...' : 'Refresh Latest Data'}
           </Button>
         </div>
 
-        {/* Market Overview Cards */}
-        <div className="animate-fade-in" style={{ animationDelay: '200ms' }}>
+        {/* Market Overview Cards with hover animations */}
+        <div className="animate-fade-in hover:scale-[1.01] transition-transform duration-300" style={{ animationDelay: '200ms' }}>
           <MarketOverview refreshTrigger={refreshTrigger} />
         </div>
         
-        {/* TradingView Heatmap - Full width */}
-        <div className="w-full animate-fade-in" style={{ animationDelay: '400ms' }}>
-          <TradingViewHeatmap />
+        {/* TradingView Heatmap with dynamic effects */}
+        <div className="w-full animate-fade-in group hover:scale-[1.01] transition-all duration-300" style={{ animationDelay: '400ms' }}>
+          <div className="relative overflow-hidden rounded-lg">
+            <TradingViewHeatmap />
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+          </div>
         </div>
         
-        {/* Technical and Financial Analysis - Side by side */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in" style={{ animationDelay: '600ms' }}>
-          <TechnicalAnalysis ticker={selectedTicker} />
-          <FinancialAnalysis ticker={selectedTicker} />
+        {/* Technical and Financial Analysis with staggered animations */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="animate-fade-in hover:scale-[1.02] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10" style={{ animationDelay: '600ms' }}>
+            <TechnicalAnalysis ticker={selectedTicker} />
+          </div>
+          <div className="animate-fade-in hover:scale-[1.02] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10" style={{ animationDelay: '700ms' }}>
+            <FinancialAnalysis ticker={selectedTicker} />
+          </div>
         </div>
         
-        {/* News Widget - Full width */}
-        <div className="w-full animate-fade-in" style={{ animationDelay: '800ms' }}>
+        {/* News Widget with interactive hover */}
+        <div className="w-full animate-fade-in hover:scale-[1.01] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10" style={{ animationDelay: '800ms' }}>
           <NewsWidget refreshTrigger={refreshTrigger} />
         </div>
         
-        {/* Top/Bottom 5 - Full width tabular format */}
-        <div className="w-full animate-fade-in" style={{ animationDelay: '1000ms' }}>
+        {/* Top/Bottom 5 with final animation */}
+        <div className="w-full animate-fade-in hover:scale-[1.01] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10" style={{ animationDelay: '1000ms' }}>
           <TopBottom5 refreshTrigger={refreshTrigger} />
         </div>
       </div>
