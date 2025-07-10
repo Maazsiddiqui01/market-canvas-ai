@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { RefreshCw } from 'lucide-react';
 import DashboardHeader from '../components/DashboardHeader';
@@ -17,16 +17,7 @@ const Index = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
 
-  useEffect(() => {
-    // Simulate initial loading
-    const timer = setTimeout(() => {
-      setIsInitialLoading(false);
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  const handleRefreshAll = async () => {
+  const handleRefreshAll = useCallback(async () => {
     setIsRefreshing(true);
     setRefreshTrigger(prev => prev + 1);
     
@@ -34,7 +25,18 @@ const Index = () => {
     setTimeout(() => {
       setIsRefreshing(false);
     }, 1000);
-  };
+  }, []);
+
+  useEffect(() => {
+    // Simulate initial loading
+    const timer = setTimeout(() => {
+      setIsInitialLoading(false);
+      // Automatically refresh data after initial loading
+      handleRefreshAll();
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [handleRefreshAll]);
 
   if (isInitialLoading) {
     return <LoadingScreen />;
