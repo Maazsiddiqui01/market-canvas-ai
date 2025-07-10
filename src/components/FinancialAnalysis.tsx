@@ -32,7 +32,7 @@ const FinancialAnalysis = ({ ticker = 'MEBL' }: FinancialAnalysisProps) => {
       "isTransparent": false,
       "locale": "en",
       "width": "100%",
-      "height": "100%"
+      "height": "800"
     });
 
     script.onload = () => {
@@ -73,7 +73,7 @@ const FinancialAnalysis = ({ ticker = 'MEBL' }: FinancialAnalysisProps) => {
             </div>
           </div>
         )}
-        <div className="tradingview-widget-container h-[600px]" ref={containerRef}>
+        <div className="tradingview-widget-container h-[800px]" ref={containerRef}>
           <div className="tradingview-widget-container__widget h-full"></div>
         </div>
       </CardContent>
