@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Newspaper, Clock, ExternalLink, Search, ChevronDown, ChevronUp } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { fetchPSXNews, NewsItem } from '@/services/newsService';
 
@@ -117,9 +118,14 @@ const NewsWidget = ({ refreshTrigger }: NewsWidgetProps) => {
                   </h4>
                   <ExternalLink className="h-3 w-3 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0 mt-1" />
                 </div>
-                <div className="flex items-center justify-between text-xs text-muted-foreground">
-                  <span>{item.source}</span>
-                  <div className="flex items-center gap-1">
+                <div className="flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-2">
+                    <Badge variant="secondary" className="text-xs px-2 py-1">
+                      {item.sourceTag || item.source}
+                    </Badge>
+                    <span className="text-muted-foreground">{item.source}</span>
+                  </div>
+                  <div className="flex items-center gap-1 text-muted-foreground">
                     <Clock className="h-3 w-3" />
                     <span>{item.time}</span>
                   </div>

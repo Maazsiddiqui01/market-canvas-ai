@@ -3,7 +3,34 @@ export interface NewsItem {
   time: string;
   source: string;
   url: string;
+  sourceTag?: string;
 }
+
+// Function to extract source tag from URL or source name
+const getSourceTag = (url: string, source: string): string => {
+  if (url.includes('tribune.com') || source.toLowerCase().includes('tribune')) {
+    return 'Tribune';
+  }
+  if (url.includes('brecorder.com') || source.toLowerCase().includes('business recorder')) {
+    return 'Business Recorder';
+  }
+  if (url.includes('dawn.com') || source.toLowerCase().includes('dawn')) {
+    return 'Dawn';
+  }
+  if (url.includes('thenews.com') || source.toLowerCase().includes('the news')) {
+    return 'The News';
+  }
+  if (url.includes('profit.pakistantoday.com') || source.toLowerCase().includes('profit')) {
+    return 'Profit';
+  }
+  if (url.includes('nation.com') || source.toLowerCase().includes('nation')) {
+    return 'The Nation';
+  }
+  if (url.includes('pakobserver.net') || source.toLowerCase().includes('observer')) {
+    return 'Pakistan Observer';
+  }
+  return source.split(' ')[0] || 'PSX News'; // Default to first word of source
+};
 
 // Fetch real news from webhook
 export const fetchPSXNews = async (): Promise<NewsItem[]> => {
@@ -30,10 +57,14 @@ export const fetchPSXNews = async (): Promise<NewsItem[]> => {
       title: item.title || item.headline || 'News Update',
       time: item.time || item.publishedAt || 'Recently',
       source: item.source || item.publisher || 'PSX News',
-      url: item.url || item.link || '#'
+      url: item.url || item.link || '#',
+      sourceTag: getSourceTag(item.url || item.link || '#', item.source || item.publisher || 'PSX News')
     }));
 
-    return formattedNews;
+    // Shuffle array to mix sources instead of grouping by source
+    const shuffledNews = formattedNews.sort(() => Math.random() - 0.5);
+
+    return shuffledNews;
   } catch (error) {
     console.error('Failed to fetch news from webhook:', error);
     
@@ -43,34 +74,40 @@ export const fetchPSXNews = async (): Promise<NewsItem[]> => {
         title: 'KSE-100 Index Surges to New Record High on Strong Banking Sector Rally',
         time: '1 hour ago',
         source: 'Business Recorder',
-        url: 'https://www.brecorder.com'
+        url: 'https://www.brecorder.com',
+        sourceTag: 'Business Recorder'
       },
       {
         title: 'Foreign Investment Inflows Boost PSX Performance Amid Economic Reforms',
         time: '3 hours ago', 
         source: 'Dawn News',
-        url: 'https://www.dawn.com/news/business'
+        url: 'https://www.dawn.com/news/business',
+        sourceTag: 'Dawn'
       },
       {
         title: 'Textile Sector Stocks Rally on Export Growth Expectations',
         time: '5 hours ago',
         source: 'Express Tribune',
-        url: 'https://tribune.com.pk/business'
+        url: 'https://tribune.com.pk/business',
+        sourceTag: 'Tribune'
       },
       {
         title: 'Oil Marketing Companies Post Strong Quarterly Results',
         time: '7 hours ago',
         source: 'The News',
-        url: 'https://www.thenews.com.pk/business'
+        url: 'https://www.thenews.com.pk/business',
+        sourceTag: 'The News'
       },
       {
         title: 'Technology Stocks Show Momentum as Digital Pakistan Initiative Gains Traction',
         time: '9 hours ago',
         source: 'Profit by Pakistan Today',
-        url: 'https://profit.pakistantoday.com.pk'
+        url: 'https://profit.pakistantoday.com.pk',
+        sourceTag: 'Profit'
       }
     ];
 
-    return mockNews;
+    // Shuffle mock data as well
+    return mockNews.sort(() => Math.random() - 0.5);
   }
 };
