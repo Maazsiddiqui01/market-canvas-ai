@@ -24,7 +24,8 @@ const NewsWidget = ({ refreshTrigger }: NewsWidgetProps) => {
     if (searchTerm.trim()) {
       filtered = news.filter(item => 
         item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.source.toLowerCase().includes(searchTerm.toLowerCase())
+        item.source.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (item.description && item.description.toLowerCase().includes(searchTerm.toLowerCase()))
       );
     }
     
@@ -35,7 +36,8 @@ const NewsWidget = ({ refreshTrigger }: NewsWidgetProps) => {
     if (searchTerm.trim()) {
       return news.filter(item => 
         item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.source.toLowerCase().includes(searchTerm.toLowerCase())
+        item.source.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (item.description && item.description.toLowerCase().includes(searchTerm.toLowerCase()))
       ).length;
     }
     return news.length;

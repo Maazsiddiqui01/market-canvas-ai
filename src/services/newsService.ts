@@ -4,6 +4,7 @@ export interface NewsItem {
   source: string;
   url: string;
   sourceTag?: string;
+  description?: string;
 }
 
 // Function to extract source tag from URL or source name
@@ -58,7 +59,8 @@ export const fetchPSXNews = async (): Promise<NewsItem[]> => {
       time: item.time || item.publishedAt || 'Recently',
       source: item.source || item.publisher || 'PSX News',
       url: item.url || item.link || '#',
-      sourceTag: getSourceTag(item.url || item.link || '#', item.source || item.publisher || 'PSX News')
+      sourceTag: getSourceTag(item.url || item.link || '#', item.source || item.publisher || 'PSX News'),
+      description: item.content || item.title || item.headline || 'News Update'
     }));
 
     // Shuffle array to mix sources instead of grouping by source
@@ -75,35 +77,40 @@ export const fetchPSXNews = async (): Promise<NewsItem[]> => {
         time: '1 hour ago',
         source: 'Business Recorder',
         url: 'https://www.brecorder.com',
-        sourceTag: 'Business Recorder'
+        sourceTag: 'Business Recorder',
+        description: 'The KSE-100 index reached an all-time high driven by strong performance in banking sector stocks as investors showed confidence in economic reforms.'
       },
       {
         title: 'Foreign Investment Inflows Boost PSX Performance Amid Economic Reforms',
         time: '3 hours ago', 
         source: 'Dawn News',
         url: 'https://www.dawn.com/news/business',
-        sourceTag: 'Dawn'
+        sourceTag: 'Dawn',
+        description: 'International investors are showing increased interest in Pakistan Stock Exchange as government implements comprehensive economic reforms.'
       },
       {
         title: 'Textile Sector Stocks Rally on Export Growth Expectations',
         time: '5 hours ago',
         source: 'Express Tribune',
         url: 'https://tribune.com.pk/business',
-        sourceTag: 'Tribune'
+        sourceTag: 'Tribune',
+        description: 'Textile companies see significant gains as export orders increase and global demand for Pakistani textile products rises.'
       },
       {
         title: 'Oil Marketing Companies Post Strong Quarterly Results',
         time: '7 hours ago',
         source: 'The News',
         url: 'https://www.thenews.com.pk/business',
-        sourceTag: 'The News'
+        sourceTag: 'The News',
+        description: 'Major oil marketing companies report robust quarterly earnings driven by improved margins and higher fuel demand.'
       },
       {
         title: 'Technology Stocks Show Momentum as Digital Pakistan Initiative Gains Traction',
         time: '9 hours ago',
         source: 'Profit by Pakistan Today',
         url: 'https://profit.pakistantoday.com.pk',
-        sourceTag: 'Profit'
+        sourceTag: 'Profit',
+        description: 'Technology sector stocks surge as Digital Pakistan initiative accelerates and tech companies secure new contracts.'
       }
     ];
 
