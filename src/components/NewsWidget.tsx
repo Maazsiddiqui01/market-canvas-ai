@@ -125,7 +125,9 @@ const NewsWidget = ({ refreshTrigger }: NewsWidgetProps) => {
                     <Badge variant="secondary" className="text-xs px-2 py-1">
                       {item.sourceTag || item.source}
                     </Badge>
-                    <span className="text-muted-foreground">{item.source}</span>
+                    <span className="text-muted-foreground">
+                      {item.url.includes('mettisglobal') ? 'Mettis Global' : item.source}
+                    </span>
                   </div>
                   <div className="flex items-center gap-1 text-muted-foreground">
                     <Clock className="h-3 w-3" />

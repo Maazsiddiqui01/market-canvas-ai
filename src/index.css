@@ -8,43 +8,43 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 220 26% 3%;
-    --foreground: 210 20% 98%;
+    --background: 0 0% 2%;
+    --foreground: 0 0% 98%;
 
-    --card: 220 26% 5%;
-    --card-foreground: 210 20% 98%;
+    --card: 0 0% 5%;
+    --card-foreground: 0 0% 98%;
 
-    --popover: 220 26% 5%;
-    --popover-foreground: 210 20% 98%;
+    --popover: 0 0% 5%;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 217 91% 60%;
-    --primary-foreground: 210 20% 98%;
+    --primary: 0 84% 60%;
+    --primary-foreground: 0 0% 98%;
 
-    --secondary: 220 14% 11%;
-    --secondary-foreground: 210 20% 98%;
+    --secondary: 0 0% 10%;
+    --secondary-foreground: 0 0% 98%;
 
-    --muted: 220 14% 11%;
-    --muted-foreground: 215 20% 65%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 70%;
 
-    --accent: 142 70% 45%;
-    --accent-foreground: 210 20% 98%;
+    --accent: 14 100% 57%;
+    --accent-foreground: 0 0% 98%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 210 20% 98%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 215 27% 12%;
-    --input: 215 27% 12%;
-    --ring: 217 91% 60%;
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 0 84% 60%;
 
-    /* Custom professional gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%), hsl(142 70% 45%));
-    --gradient-subtle: linear-gradient(180deg, hsl(220 26% 3%), hsl(220 14% 11%));
-    --gradient-card: linear-gradient(135deg, hsl(220 26% 5% / 0.8), hsl(220 14% 11% / 0.6));
+    /* Enhanced red/orange gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(0 84% 60%), hsl(14 100% 57%));
+    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 2%), hsl(0 0% 10%));
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 5% / 0.8), hsl(0 0% 10% / 0.6));
     
-    /* Professional shadows */
-    --shadow-elegant: 0 10px 30px -10px hsl(217 91% 60% / 0.3);
-    --shadow-glow: 0 0 40px hsl(217 91% 60% / 0.2);
-    --shadow-card: 0 4px 20px -4px hsl(220 26% 3% / 0.5);
+    /* Warm glowing shadows */
+    --shadow-elegant: 0 10px 30px -10px hsl(0 84% 60% / 0.4);
+    --shadow-glow: 0 0 40px hsl(0 84% 60% / 0.3);
+    --shadow-card: 0 4px 20px -4px hsl(0 0% 2% / 0.5);
     
     /* Smooth transitions */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -69,33 +69,33 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 220 26% 3%;
-    --foreground: 210 20% 98%;
+    --background: 0 0% 2%;
+    --foreground: 0 0% 98%;
 
-    --card: 220 26% 5%;
-    --card-foreground: 210 20% 98%;
+    --card: 0 0% 5%;
+    --card-foreground: 0 0% 98%;
 
-    --popover: 220 26% 5%;
-    --popover-foreground: 210 20% 98%;
+    --popover: 0 0% 5%;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 217 91% 60%;
-    --primary-foreground: 210 20% 98%;
+    --primary: 0 84% 60%;
+    --primary-foreground: 0 0% 98%;
 
-    --secondary: 220 14% 11%;
-    --secondary-foreground: 210 20% 98%;
+    --secondary: 0 0% 10%;
+    --secondary-foreground: 0 0% 98%;
 
-    --muted: 220 14% 11%;
-    --muted-foreground: 215 20% 65%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 70%;
 
-    --accent: 142 70% 45%;
-    --accent-foreground: 210 20% 98%;
+    --accent: 14 100% 57%;
+    --accent-foreground: 0 0% 98%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 210 20% 98%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 215 27% 12%;
-    --input: 215 27% 12%;
-    --ring: 217 91% 60%;
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 0 84% 60%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -195,6 +195,25 @@ All colors MUST be HSL.
   }
 }
 
+/* Friendly interactive animations */
+@keyframes wiggle {
+  0%, 7% { transform: rotateZ(0); }
+  15% { transform: rotateZ(-15deg); }
+  20% { transform: rotateZ(10deg); }
+  25% { transform: rotateZ(-10deg); }
+  30% { transform: rotateZ(6deg); }
+  35% { transform: rotateZ(-4deg); }
+  40%, 100% { transform: rotateZ(0); }
+}
+
+@keyframes heartbeat {
+  0% { transform: scale(1); }
+  14% { transform: scale(1.1); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.1); }
+  70% { transform: scale(1); }
+}
+
 /* Animation Classes */
 .animate-slide-in-left {
   animation: slideInFromLeft 0.8s ease-out forwards;
@@ -214,4 +233,22 @@ All colors MUST be HSL.
 
 .animate-float-in {
   animation: floatIn 0.9s ease-out forwards;
+}
+
+/* Interactive animations for friendliness */
+.animate-wiggle {
+  animation: wiggle 2s ease-in-out infinite;
+}
+
+.animate-heartbeat {
+  animation: heartbeat 2s ease-in-out infinite;
+}
+
+/* Hover effects for cards */
+.card-interactive:hover {
+  animation: heartbeat 0.6s ease-in-out;
+}
+
+.icon-friendly:hover {
+  animation: wiggle 1s ease-in-out;
 }
