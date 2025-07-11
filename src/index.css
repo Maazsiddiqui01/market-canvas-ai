@@ -208,9 +208,9 @@ All colors MUST be HSL.
 
 @keyframes heartbeat {
   0% { transform: scale(1); }
-  14% { transform: scale(1.1); }
+  14% { transform: scale(1.05); }
   28% { transform: scale(1); }
-  42% { transform: scale(1.1); }
+  42% { transform: scale(1.05); }
   70% { transform: scale(1); }
 }
 
@@ -240,13 +240,10 @@ All colors MUST be HSL.
   animation: wiggle 2s ease-in-out infinite;
 }
 
-.animate-heartbeat {
-  animation: heartbeat 2s ease-in-out infinite;
-}
-
-/* Hover effects for cards */
+/* Subtle hover effects for cards */
 .card-interactive:hover {
-  animation: heartbeat 0.6s ease-in-out;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px -8px hsl(var(--primary) / 0.3);
 }
 
 .icon-friendly:hover {
