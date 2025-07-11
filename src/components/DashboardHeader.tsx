@@ -25,50 +25,50 @@ const DashboardHeader = ({ onTickerChange }: DashboardHeaderProps) => {
         ? 'bg-background/95 backdrop-blur-md border-b border-border shadow-lg shadow-primary/5' 
         : 'bg-background/95 backdrop-blur-sm border-b border-border'
     }`}>
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between mb-4">
+      <div className="container mx-auto px-4 py-3">
+        <div className="flex items-center justify-between">
           {/* Logo and Title */}
           <div className="flex items-center space-x-3">
             <div className={`bg-gradient-to-r from-primary to-accent p-2 rounded-lg transition-all duration-300 ${
-              isScrolled ? 'scale-90' : 'scale-100'
+              isScrolled ? 'scale-75' : 'scale-100'
             }`}>
               <TrendingUp className="h-6 w-6 text-primary-foreground" />
             </div>
             <div>
               <h1 className={`font-bold text-foreground transition-all duration-300 ${
-                isScrolled ? 'text-lg' : 'text-xl'
+                isScrolled ? 'text-base' : 'text-xl'
               }`}>PSX Analytics Pro</h1>
-              <p className={`text-muted-foreground transition-all duration-300 ${
-                isScrolled ? 'text-xs' : 'text-sm'
-              }`}>Professional market insights</p>
+              {!isScrolled && (
+                <p className="text-xs text-muted-foreground">Professional market insights</p>
+              )}
             </div>
           </div>
           
           {/* Navigation Menu */}
           <nav className="hidden md:flex items-center space-x-1">
-            <Button variant="ghost" className="text-muted-foreground hover:text-foreground hover:bg-primary/10" onClick={() => document.getElementById('heatmap')?.scrollIntoView({ behavior: 'smooth' })}>
+            <Button variant="ghost" size={isScrolled ? "sm" : "default"} className="text-muted-foreground hover:text-foreground hover:bg-primary/10" onClick={() => document.getElementById('heatmap')?.scrollIntoView({ behavior: 'smooth' })}>
               <BarChart3 className="h-4 w-4 mr-2" />
-              Heatmap
+              {!isScrolled && "Heatmap"}
             </Button>
-            <Button variant="ghost" className="text-muted-foreground hover:text-foreground hover:bg-primary/10" onClick={() => document.getElementById('technical-analysis')?.scrollIntoView({ behavior: 'smooth' })}>
+            <Button variant="ghost" size={isScrolled ? "sm" : "default"} className="text-muted-foreground hover:text-foreground hover:bg-primary/10" onClick={() => document.getElementById('technical-analysis')?.scrollIntoView({ behavior: 'smooth' })}>
               <TechnicalIcon className="h-4 w-4 mr-2" />
-              Technical
+              {!isScrolled && "Technical"}
             </Button>
-            <Button variant="ghost" className="text-muted-foreground hover:text-foreground hover:bg-primary/10" onClick={() => document.getElementById('financial-analysis')?.scrollIntoView({ behavior: 'smooth' })}>
+            <Button variant="ghost" size={isScrolled ? "sm" : "default"} className="text-muted-foreground hover:text-foreground hover:bg-primary/10" onClick={() => document.getElementById('financial-analysis')?.scrollIntoView({ behavior: 'smooth' })}>
               <Calculator className="h-4 w-4 mr-2" />
-              Fundamental
+              {!isScrolled && "Fundamental"}
             </Button>
-            <Button variant="ghost" className="text-muted-foreground hover:text-foreground hover:bg-primary/10" onClick={() => document.getElementById('news')?.scrollIntoView({ behavior: 'smooth' })}>
+            <Button variant="ghost" size={isScrolled ? "sm" : "default"} className="text-muted-foreground hover:text-foreground hover:bg-primary/10" onClick={() => document.getElementById('news')?.scrollIntoView({ behavior: 'smooth' })}>
               <Newspaper className="h-4 w-4 mr-2" />
-              News
+              {!isScrolled && "News"}
             </Button>
-            <Button variant="ghost" className="text-muted-foreground hover:text-foreground hover:bg-primary/10" onClick={() => document.getElementById('top-bottom-5')?.scrollIntoView({ behavior: 'smooth' })}>
+            <Button variant="ghost" size={isScrolled ? "sm" : "default"} className="text-muted-foreground hover:text-foreground hover:bg-primary/10" onClick={() => document.getElementById('top-bottom-5')?.scrollIntoView({ behavior: 'smooth' })}>
               <TrendingDown className="h-4 w-4 mr-2" />
-              Top & Bottom 5
+              {!isScrolled && "Top & Bottom 5"}
             </Button>
-            <Button variant="ghost" className="text-muted-foreground hover:text-foreground hover:bg-primary/10" onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}>
+            <Button variant="ghost" size={isScrolled ? "sm" : "default"} className="text-muted-foreground hover:text-foreground hover:bg-primary/10" onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}>
               <Mail className="h-4 w-4 mr-2" />
-              Contact
+              {!isScrolled && "Contact"}
             </Button>
           </nav>
         </div>

@@ -47,7 +47,7 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-secondary to-background animate-fade-in relative overflow-hidden">
+    <div className="min-h-screen bg-background relative overflow-hidden">
       <InteractiveBackground />
       <div className="relative z-10">
         <DashboardHeader onTickerChange={setSelectedTicker} />
