@@ -15,7 +15,7 @@ const Footer = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-2 justify-center md:justify-start">
               <Button variant="outline" size="sm" asChild>
-                <a href="mailto:maaz.siddiqui@example.com" className="flex items-center gap-2">
+                <a href="mailto:maaz01888@gmail.com" className="flex items-center gap-2">
                   <Mail className="h-4 w-4" />
                   Get in Touch
                 </a>

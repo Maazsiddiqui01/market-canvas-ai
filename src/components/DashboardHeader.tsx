@@ -18,8 +18,8 @@ const DashboardHeader = ({ onTickerChange }: DashboardHeaderProps) => {
               <TrendingUp className="h-6 w-6 text-primary-foreground" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-foreground">StockAnalyzer Pro</h1>
-              <p className="text-sm text-muted-foreground">Real-time market insights</p>
+              <h1 className="text-xl font-bold text-foreground">PSX Analytics Pro</h1>
+              <p className="text-sm text-muted-foreground">Professional market insights</p>
             </div>
           </div>
           

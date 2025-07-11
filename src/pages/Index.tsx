@@ -11,6 +11,7 @@ import NewsWidget from '../components/NewsWidget';
 import FinancialAnalysis from '../components/FinancialAnalysis';
 import LoadingScreen from '../components/LoadingScreen';
 import Footer from '../components/Footer';
+import EmailWidget from '../components/EmailWidget';
 
 const Index = () => {
   const [selectedTicker, setSelectedTicker] = useState('KSE100');
@@ -44,7 +45,7 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-secondary to-background animate-fade-in">
+    <div className="min-h-screen bg-gradient-to-br from-background via-secondary to-background animate-fade-in relative">
       <DashboardHeader onTickerChange={setSelectedTicker} />
       <HeroSection onTickerChange={setSelectedTicker} />
       
@@ -54,7 +55,8 @@ const Index = () => {
           <Button 
             onClick={handleRefreshAll}
             disabled={isRefreshing}
-            className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/25 active:scale-95"
+            variant="professional"
+            className="px-8 py-3 text-base font-semibold"
           >
             <RefreshCw className={`h-4 w-4 mr-2 transition-transform duration-500 ${isRefreshing ? 'animate-spin' : 'hover:rotate-180'}`} />
             {isRefreshing ? 'Refreshing...' : 'Refresh Latest Data'}
@@ -99,6 +101,9 @@ const Index = () => {
       <div id="contact">
         <Footer />
       </div>
+      
+      {/* Email Widget */}
+      <EmailWidget />
     </div>
   );
 };
