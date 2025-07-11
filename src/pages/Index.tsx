@@ -13,6 +13,7 @@ import LoadingScreen from '../components/LoadingScreen';
 import Footer from '../components/Footer';
 import EmailWidget from '../components/EmailWidget';
 import InteractiveBackground from '../components/InteractiveBackground';
+import NewsSourcesMarquee from '../components/NewsSourcesMarquee';
 
 const Index = () => {
   const [selectedTicker, setSelectedTicker] = useState('KSE100');
@@ -50,6 +51,7 @@ const Index = () => {
       <InteractiveBackground />
       <div className="relative z-10">
         <DashboardHeader onTickerChange={setSelectedTicker} />
+        <NewsSourcesMarquee className="animate-slide-in-bottom" />
         <HeroSection onTickerChange={setSelectedTicker} />
       
       <div className="container mx-auto px-4 py-6 space-y-6">
