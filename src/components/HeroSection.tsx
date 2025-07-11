@@ -25,15 +25,15 @@ const HeroSection = ({ onTickerChange }: HeroSectionProps) => {
       
       <div className="container mx-auto px-4 py-20 relative z-10">
         <div className="text-center max-w-4xl mx-auto">
-          {/* Clean Logo Section */}
-          <div className="flex items-center justify-center mb-8">
-            <div className="bg-primary/10 p-4 rounded-2xl mr-4 group-hover:bg-primary/20 transition-all duration-500">
-              <TrendingUp className="h-10 w-10 text-primary" />
+          {/* Clean Logo Section with hover effects */}
+          <div className="flex items-center justify-center mb-8 group">
+            <div className="bg-primary/10 p-4 rounded-2xl mr-4 group-hover:bg-primary/20 transition-all duration-500 group-hover:scale-110 group-hover:rotate-3">
+              <TrendingUp className="h-10 w-10 text-primary transition-transform duration-300 group-hover:scale-110" />
             </div>
             <div className="text-left">
-              <h1 className="text-4xl md:text-5xl font-bold text-foreground">
+              <h1 className="text-4xl md:text-5xl font-bold text-foreground transition-all duration-300 hover:text-primary">
                 PSX Analytics 
-                <span className="text-primary"> Pro</span>
+                <span className="text-primary animate-pulse"> Pro</span>
               </h1>
               <div className="flex items-center gap-2 mt-2">
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
@@ -42,89 +42,91 @@ const HeroSection = ({ onTickerChange }: HeroSectionProps) => {
             </div>
           </div>
 
-          {/* Main Headline */}
+          {/* Main Headline with dynamic text effects */}
           <div className="mb-12">
             <h2 className="text-2xl md:text-3xl text-foreground/90 mb-6 leading-relaxed font-light">
-              We provide <span className="text-primary font-semibold">real-time insights</span> for 
-              <br />Pakistan Stock Exchange using <span className="text-primary font-semibold">data-driven</span> analysis
+              We provide <span className="text-primary font-semibold bg-primary/10 px-2 py-1 rounded-lg hover:bg-primary/20 transition-colors duration-300">real-time insights</span> for 
+              <br />Pakistan Stock Exchange using <span className="text-primary font-semibold bg-primary/10 px-2 py-1 rounded-lg hover:bg-primary/20 transition-colors duration-300">data-driven</span> analysis
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto hover:text-foreground/80 transition-colors duration-300">
               Advanced technical analysis, market trends, and expert recommendations for informed trading decisions
             </p>
           </div>
 
-          {/* How to Use Section - Simplified */}
+          {/* How to Use Section with hover effects */}
           <div className="mb-12">
             <h3 className="text-2xl font-semibold text-foreground mb-8">How to Use PSX Analytics Pro</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* Step 1 */}
-              <div className="text-center">
+              <div className="text-center group hover:scale-105 transition-all duration-300 cursor-pointer">
                 <div className="relative mb-4">
-                  <div className="bg-primary/10 p-6 rounded-2xl mx-auto w-20 h-20 flex items-center justify-center">
-                    <Search className="h-8 w-8 text-primary" />
+                  <div className="bg-primary/10 p-6 rounded-2xl mx-auto w-20 h-20 flex items-center justify-center group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110">
+                    <Search className="h-8 w-8 text-primary transition-transform duration-300 group-hover:scale-110" />
                   </div>
                   <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full font-bold">1</div>
                 </div>
-                <h4 className="text-lg font-semibold text-foreground mb-2">Search & Select Stock</h4>
-                <p className="text-sm text-muted-foreground">
+                <h4 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">Search & Select Stock</h4>
+                <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
                   Enter stock symbol to get detailed analysis of any PSX listed company
                 </p>
               </div>
 
               {/* Step 2 */}
-              <div className="text-center">
+              <div className="text-center group hover:scale-105 transition-all duration-300 cursor-pointer">
                 <div className="relative mb-4">
-                  <div className="bg-primary/10 p-6 rounded-2xl mx-auto w-20 h-20 flex items-center justify-center">
-                    <RefreshCw className="h-8 w-8 text-primary" />
+                  <div className="bg-primary/10 p-6 rounded-2xl mx-auto w-20 h-20 flex items-center justify-center group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110">
+                    <RefreshCw className="h-8 w-8 text-primary transition-transform duration-300 group-hover:scale-110" />
                   </div>
                   <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full font-bold">2</div>
                 </div>
-                <h4 className="text-lg font-semibold text-foreground mb-2">Refresh & Analyze</h4>
-                <p className="text-sm text-muted-foreground">
+                <h4 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">Refresh & Analyze</h4>
+                <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
                   View market heatmap, technical analysis & fundamentals
                 </p>
               </div>
 
               {/* Step 3 */}
-              <div className="text-center">
+              <div className="text-center group hover:scale-105 transition-all duration-300 cursor-pointer">
                 <div className="relative mb-4">
-                  <div className="bg-primary/10 p-6 rounded-2xl mx-auto w-20 h-20 flex items-center justify-center">
-                    <Newspaper className="h-8 w-8 text-primary" />
+                  <div className="bg-primary/10 p-6 rounded-2xl mx-auto w-20 h-20 flex items-center justify-center group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110">
+                    <Newspaper className="h-8 w-8 text-primary transition-transform duration-300 group-hover:scale-110" />
                   </div>
                   <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full font-bold">3</div>
                 </div>
-                <h4 className="text-lg font-semibold text-foreground mb-2">News & Rankings</h4>
-                <p className="text-sm text-muted-foreground">
+                <h4 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">News & Rankings</h4>
+                <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
                   Browse latest news and view top gainers/losers
                 </p>
               </div>
             </div>
           </div>
 
-          {/* Stock Search */}
-          <div className="max-w-xl mx-auto mb-8">
-            <StockSearch onTickerChange={onTickerChange} />
+          {/* Stock Search with enhanced styling */}
+          <div className="max-w-xl mx-auto mb-8 group">
+            <div className="transform transition-all duration-300 group-hover:scale-105">
+              <StockSearch onTickerChange={onTickerChange} />
+            </div>
           </div>
 
-          {/* Feature Icons */}
+          {/* Feature Icons with dynamic effects */}
           <div className="flex items-center justify-center gap-12">
-            <div className="flex flex-col items-center gap-2">
-              <div className="bg-primary/10 p-3 rounded-xl">
-                <BarChart3 className="h-6 w-6 text-primary" />
+            <div className="flex flex-col items-center gap-2 group cursor-pointer">
+              <div className="bg-primary/10 p-3 rounded-full group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110 group-hover:rotate-6">
+                <BarChart3 className="h-6 w-6 text-primary transition-transform duration-300 group-hover:scale-110" />
               </div>
-              <span className="text-sm text-muted-foreground">Live Charts</span>
+              <span className="text-sm text-muted-foreground group-hover:text-primary transition-colors duration-300">Live Charts</span>
             </div>
-            <div className="flex flex-col items-center gap-2">
-              <div className="bg-primary/10 p-3 rounded-xl">
-                <Activity className="h-6 w-6 text-primary" />
+            <div className="flex flex-col items-center gap-2 group cursor-pointer">
+              <div className="bg-primary/10 p-3 rounded-full group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110 group-hover:rotate-6">
+                <Activity className="h-6 w-6 text-primary transition-transform duration-300 group-hover:scale-110" />
               </div>
-              <span className="text-sm text-muted-foreground">Technical Analysis</span>
+              <span className="text-sm text-muted-foreground group-hover:text-primary transition-colors duration-300">Technical Analysis</span>
             </div>
-            <div className="flex flex-col items-center gap-2">
-              <div className="bg-primary/10 p-3 rounded-xl">
-                <Target className="h-6 w-6 text-primary" />
+            <div className="flex flex-col items-center gap-2 group cursor-pointer">
+              <div className="bg-primary/10 p-3 rounded-full group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110 group-hover:rotate-6">
+                <Target className="h-6 w-6 text-primary transition-transform duration-300 group-hover:scale-110" />
               </div>
-              <span className="text-sm text-muted-foreground">Expert Insights</span>
+              <span className="text-sm text-muted-foreground group-hover:text-primary transition-colors duration-300">Expert Insights</span>
             </div>
           </div>
         </div>
