@@ -101,11 +101,11 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
   };
 
   const parseHtmlContent = (htmlString: string) => {
-    const content = htmlString.replace(/<br>/g, '\n');
+    const content = htmlString.replace(/<br>/g, '\n').replace(/<br\/>/g, '\n');
     const sections = {
       stockPrices: [],
-      technicalAnalysis: null,
-      chartLink: null,
+      technicalAnalysis: [],
+      fundamentalAnalysis: [],
       marketOverview: [],
       industryHighlights: [],
       stockSpecific: [],
@@ -113,82 +113,97 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
       newsLinks: []
     };
 
-    const lines = content.split('\n').filter(line => line.trim());
-    let currentSection = '';
+    // Split by main sections A, B, C, D, E, F
+    const mainSections = content.split(/[A-F]\.\s*/).filter(section => section.trim());
 
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i].trim();
+    mainSections.forEach((section) => {
+      const sectionContent = section.trim();
       
-      // Stock prices (lines with 📈)
-      if (line.includes('📈')) {
-        sections.stockPrices.push(line);
-      }
-      // Section headers
-      else if (line.includes('Technical Analysis:')) {
-        currentSection = 'technical';
-      }
-      else if (line.includes('Chart Link:')) {
-        currentSection = 'chart';
-      }
-      else if (line.includes('Market Overview:')) {
-        currentSection = 'market';
-      }
-      else if (line.includes('Industry Highlights')) {
-        currentSection = 'industry';
-      }
-      else if (line.includes('Stock-Specific Mentions:')) {
-        currentSection = 'stock';
-      }
-      else if (line.includes('Expert Recommendation:')) {
-        currentSection = 'expert';
-      }
-      else if (line.includes('Relevant News Links:')) {
-        currentSection = 'news';
-      }
-      // Content based on current section
-      else if (line && !line.includes('News Insights:')) {
-        switch (currentSection) {
-          case 'technical':
-            if (line.includes('Overall Signal:') || line.includes('Moving Average:') || line.includes('Oscillators:')) {
-              const signal = line.split(':')[1]?.trim();
-              const type = line.split(':')[0]?.trim();
-              if (!sections.technicalAnalysis) sections.technicalAnalysis = [];
-              sections.technicalAnalysis.push({ type, signal });
+      // A. Market Snapshot - Stock Prices
+      if (sectionContent.includes('Market Snapshot') || sectionContent.includes('📈')) {
+        const lines = sectionContent.split('\n').filter(line => line.trim());
+        lines.forEach(line => {
+          if (line.includes('KSE-100') || line.includes('📈') || line.includes('🏦') || line.includes(':')) {
+            const cleanLine = line.replace(/<\/?strong>/g, '').replace(/^-\s*/, '').trim();
+            if (cleanLine && cleanLine.length > 5) {
+              sections.stockPrices.push(cleanLine);
             }
-            break;
-          case 'chart':
-            if (line.includes('<a href=')) {
-              sections.chartLink = line;
+          }
+        });
+      }
+      
+      // B. News Insights
+      else if (sectionContent.includes('News Insights') || sectionContent.includes('🔍')) {
+        const lines = sectionContent.split('\n').filter(line => line.trim());
+        lines.forEach(line => {
+          const cleanLine = line.replace(/<\/?strong>/g, '').replace(/^-\s*/, '').trim();
+          if (cleanLine.includes('Market Overview:')) {
+            const overview = cleanLine.replace('Market Overview:', '').trim();
+            if (overview) sections.marketOverview.push(overview);
+          }
+          else if (cleanLine.includes('Industry Highlights')) {
+            const industry = cleanLine.replace(/Industry Highlights[^:]*:/, '').trim();
+            if (industry) sections.industryHighlights.push(industry);
+          }
+          else if (cleanLine.includes('Stock-Specific News')) {
+            const stockNews = cleanLine.replace(/Stock-Specific News[^:]*:/, '').trim();
+            if (stockNews) sections.stockSpecific.push(stockNews);
+          }
+        });
+      }
+      
+      // C. Technical Analysis
+      else if (sectionContent.includes('Technical Analysis') || sectionContent.includes('📊')) {
+        const lines = sectionContent.split('\n').filter(line => line.trim());
+        lines.forEach(line => {
+          const cleanLine = line.replace(/<\/?strong>/g, '').replace(/^-\s*/, '').trim();
+          if (cleanLine && !cleanLine.includes('Technical Analysis')) {
+            if (cleanLine.includes('Signal:')) {
+              const signal = cleanLine.replace('Signal:', '').trim();
+              sections.technicalAnalysis.push({ type: 'Overall Signal', signal });
+            } else if (cleanLine.length > 10) {
+              sections.technicalAnalysis.push({ type: 'Analysis', signal: cleanLine });
             }
-            break;
-          case 'market':
-            if (line.startsWith('-')) {
-              sections.marketOverview.push(line.substring(1).trim());
+          }
+        });
+      }
+      
+      // D. Fundamental Analysis
+      else if (sectionContent.includes('Fundamental Analysis') || sectionContent.includes('💡')) {
+        const lines = sectionContent.split('\n').filter(line => line.trim());
+        lines.forEach(line => {
+          const cleanLine = line.replace(/<\/?strong>/g, '').replace(/^-\s*/, '').trim();
+          if (cleanLine && !cleanLine.includes('Fundamental Analysis') && cleanLine.length > 10) {
+            sections.fundamentalAnalysis.push(cleanLine);
+          }
+        });
+      }
+      
+      // E. Recommendation
+      else if (sectionContent.includes('Recommendation') || sectionContent.includes('✅')) {
+        const lines = sectionContent.split('\n').filter(line => line.trim());
+        lines.forEach(line => {
+          const cleanLine = line.replace(/<\/?strong>/g, '').replace(/^-\s*/, '').trim();
+          if (cleanLine && !cleanLine.includes('Recommendation') && cleanLine.length > 10) {
+            sections.expertRecommendation.push(cleanLine);
+          }
+        });
+      }
+      
+      // F. Relevant Links
+      else if (sectionContent.includes('Relevant Links') || sectionContent.includes('🔗')) {
+        const links = sectionContent.match(/<a href="([^"]+)">([^<]+)<\/a>/g);
+        if (links) {
+          links.forEach(link => {
+            const hrefMatch = link.match(/href="([^"]+)"/);
+            const textMatch = link.match(/>([^<]+)</);
+            if (hrefMatch && textMatch) {
+              sections.newsLinks.push(`${textMatch[1]}: ${hrefMatch[1]}`);
             }
-            break;
-          case 'industry':
-            if (line.startsWith('-')) {
-              sections.industryHighlights.push(line.substring(1).trim());
-            }
-            break;
-          case 'stock':
-            if (line.startsWith('-')) {
-              sections.stockSpecific.push(line.substring(1).trim());
-            }
-            break;
-          case 'expert':
-            if (!line.includes('Relevant News Links:')) {
-              sections.expertRecommendation.push(line);
-            }
-            break;
-          case 'news':
-            if (line.startsWith('-') && line.includes('http')) {
-              sections.newsLinks.push(line.substring(1).trim());
-            }
-            break;
+          });
         }
       }
-    }
+    });
 
     return sections;
   };
@@ -242,7 +257,7 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                 <h4 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
                   📊 Technical Analysis
                 </h4>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-3">
                   {sections.technicalAnalysis.map((item, index) => (
                     <div key={index} className="bg-card p-3 rounded-lg border">
                       <p className="text-sm text-muted-foreground mb-1">{item.type}</p>
@@ -257,20 +272,24 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
             </Card>
           )}
 
-          {/* Chart Link */}
-          {sections.chartLink && (
-            <Card className="bg-accent/10 border-accent/20">
+          {/* Fundamental Analysis */}
+          {sections.fundamentalAnalysis && sections.fundamentalAnalysis.length > 0 && (
+            <Card className="bg-amber-500/10 border-amber-500/20">
               <CardContent className="p-4">
                 <h4 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
-                  📈 Chart
+                  💡 Fundamental Analysis
                 </h4>
-                <div 
-                  className="text-accent hover:text-accent/80 underline"
-                  dangerouslySetInnerHTML={{ __html: sections.chartLink }}
-                />
+                <div className="space-y-2">
+                  {sections.fundamentalAnalysis.map((item, index) => (
+                    <p key={index} className="text-muted-foreground leading-relaxed">
+                      • {item}
+                    </p>
+                  ))}
+                </div>
               </CardContent>
             </Card>
           )}
+
 
           {/* Market Overview */}
           {sections.marketOverview.length > 0 && (
