@@ -1,6 +1,6 @@
 
-import React, { useState } from 'react';
-import { Search, TrendingUp, Loader2, RefreshCw } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Search, TrendingUp, Loader2, RefreshCw, BarChart3, Newspaper, Zap, Database, Brain, Activity } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -22,11 +22,34 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [responseData, setResponseData] = useState<any>(null);
+  const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
 
   const popularStocks = [
     'KSE100', 'MEBL', 'ILP', 'HBL', 'ENGRO', 'LUCK', 'UBL', 'PSO', 
     'OGDC', 'PPL', 'MARI', 'SNGP', 'SSGC', 'BAFL', 'DAWH', 'FCCL', 'HUBC'
   ];
+
+  const loadingMessages = [
+    { text: "Spinning up your news...", icon: Newspaper },
+    { text: "Powering your analysis...", icon: Zap },
+    { text: "Crunching market data...", icon: BarChart3 },
+    { text: "Fetching real-time insights...", icon: Activity },
+    { text: "Loading financial intelligence...", icon: Brain },
+    { text: "Connecting to data sources...", icon: Database },
+    { text: "Processing market signals...", icon: TrendingUp },
+    { text: "Analyzing trends...", icon: BarChart3 }
+  ];
+
+  // Rotate loading messages
+  useEffect(() => {
+    if (!loading) return;
+    
+    const interval = setInterval(() => {
+      setLoadingMessageIndex((prev) => (prev + 1) % loadingMessages.length);
+    }, 1500);
+
+    return () => clearInterval(interval);
+  }, [loading, loadingMessages.length]);
 
   const handleSearch = async (isRefresh = false) => {
     const ticker = selectedStock || customStock;
@@ -437,12 +460,45 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
       {/* Loading State */}
       {loading && (
         <Card className="bg-card border-border">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-center space-x-3">
-              <Loader2 className="h-6 w-6 animate-spin text-primary" />
-              <div className="text-center">
-                <p className="text-foreground font-medium">Processing your request...</p>
-                <p className="text-muted-foreground text-sm">This may take a minute or two</p>
+          <CardContent className="p-8">
+            <div className="text-center space-y-6">
+              {/* Animated Icons */}
+              <div className="relative flex justify-center">
+                <div className="flex items-center space-x-4">
+                  <Newspaper className="h-8 w-8 text-primary/60 animate-bounce" style={{ animationDelay: '0ms' }} />
+                  <BarChart3 className="h-10 w-10 text-primary animate-bounce" style={{ animationDelay: '200ms' }} />
+                  <Zap className="h-8 w-8 text-primary/60 animate-bounce" style={{ animationDelay: '400ms' }} />
+                </div>
+                <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping"></div>
+              </div>
+
+              {/* Dynamic Loading Message */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-center space-x-3">
+                  {React.createElement(loadingMessages[loadingMessageIndex].icon, {
+                    className: "h-5 w-5 text-primary animate-pulse"
+                  })}
+                  <p className="text-foreground font-medium text-lg animate-fade-in">
+                    {loadingMessages[loadingMessageIndex].text}
+                  </p>
+                </div>
+                <p className="text-muted-foreground text-sm">
+                  This may take a minute or two
+                </p>
+              </div>
+
+              {/* Progress Indicator */}
+              <div className="w-64 mx-auto">
+                <div className="bg-secondary rounded-full h-2 overflow-hidden">
+                  <div className="bg-gradient-to-r from-primary to-primary/60 h-full rounded-full animate-pulse w-full"></div>
+                </div>
+              </div>
+
+              {/* Loading Dots */}
+              <div className="flex justify-center space-x-2">
+                <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
               </div>
             </div>
           </CardContent>
