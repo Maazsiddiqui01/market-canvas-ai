@@ -14,6 +14,7 @@ import Footer from '../components/Footer';
 import EmailWidget from '../components/EmailWidget';
 import InteractiveBackground from '../components/InteractiveBackground';
 import NewsSourcesMarquee from '../components/NewsSourcesMarquee';
+import FeedbackSection from '../components/FeedbackSection';
 
 const Index = () => {
   const [selectedTicker, setSelectedTicker] = useState('KSE100');
@@ -102,6 +103,9 @@ const Index = () => {
         </div>
       </div>
       
+        {/* Feedback Section */}
+        <FeedbackSection />
+        
         {/* Footer */}
         <div id="contact">
           <Footer />

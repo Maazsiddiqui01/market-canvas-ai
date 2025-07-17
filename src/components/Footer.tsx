@@ -57,7 +57,18 @@ const Footer = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-border mt-8 pt-6 text-center">
+        <div className="border-t border-border mt-8 pt-6 text-center space-y-3">
+          <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+            <span>Market data provided by</span>
+            <a 
+              href="https://www.tradingview.com/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-primary hover:text-primary/80 font-medium transition-colors"
+            >
+              TradingView
+            </a>
+          </div>
           <p className="text-sm text-muted-foreground">
             © 2025 Market Canvas AI. Built with AI-powered innovation for intelligent market analysis.
           </p>
