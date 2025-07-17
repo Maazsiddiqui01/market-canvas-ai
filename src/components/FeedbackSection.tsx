@@ -16,15 +16,39 @@ const FeedbackSection = () => {
 
     setIsSubmitting(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      toast({
-        title: "Thank you for your feedback!",
-        description: "We'll use your suggestions to make Market Canvas AI even better.",
+    try {
+      const response = await fetch('https://n8n-maaz.duckdns.org/webhook-test/Get-Feedback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          feedback: feedback.trim(),
+          timestamp: new Date().toISOString(),
+          source: 'Market Canvas AI',
+          url: window.location.href
+        }),
       });
-      setFeedback('');
+
+      if (response.ok) {
+        toast({
+          title: "Thank you for your feedback!",
+          description: "We'll use your suggestions to make Market Canvas AI even better.",
+        });
+        setFeedback('');
+      } else {
+        throw new Error('Failed to send feedback');
+      }
+    } catch (error) {
+      console.error('Error sending feedback:', error);
+      toast({
+        title: "Error sending feedback",
+        description: "Please try again later or contact us directly.",
+        variant: "destructive",
+      });
+    } finally {
       setIsSubmitting(false);
-    }, 1000);
+    }
   };
 
   const suggestions = [
