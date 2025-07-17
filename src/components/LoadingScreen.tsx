@@ -18,7 +18,7 @@ const LoadingScreen = () => {
         {/* Loading Text */}
         <div className="space-y-4">
           <h2 className="text-3xl font-bold text-foreground animate-fade-in">
-            Market Pulse AI
+            Market Canvas AI
           </h2>
           <p className="text-muted-foreground animate-fade-in" style={{ animationDelay: '500ms' }}>
             Initializing AI-powered market analysis...

@@ -32,7 +32,7 @@ const HeroSection = ({ onTickerChange }: HeroSectionProps) => {
             </div>
             <div className="text-left">
               <h1 className="text-4xl md:text-5xl font-bold text-foreground transition-all duration-300 hover:text-primary">
-                Market Pulse 
+                Market Canvas 
                 <span className="text-primary animate-pulse"> AI</span>
               </h1>
               <div className="flex items-center gap-2 mt-2">
@@ -55,7 +55,7 @@ const HeroSection = ({ onTickerChange }: HeroSectionProps) => {
 
           {/* How to Use Section with hover effects */}
           <div className="mb-12">
-            <h3 className="text-2xl font-semibold text-foreground mb-8">How to Use Market Pulse AI</h3>
+            <h3 className="text-2xl font-semibold text-foreground mb-8">How to Use Market Canvas AI</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* Step 1 */}
               <div className="text-center group hover:scale-105 transition-all duration-300 cursor-pointer">

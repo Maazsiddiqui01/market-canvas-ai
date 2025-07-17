@@ -37,7 +37,7 @@ const DashboardHeader = ({ onTickerChange }: DashboardHeaderProps) => {
             <div>
               <h1 className={`font-bold text-foreground transition-all duration-300 ${
                 isScrolled ? 'text-base' : 'text-xl'
-              }`}>Market Pulse AI</h1>
+              }`}>Market Canvas AI</h1>
               {!isScrolled && (
                 <p className="text-xs text-muted-foreground">AI-powered market intelligence</p>
               )}

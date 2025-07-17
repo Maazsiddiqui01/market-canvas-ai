@@ -6,7 +6,7 @@ const EmailWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleEmailClick = () => {
-    window.location.href = 'mailto:maaz01888@gmail.com?subject=Market Pulse AI Inquiry&body=Hi Maaz, I would like to discuss about Market Pulse AI.';
+    window.location.href = 'mailto:maaz01888@gmail.com?subject=Market Canvas AI Inquiry&body=Hi Maaz, I would like to discuss about Market Canvas AI.';
   };
 
   return (
@@ -48,7 +48,7 @@ const EmailWidget = () => {
             
             <div className="space-y-3">
               <p className="text-sm text-muted-foreground">
-                Have questions about Market Pulse AI or want to collaborate? I'd love to hear from you!
+                Have questions about Market Canvas AI or want to collaborate? I'd love to hear from you!
               </p>
               
               <Button 

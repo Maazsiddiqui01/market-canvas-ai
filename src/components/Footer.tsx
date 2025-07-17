@@ -11,7 +11,7 @@ const Footer = () => {
           <div className="text-center md:text-left">
             <h3 className="text-lg font-semibold text-foreground mb-2">Created by Maaz</h3>
             <p className="text-sm text-muted-foreground mb-4">
-              Market Pulse AI - Your intelligent companion for smarter trading decisions
+              Market Canvas AI - Your intelligent companion for smarter trading decisions
             </p>
             <div className="flex flex-col sm:flex-row gap-2 justify-center md:justify-start">
               <Button variant="outline" size="sm" asChild>
@@ -59,7 +59,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="border-t border-border mt-8 pt-6 text-center">
           <p className="text-sm text-muted-foreground">
-            © 2025 Market Pulse AI. Built with AI-powered innovation for intelligent market analysis.
+            © 2025 Market Canvas AI. Built with AI-powered innovation for intelligent market analysis.
           </p>
         </div>
       </div>
