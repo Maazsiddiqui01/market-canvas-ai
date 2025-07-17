@@ -18,10 +18,10 @@ const LoadingScreen = () => {
         {/* Loading Text */}
         <div className="space-y-4">
           <h2 className="text-3xl font-bold text-foreground animate-fade-in">
-            PSX Market Dashboard
+            Market Pulse AI
           </h2>
           <p className="text-muted-foreground animate-fade-in" style={{ animationDelay: '500ms' }}>
-            Loading market data and analysis...
+            Initializing AI-powered market analysis...
           </p>
         </div>
 

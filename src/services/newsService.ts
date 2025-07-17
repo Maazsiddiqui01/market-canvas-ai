@@ -30,7 +30,7 @@ const getSourceTag = (url: string, source: string): string => {
   if (url.includes('pakobserver.net') || source.toLowerCase().includes('observer')) {
     return 'Pakistan Observer';
   }
-  return source.split(' ')[0] || 'PSX News'; // Default to first word of source
+  return source.split(' ')[0] || 'Market News'; // Default to first word of source
 };
 
 // Fetch real news from webhook
@@ -55,11 +55,11 @@ export const fetchPSXNews = async (): Promise<NewsItem[]> => {
     // Parse and format the response to match NewsItem interface
     // Return all news items for search and filtering
     const formattedNews: NewsItem[] = newsData.map((item: any) => ({
-      title: item.title || item.headline || 'News Update',
+      title: item.title || item.headline || 'Market Update',
       time: item.time || item.publishedAt || 'Recently',
-      source: item.source || item.publisher || 'PSX News',
+      source: item.source || item.publisher || 'Market News',
       url: item.url || item.link || '#',
-      sourceTag: getSourceTag(item.url || item.link || '#', item.source || item.publisher || 'PSX News'),
+      sourceTag: getSourceTag(item.url || item.link || '#', item.source || item.publisher || 'Market News'),
       description: item.content || item.title || item.headline || 'News Update'
     }));
 

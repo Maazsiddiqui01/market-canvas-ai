@@ -32,12 +32,12 @@ const HeroSection = ({ onTickerChange }: HeroSectionProps) => {
             </div>
             <div className="text-left">
               <h1 className="text-4xl md:text-5xl font-bold text-foreground transition-all duration-300 hover:text-primary">
-                PSX Analytics 
-                <span className="text-primary animate-pulse"> Pro</span>
+                Market Pulse 
+                <span className="text-primary animate-pulse"> AI</span>
               </h1>
               <div className="flex items-center gap-2 mt-2">
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="text-sm text-muted-foreground">Live Market Data</span>
+                <span className="text-sm text-muted-foreground">AI-Powered Analytics</span>
               </div>
             </div>
           </div>
@@ -45,17 +45,17 @@ const HeroSection = ({ onTickerChange }: HeroSectionProps) => {
           {/* Main Headline with dynamic text effects */}
           <div className="mb-12">
             <h2 className="text-2xl md:text-3xl text-foreground/90 mb-6 leading-relaxed font-light">
-              We provide <span className="text-primary font-semibold bg-primary/10 px-2 py-1 rounded-lg hover:bg-primary/20 transition-colors duration-300">real-time insights</span> for 
-              <br />Pakistan Stock Exchange using <span className="text-primary font-semibold bg-primary/10 px-2 py-1 rounded-lg hover:bg-primary/20 transition-colors duration-300">data-driven</span> analysis
+              We deliver <span className="text-primary font-semibold bg-primary/10 px-2 py-1 rounded-lg hover:bg-primary/20 transition-colors duration-300">AI-powered insights</span> for 
+              <br />intelligent market analysis using <span className="text-primary font-semibold bg-primary/10 px-2 py-1 rounded-lg hover:bg-primary/20 transition-colors duration-300">machine learning</span> algorithms
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto hover:text-foreground/80 transition-colors duration-300">
-              Advanced technical analysis, market trends, and expert recommendations for informed trading decisions
+              Advanced AI-driven technical analysis, predictive market trends, and intelligent recommendations for smarter trading decisions
             </p>
           </div>
 
           {/* How to Use Section with hover effects */}
           <div className="mb-12">
-            <h3 className="text-2xl font-semibold text-foreground mb-8">How to Use PSX Analytics Pro</h3>
+            <h3 className="text-2xl font-semibold text-foreground mb-8">How to Use Market Pulse AI</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* Step 1 */}
               <div className="text-center group hover:scale-105 transition-all duration-300 cursor-pointer">
@@ -67,7 +67,7 @@ const HeroSection = ({ onTickerChange }: HeroSectionProps) => {
                 </div>
                 <h4 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">Search & Select Stock</h4>
                 <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
-                  Enter stock symbol to get detailed analysis of any PSX listed company
+                  Enter stock symbol to get AI-powered analysis of any listed company
                 </p>
               </div>
 
@@ -79,9 +79,9 @@ const HeroSection = ({ onTickerChange }: HeroSectionProps) => {
                   </div>
                   <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full font-bold">2</div>
                 </div>
-                <h4 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">Refresh & Analyze</h4>
+                <h4 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">AI Analysis & Insights</h4>
                 <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
-                  View market heatmap, technical analysis & fundamentals
+                  View AI-generated market insights, technical patterns & smart recommendations
                 </p>
               </div>
 
@@ -93,9 +93,9 @@ const HeroSection = ({ onTickerChange }: HeroSectionProps) => {
                   </div>
                   <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full font-bold">3</div>
                 </div>
-                <h4 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">News & Rankings</h4>
+                <h4 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">Smart News & Rankings</h4>
                 <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
-                  Browse latest news and view top gainers/losers
+                  Browse AI-curated news and intelligent market rankings
                 </p>
               </div>
             </div>
@@ -126,7 +126,7 @@ const HeroSection = ({ onTickerChange }: HeroSectionProps) => {
               <div className="bg-primary/10 p-3 rounded-full group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110 group-hover:rotate-6">
                 <Target className="h-6 w-6 text-primary transition-transform duration-300 group-hover:scale-110" />
               </div>
-              <span className="text-sm text-muted-foreground group-hover:text-primary transition-colors duration-300">Expert Insights</span>
+              <span className="text-sm text-muted-foreground group-hover:text-primary transition-colors duration-300">AI Insights</span>
             </div>
           </div>
         </div>

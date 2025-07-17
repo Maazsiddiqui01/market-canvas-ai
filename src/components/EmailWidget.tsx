@@ -6,7 +6,7 @@ const EmailWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleEmailClick = () => {
-    window.location.href = 'mailto:maaz01888@gmail.com?subject=PSX Analytics Pro Inquiry&body=Hi Maaz, I would like to discuss about PSX Analytics Pro.';
+    window.location.href = 'mailto:maaz01888@gmail.com?subject=Market Pulse AI Inquiry&body=Hi Maaz, I would like to discuss about Market Pulse AI.';
   };
 
   return (
@@ -48,7 +48,7 @@ const EmailWidget = () => {
             
             <div className="space-y-3">
               <p className="text-sm text-muted-foreground">
-                Have questions about PSX Analytics Pro or want to collaborate? I'd love to hear from you!
+                Have questions about Market Pulse AI or want to collaborate? I'd love to hear from you!
               </p>
               
               <Button 
