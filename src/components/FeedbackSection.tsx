@@ -33,7 +33,7 @@ const FeedbackSection = () => {
     "Real-time alerts and notifications",
     "Mobile app version",
     "Cryptocurrency analysis",
-    "Options trading insights"
+    "Commodity market analysis"
   ];
 
   const handleSuggestionClick = (suggestion: string) => {
