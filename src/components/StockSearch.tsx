@@ -470,9 +470,22 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
             </div>
           </div>
           
-          <p className="text-sm text-muted-foreground mt-2">
-            Enter the stock (MEBL, ILP etc) or KSE100 for market data
-          </p>
+          <div className="mt-3 space-y-2">
+            <p className="text-sm text-muted-foreground">
+              Enter the stock (MEBL, ILP etc) or KSE100 for market data
+            </p>
+            <p className="text-xs text-muted-foreground/80">
+              Not finding the ticker you're looking for? 
+              <a 
+                href="https://docs.google.com/spreadsheets/d/17VH0cfws46XC6QSl_9vtFgB-gSQbsw-b/edit?usp=sharing&ouid=113413870420063085394&rtpof=true&sd=true"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:text-primary/80 underline ml-1 font-medium"
+              >
+                Click here to find all stock tickers, names, and sectors
+              </a>
+            </p>
+          </div>
         </CardContent>
       </Card>
 
