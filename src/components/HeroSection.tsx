@@ -45,8 +45,8 @@ const HeroSection = ({ onTickerChange }: HeroSectionProps) => {
           {/* Main Headline with dynamic text effects */}
           <div className="mb-12">
             <h2 className="text-2xl md:text-3xl text-foreground/90 mb-6 leading-relaxed font-light">
-              Real-time market insights powered by <span className="text-primary font-semibold bg-primary/10 px-2 py-1 rounded-lg hover:bg-primary/20 transition-colors duration-300">latest prices</span>, 
-              <br />breaking <span className="text-primary font-semibold bg-primary/10 px-2 py-1 rounded-lg hover:bg-primary/20 transition-colors duration-300">news & AI</span> analysis
+              Get your <span className="text-primary font-semibold bg-primary/10 px-2 py-1 rounded-lg hover:bg-primary/20 transition-colors duration-300">competitive edge</span> with 
+              <br />live prices, breaking <span className="text-primary font-semibold bg-primary/10 px-2 py-1 rounded-lg hover:bg-primary/20 transition-colors duration-300">news & AI intelligence</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto hover:text-foreground/80 transition-colors duration-300">
               Advanced AI-driven technical analysis, predictive market trends, and intelligent recommendations for smarter trading decisions
