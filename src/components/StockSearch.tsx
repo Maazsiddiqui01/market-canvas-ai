@@ -567,27 +567,34 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                       </div>
                     ) : searchQuery.trim() ? (
                       suggestions.length > 0 ? (
-                        suggestions.map((stock, index) => (
-                          <div
-                            key={`suggestion-${stock.ticker}-${index}`}
-                            className="p-3 hover:bg-secondary/50 cursor-pointer border-b border-border/50 last:border-b-0 select-none transition-colors"
-                            onMouseDown={(e) => {
-                              e.preventDefault();
-                              console.log('Selecting stock:', stock.ticker, 'Index:', index);
-                              handleStockSelect(stock);
-                            }}
-                          >
-                            <div className="flex justify-between items-start pointer-events-none">
-                              <div>
-                                <div className="font-semibold text-foreground">{stock.ticker}</div>
-                                <div className="text-sm text-muted-foreground">{stock.name}</div>
-                              </div>
-                              <div className="text-xs text-muted-foreground bg-secondary/30 px-2 py-1 rounded">
-                                {stock.sector}
+                        <>
+                          {/* Results header - not selectable */}
+                          <div className="p-2 bg-secondary/20 border-b border-border text-sm text-muted-foreground font-medium">
+                            {suggestions.length} result{suggestions.length !== 1 ? 's' : ''} found
+                          </div>
+                          {/* Actual stock options */}
+                          {suggestions.map((stock, index) => (
+                            <div
+                              key={`suggestion-${stock.ticker}-${index}`}
+                              className="p-3 hover:bg-secondary/50 cursor-pointer border-b border-border/50 last:border-b-0 select-none transition-colors"
+                              onMouseDown={(e) => {
+                                e.preventDefault();
+                                console.log('Selecting stock:', stock.ticker, 'Index:', index);
+                                handleStockSelect(stock);
+                              }}
+                            >
+                              <div className="flex justify-between items-start pointer-events-none">
+                                <div>
+                                  <div className="font-semibold text-foreground">{stock.ticker}</div>
+                                  <div className="text-sm text-muted-foreground">{stock.name}</div>
+                                </div>
+                                <div className="text-xs text-muted-foreground bg-secondary/30 px-2 py-1 rounded">
+                                  {stock.sector}
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        ))
+                          ))}
+                        </>
                       ) : (
                         <div className="p-3 text-muted-foreground text-center">
                           No stocks found matching "{searchQuery}"
