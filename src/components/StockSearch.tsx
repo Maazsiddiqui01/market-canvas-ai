@@ -534,7 +534,9 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                 
                 {/* Suggestions Dropdown */}
                 {showSuggestions && (searchQuery.trim() || (!searchQuery.trim() && selectedSector)) && (
-                  <div className="absolute top-full left-0 right-0 mt-1 bg-popover border border-border rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-popover border border-border rounded-md shadow-lg z-[9999] max-h-60 overflow-y-auto"
+                    onMouseDown={(e) => e.preventDefault()} // Prevent input blur on click
+                  >
                     {loadingSuggestions ? (
                       <div className="p-3 text-center text-muted-foreground">
                         <div className="flex items-center justify-center gap-2">
