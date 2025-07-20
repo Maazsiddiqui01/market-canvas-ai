@@ -556,18 +556,7 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                 {/* Suggestions Dropdown */}
                 {showSuggestions && (searchQuery.trim() || (!searchQuery.trim() && selectedSector)) && (
                   <div 
-                    data-suggestions-dropdown
                     className="absolute top-full left-0 right-0 mt-1 bg-popover border border-border rounded-md shadow-xl z-[9999] max-h-60 overflow-y-auto"
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                    }}
-                    onWheel={(e) => {
-                      e.stopPropagation();
-                    }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                    }}
                   >
                     {loadingSuggestions ? (
                       <div className="p-3 text-center text-muted-foreground">
@@ -578,30 +567,27 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                       </div>
                     ) : searchQuery.trim() ? (
                       suggestions.length > 0 ? (
-                        <div className="py-1">
-                          {suggestions.map((stock, index) => (
-                            <button
-                              key={`${stock.ticker}-${index}`}
-                              type="button"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                handleStockSelect(stock);
-                              }}
-                              className="w-full p-3 text-left hover:bg-secondary/50 cursor-pointer border-b border-border/50 last:border-b-0 select-none transition-colors"
-                            >
-                              <div className="flex justify-between items-start">
-                                <div>
-                                  <div className="font-semibold text-foreground">{stock.ticker}</div>
-                                  <div className="text-sm text-muted-foreground">{stock.name}</div>
-                                </div>
-                                <div className="text-xs text-muted-foreground bg-secondary/30 px-2 py-1 rounded">
-                                  {stock.sector}
-                                </div>
+                        suggestions.map((stock, index) => (
+                          <div
+                            key={`suggestion-${stock.ticker}-${index}`}
+                            className="p-3 hover:bg-secondary/50 cursor-pointer border-b border-border/50 last:border-b-0 select-none transition-colors"
+                            onMouseDown={(e) => {
+                              e.preventDefault();
+                              console.log('Selecting stock:', stock.ticker, 'Index:', index);
+                              handleStockSelect(stock);
+                            }}
+                          >
+                            <div className="flex justify-between items-start pointer-events-none">
+                              <div>
+                                <div className="font-semibold text-foreground">{stock.ticker}</div>
+                                <div className="text-sm text-muted-foreground">{stock.name}</div>
                               </div>
-                            </button>
-                          ))}
-                        </div>
+                              <div className="text-xs text-muted-foreground bg-secondary/30 px-2 py-1 rounded">
+                                {stock.sector}
+                              </div>
+                            </div>
+                          </div>
+                        ))
                       ) : (
                         <div className="p-3 text-muted-foreground text-center">
                           No stocks found matching "{searchQuery}"
@@ -610,34 +596,31 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                       )
                     ) : (
                       sectorStocks.length > 0 && (
-                        <div className="py-1">
-                          {sectorStocks.map((stock, index) => (
-                            <button
-                              key={`${stock.ticker}-sector-${index}`}
-                              type="button"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                handleStockSelect(stock);
-                              }}
-                              className="w-full p-3 text-left hover:bg-secondary/50 cursor-pointer border-b border-border/50 last:border-b-0 select-none transition-colors"
-                            >
-                               <div className="flex justify-between items-start">
-                                 <div>
-                                   <div className="font-semibold text-foreground">{stock.ticker}</div>
-                                   <div className="text-sm text-muted-foreground">{stock.name}</div>
-                                 </div>
-                                 <div className="text-xs text-muted-foreground bg-secondary/30 px-2 py-1 rounded">
-                                   {stock.sector}
-                                 </div>
-                               </div>
-                             </button>
-                           ))}
-                         </div>
-                       )
-                     )}
-                   </div>
-                 )}
+                        sectorStocks.map((stock, index) => (
+                          <div
+                            key={`sector-${stock.ticker}-${index}`}
+                            className="p-3 hover:bg-secondary/50 cursor-pointer border-b border-border/50 last:border-b-0 select-none transition-colors"
+                            onMouseDown={(e) => {
+                              e.preventDefault();
+                              console.log('Selecting sector stock:', stock.ticker, 'Index:', index);
+                              handleStockSelect(stock);
+                            }}
+                          >
+                            <div className="flex justify-between items-start pointer-events-none">
+                              <div>
+                                <div className="font-semibold text-foreground">{stock.ticker}</div>
+                                <div className="text-sm text-muted-foreground">{stock.name}</div>
+                              </div>
+                              <div className="text-xs text-muted-foreground bg-secondary/30 px-2 py-1 rounded">
+                                {stock.sector}
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      )
+                    )}
+                  </div>
+                )}
               </div>
             </div>
 
