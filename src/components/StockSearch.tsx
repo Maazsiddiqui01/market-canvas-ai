@@ -494,12 +494,12 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                 <Filter className="h-4 w-4" />
                 Filter by Sector (Optional)
               </label>
-              <Select value={selectedSector} onValueChange={setSelectedSector}>
+              <Select value={selectedSector} onValueChange={(value) => setSelectedSector(value === 'all_sectors' ? '' : value)}>
                 <SelectTrigger className="bg-card border-border text-foreground">
                   <SelectValue placeholder="All sectors" />
                 </SelectTrigger>
                 <SelectContent className="bg-popover border-border max-h-60">
-                  <SelectItem value="" className="text-foreground hover:bg-secondary/50">
+                  <SelectItem value="all_sectors" className="text-foreground hover:bg-secondary/50">
                     All Sectors
                   </SelectItem>
                   {SECTORS.map((sector) => (
