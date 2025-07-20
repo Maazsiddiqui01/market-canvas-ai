@@ -594,7 +594,8 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                 {/* Suggestions Dropdown */}
                 {showSuggestions && (searchQuery.trim() || (!searchQuery.trim() && selectedSector)) && (
                   <div 
-                    className="absolute top-full left-0 right-0 mt-1 bg-popover border border-border rounded-md shadow-xl z-[9999] max-h-60 overflow-y-auto"
+                    data-suggestions-dropdown
+                    className="absolute top-full left-0 right-0 mt-1 bg-popover border border-border rounded-md shadow-xl z-[9999] max-h-80 overflow-y-auto"
                   >
                     {loadingSuggestions ? (
                       <div className="p-3 text-center text-muted-foreground">
