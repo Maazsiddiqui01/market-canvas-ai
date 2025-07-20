@@ -1,6 +1,5 @@
-
-import React, { useState, useEffect } from 'react';
-import { Search, TrendingUp, Loader2, RefreshCw, BarChart3, Newspaper, Zap, Database, Brain, Activity } from 'lucide-react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Search, TrendingUp, Loader2, RefreshCw, BarChart3, Newspaper, Zap, Database, Brain, Activity, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -11,23 +10,33 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { SECTORS, STOCKS, searchStocks, getStockByTicker, type Stock } from '@/data/stockData';
 
 interface StockSearchProps {
   onTickerChange?: (ticker: string) => void;
 }
 
 const StockSearch = ({ onTickerChange }: StockSearchProps) => {
-  const [selectedStock, setSelectedStock] = useState('');
-  const [customStock, setCustomStock] = useState('');
+  const [selectedSector, setSelectedSector] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [responseData, setResponseData] = useState<any>(null);
   const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
 
-  const popularStocks = [
-    'KSE100', 'MEBL', 'ILP', 'HBL', 'ENGRO', 'LUCK', 'UBL', 'PSO', 
-    'OGDC', 'PPL', 'MARI', 'SNGP', 'SSGC', 'BAFL', 'DAWH', 'FCCL', 'HUBC'
-  ];
+  // Get filtered suggestions based on search query and selected sector
+  const suggestions = useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    return searchStocks(searchQuery, selectedSector || undefined).slice(0, 10);
+  }, [searchQuery, selectedSector]);
+
+  // Get stocks for selected sector (for dropdown when no search query)
+  const sectorStocks = useMemo(() => {
+    if (!selectedSector) return [];
+    return STOCKS.filter(stock => stock.sector === selectedSector);
+  }, [selectedSector]);
 
   const loadingMessages = [
     { text: "Spinning up your news...", icon: Newspaper },
@@ -51,9 +60,15 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
     return () => clearInterval(interval);
   }, [loading, loadingMessages.length]);
 
+  const handleStockSelect = (stock: Stock) => {
+    setSelectedStock(stock);
+    setSearchQuery(`${stock.ticker} - ${stock.name}`);
+    setShowSuggestions(false);
+  };
+
   const handleSearch = async (isRefresh = false) => {
-    const ticker = selectedStock || customStock;
-    if (!ticker.trim()) {
+    const ticker = selectedStock?.ticker || searchQuery.split(' - ')[0]?.trim();
+    if (!ticker) {
       setError('Please select or enter a stock ticker');
       return;
     }
@@ -311,7 +326,6 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
             </Card>
           )}
 
-
           {/* Market Overview */}
           {sections.marketOverview.length > 0 && (
             <Card className="bg-blue-500/10 border-blue-500/20">
@@ -435,82 +449,162 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
   return (
     <div className="space-y-4">
       <Card className="bg-card border-border">
-        <CardContent className="p-4">
-          <div className="flex flex-col sm:flex-row gap-3">
-            <div className="flex-1">
-              <Select value={selectedStock} onValueChange={(value) => {
-                setSelectedStock(value);
-                setCustomStock('');
-              }}>
+        <CardContent className="p-6">
+          <div className="space-y-4">
+            {/* Sector Filter */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-foreground flex items-center gap-2">
+                <Filter className="h-4 w-4" />
+                Filter by Sector (Optional)
+              </label>
+              <Select value={selectedSector} onValueChange={setSelectedSector}>
                 <SelectTrigger className="bg-card border-border text-foreground">
-                  <SelectValue placeholder="Select a stock ticker" />
+                  <SelectValue placeholder="All sectors" />
                 </SelectTrigger>
-                <SelectContent className="bg-card border-border">
-                  {popularStocks.map((stock) => (
-                    <SelectItem key={stock} value={stock} className="text-foreground hover:bg-secondary">
-                      {stock}
+                <SelectContent className="bg-popover border-border max-h-60">
+                  <SelectItem value="" className="text-foreground hover:bg-secondary/50">
+                    All Sectors
+                  </SelectItem>
+                  {SECTORS.map((sector) => (
+                    <SelectItem key={sector} value={sector} className="text-foreground hover:bg-secondary/50">
+                      {sector}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
-            
-            <div className="flex-1">
-              <Input
-                placeholder="Or enter custom ticker (MEBL, ILP, etc)"
-                value={customStock}
-                onChange={(e) => {
-                  setCustomStock(e.target.value);
-                  setSelectedStock('');
-                }}
-                className="bg-card border-border text-foreground placeholder-muted-foreground"
-              />
+
+            {/* Stock Search */}
+            <div className="space-y-2 relative">
+              <label className="text-sm font-medium text-foreground flex items-center gap-2">
+                <Search className="h-4 w-4" />
+                Search Stock
+              </label>
+              <div className="relative">
+                <Input
+                  type="text"
+                  placeholder={selectedSector ? `Search stocks in ${selectedSector}...` : "Search by ticker or company name..."}
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setShowSuggestions(true);
+                    setSelectedStock(null);
+                  }}
+                  onFocus={() => setShowSuggestions(true)}
+                  className="bg-card border-border text-foreground placeholder:text-muted-foreground"
+                />
+                
+                {/* Suggestions Dropdown */}
+                {showSuggestions && (searchQuery.trim() || (!searchQuery.trim() && selectedSector)) && (
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-popover border border-border rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
+                    {searchQuery.trim() ? (
+                      suggestions.length > 0 ? (
+                        suggestions.map((stock) => (
+                          <div
+                            key={stock.ticker}
+                            onClick={() => handleStockSelect(stock)}
+                            className="p-3 hover:bg-secondary/50 cursor-pointer border-b border-border/50 last:border-b-0"
+                          >
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <div className="font-semibold text-foreground">{stock.ticker}</div>
+                                <div className="text-sm text-muted-foreground">{stock.name}</div>
+                              </div>
+                              <div className="text-xs text-muted-foreground bg-secondary/30 px-2 py-1 rounded">
+                                {stock.sector}
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="p-3 text-muted-foreground text-center">
+                          No stocks found matching "{searchQuery}"
+                          {selectedSector && ` in ${selectedSector}`}
+                        </div>
+                      )
+                    ) : (
+                      sectorStocks.length > 0 && (
+                        sectorStocks.map((stock) => (
+                          <div
+                            key={stock.ticker}
+                            onClick={() => handleStockSelect(stock)}
+                            className="p-3 hover:bg-secondary/50 cursor-pointer border-b border-border/50 last:border-b-0"
+                          >
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <div className="font-semibold text-foreground">{stock.ticker}</div>
+                                <div className="text-sm text-muted-foreground">{stock.name}</div>
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      )
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
+
+            {/* Selected Stock Display */}
+            {selectedStock && (
+              <div className="bg-primary/10 border border-primary/20 rounded-lg p-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-semibold text-foreground">{selectedStock.ticker}</div>
+                    <div className="text-sm text-muted-foreground">{selectedStock.name}</div>
+                    <div className="text-xs text-primary">{selectedStock.sector}</div>
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    Selected
+                  </div>
+                </div>
+              </div>
+            )}
             
-            <div className="flex gap-2">
+            {/* Search Button */}
+            <div className="flex justify-center">
               <Button 
-                onClick={() => handleSearch()}
-                disabled={loading}
-                variant="default"
+                onClick={() => handleSearch(false)} 
+                disabled={loading || (!selectedStock && !searchQuery.trim())}
+                size="lg"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground px-8"
               >
                 {loading ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>Analyzing...</span>
+                  </div>
                 ) : (
-                  <Search className="h-4 w-4" />
+                  <div className="flex items-center gap-2">
+                    <TrendingUp className="h-4 w-4" />
+                    <span>Get Analysis</span>
+                  </div>
                 )}
               </Button>
               
               {responseData && (
                 <Button 
-                  onClick={() => handleSearch(true)}
+                  onClick={() => handleSearch(true)} 
                   disabled={loading}
-                  variant="secondary"
-                  size="icon"
+                  variant="outline"
+                  size="lg"
+                  className="ml-2 border-border hover:bg-secondary/50"
                 >
                   <RefreshCw className="h-4 w-4" />
                 </Button>
               )}
             </div>
           </div>
-          
-          <div className="mt-3 space-y-2">
-            <p className="text-sm text-muted-foreground">
-              Enter the stock (MEBL, ILP etc) or KSE100 for market data
-            </p>
-            <p className="text-xs text-muted-foreground/80">
-              Not finding the ticker you're looking for? 
-              <a 
-                href="https://docs.google.com/spreadsheets/d/17VH0cfws46XC6QSl_9vtFgB-gSQbsw-b/edit?usp=sharing&ouid=113413870420063085394&rtpof=true&sd=true"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:text-primary/80 underline ml-1 font-medium"
-              >
-                Click here to find all stock tickers, names, and sectors
-              </a>
-            </p>
-          </div>
         </CardContent>
       </Card>
+
+      {/* Click outside to close suggestions */}
+      {showSuggestions && (
+        <div 
+          className="fixed inset-0 z-40" 
+          onClick={() => setShowSuggestions(false)}
+        />
+      )}
 
       {/* Loading State */}
       {loading && (
@@ -583,5 +677,3 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
 };
 
 export default StockSearch;
-
-// Note: StockSearch component is now 290 lines long. Consider refactoring into smaller components.
