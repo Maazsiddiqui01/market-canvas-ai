@@ -99,12 +99,13 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
 
   const handleStockSelect = (stock: Stock) => {
     setSelectedStock(stock);
-    setSearchQuery(`${stock.ticker} - ${stock.name}`);
+    setSearchQuery(stock.ticker); // Only show the ticker symbol
     setShowSuggestions(false);
   };
 
   const handleSearch = async (isRefresh = false) => {
-    const ticker = selectedStock?.ticker || searchQuery.split(' - ')[0]?.trim();
+    // Always use the ticker symbol, whether from selected stock or manual input
+    const ticker = selectedStock?.ticker || searchQuery.trim();
     if (!ticker) {
       setError('Please select or enter a stock ticker');
       return;
@@ -515,12 +516,12 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
             <div className="space-y-2 relative">
               <label className="text-sm font-medium text-foreground flex items-center gap-2">
                 <Search className="h-4 w-4" />
-                Search Stock
+                Search by Ticker or Company Name
               </label>
               <div className="relative">
                 <Input
                   type="text"
-                  placeholder={selectedSector ? `Search stocks in ${selectedSector}...` : "Search by ticker or company name..."}
+                  placeholder={selectedSector ? `Enter stock ticker (e.g., MEBL, HBL, ENGRO)...` : "Enter stock ticker (e.g., MEBL, HBL, ENGRO)..."}
                   value={searchQuery}
                   onChange={(e) => {
                     setSearchQuery(e.target.value);
@@ -594,12 +595,12 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
               <div className="bg-primary/10 border border-primary/20 rounded-lg p-3">
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-semibold text-foreground">{selectedStock.ticker}</div>
+                    <div className="font-bold text-foreground text-lg">{selectedStock.ticker}</div>
                     <div className="text-sm text-muted-foreground">{selectedStock.name}</div>
                     <div className="text-xs text-primary">{selectedStock.sector}</div>
                   </div>
                   <div className="text-sm text-muted-foreground">
-                    Selected
+                    ✓ Ready for analysis
                   </div>
                 </div>
               </div>
