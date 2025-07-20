@@ -31,6 +31,19 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
   const [sectorStocks, setSectorStocks] = useState<Stock[]>([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
 
+  // Handle clicking outside to close suggestions
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (showSuggestions && !target.closest('[data-suggestions-dropdown]') && !target.closest('input')) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showSuggestions]);
+
   // Fetch suggestions when search query or sector changes
   useEffect(() => {
     const fetchSuggestions = async () => {
@@ -523,19 +536,38 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                   type="text"
                   placeholder={selectedSector ? `Enter stock ticker (e.g., MEBL, HBL, ENGRO)...` : "Enter stock ticker (e.g., MEBL, HBL, ENGRO)..."}
                   value={searchQuery}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
-                    setShowSuggestions(true);
-                    setSelectedStock(null);
-                  }}
-                  onFocus={() => setShowSuggestions(true)}
-                  className="bg-card border-border text-foreground placeholder:text-muted-foreground"
+                   onChange={(e) => {
+                     setSearchQuery(e.target.value);
+                     setShowSuggestions(true);
+                     setSelectedStock(null);
+                   }}
+                   onFocus={() => setShowSuggestions(true)}
+                   onBlur={(e) => {
+                     // Only close if not clicking within dropdown
+                     setTimeout(() => {
+                       if (!e.relatedTarget?.closest('[data-suggestions-dropdown]')) {
+                         setShowSuggestions(false);
+                       }
+                     }, 150);
+                   }}
+                   className="bg-card border-border text-foreground placeholder:text-muted-foreground"
                 />
                 
                 {/* Suggestions Dropdown */}
                 {showSuggestions && (searchQuery.trim() || (!searchQuery.trim() && selectedSector)) && (
-                  <div className="absolute top-full left-0 right-0 mt-1 bg-popover border border-border rounded-md shadow-lg z-[9999] max-h-60 overflow-y-auto"
-                    onMouseDown={(e) => e.preventDefault()} // Prevent input blur on click
+                  <div 
+                    data-suggestions-dropdown
+                    className="absolute top-full left-0 right-0 mt-1 bg-popover border border-border rounded-md shadow-xl z-[9999] max-h-60 overflow-y-auto"
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }}
+                    onWheel={(e) => {
+                      e.stopPropagation();
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
                   >
                     {loadingSuggestions ? (
                       <div className="p-3 text-center text-muted-foreground">
@@ -546,11 +578,16 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                       </div>
                     ) : searchQuery.trim() ? (
                       suggestions.length > 0 ? (
-                        suggestions.map((stock) => (
+                        suggestions.map((stock, index) => (
                           <div
-                            key={stock.ticker}
-                            onClick={() => handleStockSelect(stock)}
-                            className="p-3 hover:bg-secondary/50 cursor-pointer border-b border-border/50 last:border-b-0"
+                            key={`${stock.ticker}-${index}`}
+                            onMouseDown={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleStockSelect(stock);
+                            }}
+                            className="p-3 hover:bg-secondary/50 cursor-pointer border-b border-border/50 last:border-b-0 select-none"
+                            style={{ minHeight: '60px' }}
                           >
                             <div className="flex justify-between items-start">
                               <div>
@@ -571,11 +608,16 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                       )
                     ) : (
                       sectorStocks.length > 0 && (
-                        sectorStocks.map((stock) => (
+                        sectorStocks.map((stock, index) => (
                           <div
-                            key={stock.ticker}
-                            onClick={() => handleStockSelect(stock)}
-                            className="p-3 hover:bg-secondary/50 cursor-pointer border-b border-border/50 last:border-b-0"
+                            key={`${stock.ticker}-sector-${index}`}
+                            onMouseDown={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleStockSelect(stock);
+                            }}
+                            className="p-3 hover:bg-secondary/50 cursor-pointer border-b border-border/50 last:border-b-0 select-none"
+                            style={{ minHeight: '60px' }}
                           >
                             <div className="flex justify-between items-start">
                               <div>
