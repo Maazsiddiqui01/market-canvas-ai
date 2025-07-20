@@ -101,7 +101,7 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
   };
 
   const parseHtmlContent = (htmlString: string) => {
-    const content = htmlString.replace(/<br>/g, '\n').replace(/<br\/>/g, '\n');
+    const content = htmlString.replace(/<br\s*\/?>/g, '\n').replace(/<\/?strong>/g, '').replace(/<\/?br>/g, '\n');
     const sections = {
       stockPrices: [],
       technicalAnalysis: [],
@@ -116,47 +116,68 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
     // Split by main sections A, B, C, D, E, F
     const mainSections = content.split(/[A-F]\.\s*/).filter(section => section.trim());
 
-    mainSections.forEach((section) => {
+    mainSections.forEach((section, index) => {
       const sectionContent = section.trim();
       
       // A. Market Snapshot - Stock Prices
-      if (sectionContent.includes('Market Snapshot') || sectionContent.includes('📈')) {
+      if (index === 0 || sectionContent.includes('Market Snapshot') || sectionContent.includes('📈')) {
         const lines = sectionContent.split('\n').filter(line => line.trim());
         lines.forEach(line => {
-          if (line.includes('KSE-100') || line.includes('📈') || line.includes('🏦') || line.includes(':')) {
-            const cleanLine = line.replace(/<\/?strong>/g, '').replace(/^-\s*/, '').trim();
-            if (cleanLine && cleanLine.length > 5) {
-              sections.stockPrices.push(cleanLine);
-            }
+          const cleanLine = line.replace(/^-\s*/, '').trim();
+          if (cleanLine && (cleanLine.includes('KSE-100') || cleanLine.includes('🏭') || cleanLine.includes(':'))) {
+            sections.stockPrices.push(cleanLine);
           }
         });
       }
       
       // B. News Insights
-      else if (sectionContent.includes('News Insights') || sectionContent.includes('🔍')) {
+      else if (index === 1 || sectionContent.includes('News Insights') || sectionContent.includes('🔍')) {
         const lines = sectionContent.split('\n').filter(line => line.trim());
+        let currentCategory = '';
+        
         lines.forEach(line => {
-          const cleanLine = line.replace(/<\/?strong>/g, '').replace(/^-\s*/, '').trim();
+          const cleanLine = line.replace(/^-\s*/, '').trim();
+          
           if (cleanLine.includes('Market Overview:')) {
+            currentCategory = 'overview';
             const overview = cleanLine.replace('Market Overview:', '').trim();
             if (overview) sections.marketOverview.push(overview);
           }
           else if (cleanLine.includes('Industry Highlights')) {
-            const industry = cleanLine.replace(/Industry Highlights[^:]*:/, '').trim();
-            if (industry) sections.industryHighlights.push(industry);
+            currentCategory = 'industry';
           }
-          else if (cleanLine.includes('Stock-Specific News')) {
-            const stockNews = cleanLine.replace(/Stock-Specific News[^:]*:/, '').trim();
-            if (stockNews) sections.stockSpecific.push(stockNews);
+          else if (cleanLine.includes('Stock-Specific Mentions')) {
+            currentCategory = 'specific';
+          }
+          else if (cleanLine.startsWith('-') || cleanLine.startsWith('•')) {
+            const bulletContent = cleanLine.replace(/^[-•]\s*/, '').trim();
+            if (bulletContent && bulletContent.length > 10) {
+              if (currentCategory === 'industry') {
+                sections.industryHighlights.push(bulletContent);
+              } else if (currentCategory === 'specific') {
+                sections.stockSpecific.push(bulletContent);
+              } else if (currentCategory === 'overview') {
+                sections.marketOverview.push(bulletContent);
+              }
+            }
+          }
+          else if (cleanLine.length > 20 && !cleanLine.includes('News Insights')) {
+            if (currentCategory === 'overview') {
+              sections.marketOverview.push(cleanLine);
+            } else if (currentCategory === 'industry') {
+              sections.industryHighlights.push(cleanLine);
+            } else if (currentCategory === 'specific') {
+              sections.stockSpecific.push(cleanLine);
+            }
           }
         });
       }
       
       // C. Technical Analysis
-      else if (sectionContent.includes('Technical Analysis') || sectionContent.includes('📊')) {
+      else if (index === 2 || sectionContent.includes('Technical Analysis') || sectionContent.includes('📊')) {
         const lines = sectionContent.split('\n').filter(line => line.trim());
         lines.forEach(line => {
-          const cleanLine = line.replace(/<\/?strong>/g, '').replace(/^-\s*/, '').trim();
+          const cleanLine = line.replace(/^-\s*/, '').trim();
           if (cleanLine && !cleanLine.includes('Technical Analysis')) {
             if (cleanLine.includes('Signal:')) {
               const signal = cleanLine.replace('Signal:', '').trim();
@@ -169,10 +190,10 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
       }
       
       // D. Fundamental Analysis
-      else if (sectionContent.includes('Fundamental Analysis') || sectionContent.includes('💡')) {
+      else if (index === 3 || sectionContent.includes('Fundamental Analysis') || sectionContent.includes('💡')) {
         const lines = sectionContent.split('\n').filter(line => line.trim());
         lines.forEach(line => {
-          const cleanLine = line.replace(/<\/?strong>/g, '').replace(/^-\s*/, '').trim();
+          const cleanLine = line.replace(/^-\s*/, '').trim();
           if (cleanLine && !cleanLine.includes('Fundamental Analysis') && cleanLine.length > 10) {
             sections.fundamentalAnalysis.push(cleanLine);
           }
@@ -180,10 +201,10 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
       }
       
       // E. Recommendation
-      else if (sectionContent.includes('Recommendation') || sectionContent.includes('✅')) {
+      else if (index === 4 || sectionContent.includes('Recommendation') || sectionContent.includes('✅')) {
         const lines = sectionContent.split('\n').filter(line => line.trim());
         lines.forEach(line => {
-          const cleanLine = line.replace(/<\/?strong>/g, '').replace(/^-\s*/, '').trim();
+          const cleanLine = line.replace(/^-\s*/, '').trim();
           if (cleanLine && !cleanLine.includes('Recommendation') && cleanLine.length > 10) {
             sections.expertRecommendation.push(cleanLine);
           }
@@ -191,14 +212,14 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
       }
       
       // F. Relevant Links
-      else if (sectionContent.includes('Relevant Links') || sectionContent.includes('🔗')) {
+      else if (index === 5 || sectionContent.includes('Relevant Links') || sectionContent.includes('🔗')) {
         const links = sectionContent.match(/<a href="([^"]+)">([^<]+)<\/a>/g);
         if (links) {
           links.forEach(link => {
             const hrefMatch = link.match(/href="([^"]+)"/);
             const textMatch = link.match(/>([^<]+)</);
             if (hrefMatch && textMatch) {
-              sections.newsLinks.push(`${textMatch[1]}: ${hrefMatch[1]}`);
+              sections.newsLinks.push({ title: textMatch[1], url: hrefMatch[1] });
             }
           });
         }
@@ -370,24 +391,26 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                 <h4 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
                   📰 Relevant News Links
                 </h4>
-                <div className="space-y-3">
-                  {sections.newsLinks.map((link, index) => {
-                    const parts = link.split(': ');
-                    const title = parts[0];
-                    const url = parts[1];
-                    return (
-                      <div key={index} className="border-l-2 border-cyan-500/30 pl-3">
-                        <a 
-                          href={url} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="text-cyan-400 hover:text-cyan-300 underline font-medium"
-                        >
-                          {title}
-                        </a>
-                      </div>
-                    );
-                  })}
+                 <div className="space-y-3">
+                   {sections.newsLinks.map((link, index) => {
+                     // Handle both old string format and new object format
+                     const isObject = typeof link === 'object' && link.title && link.url;
+                     const title = isObject ? link.title : (typeof link === 'string' ? link.split(': ')[0] : '');
+                     const url = isObject ? link.url : (typeof link === 'string' ? link.split(': ')[1] : '');
+                     
+                     return (
+                       <div key={index} className="border-l-2 border-cyan-500/30 pl-3">
+                         <a 
+                           href={url} 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           className="text-cyan-400 hover:text-cyan-300 underline font-medium"
+                         >
+                           {title}
+                         </a>
+                       </div>
+                     );
+                   })}
                 </div>
               </CardContent>
             </Card>
