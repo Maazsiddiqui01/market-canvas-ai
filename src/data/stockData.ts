@@ -1,5 +1,4 @@
-// Stock data organized by sectors
-// You can replace this with your actual Excel data
+import { supabase } from '@/integrations/supabase/client';
 
 export interface Stock {
   ticker: string;
@@ -46,102 +45,126 @@ export const SECTORS = [
   'WOOLLEN'
 ];
 
-// Sample stock data - replace with your actual data from Excel
-export const STOCKS: Stock[] = [
-  // COMMERCIAL BANKS
-  { ticker: 'HBL', name: 'Habib Bank Limited', sector: 'COMMERCIAL BANKS' },
-  { ticker: 'UBL', name: 'United Bank Limited', sector: 'COMMERCIAL BANKS' },
-  { ticker: 'MEBL', name: 'Muslim Commercial Bank Limited', sector: 'COMMERCIAL BANKS' },
-  { ticker: 'NBP', name: 'National Bank of Pakistan', sector: 'COMMERCIAL BANKS' },
-  { ticker: 'ABL', name: 'Allied Bank Limited', sector: 'COMMERCIAL BANKS' },
-  { ticker: 'BAFL', name: 'Bank Alfalah Limited', sector: 'COMMERCIAL BANKS' },
-  
-  // FERTILIZER
-  { ticker: 'ENGRO', name: 'Engro Corporation Limited', sector: 'FERTILIZER' },
-  { ticker: 'FFC', name: 'Fauji Fertilizer Company Limited', sector: 'FERTILIZER' },
-  { ticker: 'FFBL', name: 'Fauji Fertilizer Bin Qasim Limited', sector: 'FERTILIZER' },
-  
-  // CEMENT
-  { ticker: 'LUCK', name: 'Lucky Cement Limited', sector: 'CEMENT' },
-  { ticker: 'DGKC', name: 'D. G. Khan Cement Company Limited', sector: 'CEMENT' },
-  { ticker: 'MLCF', name: 'Maple Leaf Cement Factory Limited', sector: 'CEMENT' },
-  
-  // OIL & GAS MARKETING COMPANIES
-  { ticker: 'PSO', name: 'Pakistan State Oil Company Limited', sector: 'OIL & GAS MARKETING COMPANIES' },
-  { ticker: 'HASCOL', name: 'Hascol Petroleum Limited', sector: 'OIL & GAS MARKETING COMPANIES' },
-  { ticker: 'SHEL', name: 'Shell Pakistan Limited', sector: 'OIL & GAS MARKETING COMPANIES' },
-  
-  // OIL & GAS EXPLORATION COMPANIES
-  { ticker: 'OGDC', name: 'Oil and Gas Development Company Limited', sector: 'OIL & GAS EXPLORATION COMPANIES' },
-  { ticker: 'PPL', name: 'Pakistan Petroleum Limited', sector: 'OIL & GAS EXPLORATION COMPANIES' },
-  { ticker: 'MARI', name: 'Mari Petroleum Company Limited', sector: 'OIL & GAS EXPLORATION COMPANIES' },
-  
-  // POWER GENERATION & DISTRIBUTION
-  { ticker: 'HUBC', name: 'Hub Power Company Limited', sector: 'POWER GENERATION & DISTRIBUTION' },
-  { ticker: 'KAPCO', name: 'Kot Addu Power Company Limited', sector: 'POWER GENERATION & DISTRIBUTION' },
-  { ticker: 'SNGP', name: 'Sui Northern Gas Pipelines Limited', sector: 'POWER GENERATION & DISTRIBUTION' },
-  { ticker: 'SSGC', name: 'Sui Southern Gas Company Limited', sector: 'POWER GENERATION & DISTRIBUTION' },
-  
-  // FOOD & PERSONAL CARE PRODUCTS
-  { ticker: 'NESTLE', name: 'Nestlé Pakistan Limited', sector: 'FOOD & PERSONAL CARE PRODUCTS' },
-  { ticker: 'UFL', name: 'Unity Foods Limited', sector: 'FOOD & PERSONAL CARE PRODUCTS' },
-  { ticker: 'COLG', name: 'Colgate Palmolive (Pakistan) Limited', sector: 'FOOD & PERSONAL CARE PRODUCTS' },
-  
-  // TECHNOLOGY & COMMUNICATION
-  { ticker: 'TRG', name: 'The Resource Group Limited', sector: 'TECHNOLOGY & COMMUNICATION' },
-  { ticker: 'PTCL', name: 'Pakistan Telecommunication Company Limited', sector: 'TECHNOLOGY & COMMUNICATION' },
-  { ticker: 'NETSOL', name: 'NetSol Technologies Limited', sector: 'TECHNOLOGY & COMMUNICATION' },
-  
-  // AUTOMOBILE ASSEMBLER
-  { ticker: 'INDU', name: 'Indus Motor Company Limited', sector: 'AUTOMOBILE ASSEMBLER' },
-  { ticker: 'PSMC', name: 'Pak Suzuki Motor Company Limited', sector: 'AUTOMOBILE ASSEMBLER' },
-  { ticker: 'HCAR', name: 'Honda Atlas Cars (Pakistan) Limited', sector: 'AUTOMOBILE ASSEMBLER' },
-  
-  // TEXTILE COMPOSITE
-  { ticker: 'GADT', name: 'Gul Ahmed Textile Mills Limited', sector: 'TEXTILE COMPOSITE' },
-  { ticker: 'KTML', name: 'Kohinoor Textile Mills Limited', sector: 'TEXTILE COMPOSITE' },
-  { ticker: 'DAWH', name: 'D.A.W.H. Textile Mills Limited', sector: 'TEXTILE COMPOSITE' },
-  
-  // PHARMACEUTICALS
-  { ticker: 'SEARL', name: 'The Searle Company Limited', sector: 'PHARMACEUTICALS' },
-  { ticker: 'GLAXO', name: 'GlaxoSmithKline Pakistan Limited', sector: 'PHARMACEUTICALS' },
-  { ticker: 'ABBOTT', name: 'Abbott Laboratories (Pakistan) Limited', sector: 'PHARMACEUTICALS' },
-  
-  // CHEMICAL
-  { ticker: 'ICI', name: 'ICI Pakistan Limited', sector: 'CHEMICAL' },
-  { ticker: 'LOTTE', name: 'Lotte Chemical Pakistan Limited', sector: 'CHEMICAL' },
-  { ticker: 'BIPL', name: 'Berger Paints Pakistan Limited', sector: 'CHEMICAL' },
-  
-  // Add KSE100 as miscellaneous for index
-  { ticker: 'KSE100', name: 'KSE-100 Index', sector: 'MISCELLANEOUS' },
-  
-  // INSURANCE
-  { ticker: 'ADAMJEE', name: 'Adamjee Insurance Company Limited', sector: 'INSURANCE' },
-  { ticker: 'EFOODS', name: 'EFU Life Assurance Limited', sector: 'INSURANCE' },
-  { ticker: 'ILP', name: 'IGI Life Insurance Limited', sector: 'INSURANCE' },
-];
+// Cache for stocks data to avoid repeated database calls
+let stocksCache: Stock[] | null = null;
+
+// Function to fetch all stocks from database
+export const getAllStocks = async (): Promise<Stock[]> => {
+  if (stocksCache) {
+    return stocksCache;
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('stocks')
+      .select('symbol, name, sector')
+      .order('symbol');
+
+    if (error) {
+      console.error('Error fetching stocks:', error);
+      return [];
+    }
+
+    // Transform data to match our interface
+    stocksCache = data.map(stock => ({
+      ticker: stock.symbol,
+      name: stock.name,
+      sector: stock.sector
+    }));
+
+    return stocksCache;
+  } catch (error) {
+    console.error('Error fetching stocks:', error);
+    return [];
+  }
+};
 
 // Utility functions
-export const getStocksBySector = (sector: string): Stock[] => {
-  return STOCKS.filter(stock => stock.sector === sector);
+export const getStocksBySector = async (sector: string): Promise<Stock[]> => {
+  try {
+    const { data, error } = await supabase
+      .from('stocks')
+      .select('symbol, name, sector')
+      .eq('sector', sector)
+      .order('symbol');
+
+    if (error) {
+      console.error('Error fetching stocks by sector:', error);
+      return [];
+    }
+
+    return data.map(stock => ({
+      ticker: stock.symbol,
+      name: stock.name,
+      sector: stock.sector
+    }));
+  } catch (error) {
+    console.error('Error fetching stocks by sector:', error);
+    return [];
+  }
 };
 
-export const searchStocks = (query: string, selectedSector?: string): Stock[] => {
-  const searchQuery = query.toLowerCase();
-  let filteredStocks = selectedSector 
-    ? STOCKS.filter(stock => stock.sector === selectedSector)
-    : STOCKS;
-  
-  return filteredStocks.filter(stock => 
-    stock.ticker.toLowerCase().includes(searchQuery) ||
-    stock.name.toLowerCase().includes(searchQuery)
-  );
+export const searchStocks = async (query: string, selectedSector?: string): Promise<Stock[]> => {
+  try {
+    let supabaseQuery = supabase
+      .from('stocks')
+      .select('symbol, name, sector');
+
+    // Add sector filter if provided
+    if (selectedSector) {
+      supabaseQuery = supabaseQuery.eq('sector', selectedSector);
+    }
+
+    // Add text search
+    supabaseQuery = supabaseQuery.or(
+      `symbol.ilike.%${query}%,name.ilike.%${query}%`
+    );
+
+    supabaseQuery = supabaseQuery.order('symbol').limit(20);
+
+    const { data, error } = await supabaseQuery;
+
+    if (error) {
+      console.error('Error searching stocks:', error);
+      return [];
+    }
+
+    return data.map(stock => ({
+      ticker: stock.symbol,
+      name: stock.name,
+      sector: stock.sector
+    }));
+  } catch (error) {
+    console.error('Error searching stocks:', error);
+    return [];
+  }
 };
 
-export const getAllTickers = (): string[] => {
-  return STOCKS.map(stock => stock.ticker);
+export const getAllTickers = async (): Promise<string[]> => {
+  const stocks = await getAllStocks();
+  return stocks.map(stock => stock.ticker);
 };
 
-export const getStockByTicker = (ticker: string): Stock | undefined => {
-  return STOCKS.find(stock => stock.ticker.toLowerCase() === ticker.toLowerCase());
+export const getStockByTicker = async (ticker: string): Promise<Stock | undefined> => {
+  try {
+    const { data, error } = await supabase
+      .from('stocks')
+      .select('symbol, name, sector')
+      .eq('symbol', ticker.toUpperCase())
+      .single();
+
+    if (error || !data) {
+      console.error('Error fetching stock by ticker:', error);
+      return undefined;
+    }
+
+    return {
+      ticker: data.symbol,
+      name: data.name,
+      sector: data.sector
+    };
+  } catch (error) {
+    console.error('Error fetching stock by ticker:', error);
+    return undefined;
+  }
 };

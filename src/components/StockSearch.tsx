@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { SECTORS, STOCKS, searchStocks, getStockByTicker, type Stock } from '@/data/stockData';
+import { SECTORS, searchStocks, getStocksBySector, type Stock } from '@/data/stockData';
 
 interface StockSearchProps {
   onTickerChange?: (ticker: string) => void;
@@ -27,15 +27,52 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
   const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
 
   // Get filtered suggestions based on search query and selected sector
-  const suggestions = useMemo(() => {
-    if (!searchQuery.trim()) return [];
-    return searchStocks(searchQuery, selectedSector || undefined).slice(0, 10);
+  const [suggestions, setSuggestions] = useState<Stock[]>([]);
+  const [sectorStocks, setSectorStocks] = useState<Stock[]>([]);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+
+  // Fetch suggestions when search query or sector changes
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (!searchQuery.trim()) {
+        setSuggestions([]);
+        return;
+      }
+      
+      setLoadingSuggestions(true);
+      try {
+        const results = await searchStocks(searchQuery, selectedSector || undefined);
+        setSuggestions(results.slice(0, 10));
+      } catch (error) {
+        console.error('Error fetching suggestions:', error);
+        setSuggestions([]);
+      } finally {
+        setLoadingSuggestions(false);
+      }
+    };
+
+    const timeoutId = setTimeout(fetchSuggestions, 300); // Debounce
+    return () => clearTimeout(timeoutId);
   }, [searchQuery, selectedSector]);
 
-  // Get stocks for selected sector (for dropdown when no search query)
-  const sectorStocks = useMemo(() => {
-    if (!selectedSector) return [];
-    return STOCKS.filter(stock => stock.sector === selectedSector);
+  // Fetch stocks for selected sector
+  useEffect(() => {
+    const fetchSectorStocks = async () => {
+      if (!selectedSector) {
+        setSectorStocks([]);
+        return;
+      }
+      
+      try {
+        const results = await getStocksBySector(selectedSector);
+        setSectorStocks(results);
+      } catch (error) {
+        console.error('Error fetching sector stocks:', error);
+        setSectorStocks([]);
+      }
+    };
+
+    fetchSectorStocks();
   }, [selectedSector]);
 
   const loadingMessages = [
@@ -497,7 +534,14 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                 {/* Suggestions Dropdown */}
                 {showSuggestions && (searchQuery.trim() || (!searchQuery.trim() && selectedSector)) && (
                   <div className="absolute top-full left-0 right-0 mt-1 bg-popover border border-border rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
-                    {searchQuery.trim() ? (
+                    {loadingSuggestions ? (
+                      <div className="p-3 text-center text-muted-foreground">
+                        <div className="flex items-center justify-center gap-2">
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          Searching...
+                        </div>
+                      </div>
+                    ) : searchQuery.trim() ? (
                       suggestions.length > 0 ? (
                         suggestions.map((stock) => (
                           <div
