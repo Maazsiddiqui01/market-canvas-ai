@@ -17,6 +17,38 @@ interface StockSearchProps {
 }
 
 const StockSearch = ({ onTickerChange }: StockSearchProps) => {
+  
+   // Function to extract and process links from content
+   const extractAndProcessLinks = (content: string) => {
+     // Replace HTML links with React-compatible format
+     return content.replace(/<a href="([^"]+)">([^<]+)<\/a>/g, 
+       '<LINK_START>$1|$2<LINK_END>'
+     );
+   };
+
+   // Function to render text with clickable links
+   const renderTextWithLinks = (text: string) => {
+     const parts = text.split(/(<LINK_START>[^<]+<LINK_END>)/g);
+     
+     return parts.map((part, index) => {
+       if (part.startsWith('<LINK_START>') && part.endsWith('<LINK_END>')) {
+         const linkData = part.replace('<LINK_START>', '').replace('<LINK_END>', '');
+         const [url, title] = linkData.split('|');
+         return (
+           <a
+             key={index}
+             href={url}
+             target="_blank"
+             rel="noopener noreferrer"
+             className="text-primary hover:text-primary/80 underline transition-colors"
+           >
+             {title}
+           </a>
+         );
+       }
+       return part;
+     });
+   };
   const [selectedSector, setSelectedSector] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
@@ -204,12 +236,12 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
         lines.forEach(line => {
           const cleanLine = line.replace(/^-\s*/, '').trim();
           
-          if (cleanLine.includes('Market Overview:')) {
+           if (cleanLine.includes('Market Overview:')) {
             currentCategory = 'overview';
             const overview = cleanLine.replace('Market Overview:', '').trim();
             if (overview) sections.marketOverview.push(overview);
           }
-          else if (cleanLine.includes('Industry Highlights')) {
+          else if (cleanLine.includes('Sector Highlights') || cleanLine.includes('Industry Highlights')) {
             currentCategory = 'industry';
           }
           else if (cleanLine.includes('Stock-Specific Mentions')) {
@@ -218,22 +250,28 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
           else if (cleanLine.startsWith('-') || cleanLine.startsWith('•')) {
             const bulletContent = cleanLine.replace(/^[-•]\s*/, '').trim();
             if (bulletContent && bulletContent.length > 10) {
+               // Check for and extract links from content
+               const processedContent = extractAndProcessLinks(bulletContent);
+              
               if (currentCategory === 'industry') {
-                sections.industryHighlights.push(bulletContent);
+                sections.industryHighlights.push(processedContent);
               } else if (currentCategory === 'specific') {
-                sections.stockSpecific.push(bulletContent);
+                sections.stockSpecific.push(processedContent);
               } else if (currentCategory === 'overview') {
-                sections.marketOverview.push(bulletContent);
+                sections.marketOverview.push(processedContent);
               }
             }
           }
           else if (cleanLine.length > 20 && !cleanLine.includes('News Insights')) {
+             // Check for and extract links from content
+             const processedContent = extractAndProcessLinks(cleanLine);
+            
             if (currentCategory === 'overview') {
-              sections.marketOverview.push(cleanLine);
+              sections.marketOverview.push(processedContent);
             } else if (currentCategory === 'industry') {
-              sections.industryHighlights.push(cleanLine);
+              sections.industryHighlights.push(processedContent);
             } else if (currentCategory === 'specific') {
-              sections.stockSpecific.push(cleanLine);
+              sections.stockSpecific.push(processedContent);
             }
           }
         });
@@ -384,31 +422,31 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                 <h4 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
                   🌍 Market Overview
                 </h4>
-                <div className="space-y-2">
-                  {sections.marketOverview.map((item, index) => (
-                    <p key={index} className="text-muted-foreground leading-relaxed">
-                      • {item}
-                    </p>
-                  ))}
-                </div>
+                 <div className="space-y-2">
+                   {sections.marketOverview.map((item, index) => (
+                     <p key={index} className="text-muted-foreground leading-relaxed">
+                       • {renderTextWithLinks(item)}
+                     </p>
+                   ))}
+                 </div>
               </CardContent>
             </Card>
           )}
 
-          {/* Industry Highlights */}
-          {sections.industryHighlights.length > 0 && (
-            <Card className="bg-purple-500/10 border-purple-500/20">
-              <CardContent className="p-4">
-                <h4 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
-                  🏭 Industry Highlights
-                </h4>
-                <div className="space-y-2">
-                  {sections.industryHighlights.map((item, index) => (
-                    <p key={index} className="text-muted-foreground leading-relaxed">
-                      • {item}
-                    </p>
-                  ))}
-                </div>
+           {/* Sector Highlights */}
+           {sections.industryHighlights.length > 0 && (
+             <Card className="bg-purple-500/10 border-purple-500/20">
+               <CardContent className="p-4">
+                 <h4 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
+                   🏭 Sector Highlights
+                 </h4>
+                 <div className="space-y-2">
+                   {sections.industryHighlights.map((item, index) => (
+                     <p key={index} className="text-muted-foreground leading-relaxed">
+                       • {renderTextWithLinks(item)}
+                     </p>
+                   ))}
+                 </div>
               </CardContent>
             </Card>
           )}
@@ -420,13 +458,13 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                 <h4 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
                   🎯 Stock-Specific Mentions
                 </h4>
-                <div className="space-y-2">
-                  {sections.stockSpecific.map((item, index) => (
-                    <p key={index} className="text-muted-foreground leading-relaxed">
-                      • {item}
-                    </p>
-                  ))}
-                </div>
+                 <div className="space-y-2">
+                   {sections.stockSpecific.map((item, index) => (
+                     <p key={index} className="text-muted-foreground leading-relaxed">
+                       • {renderTextWithLinks(item)}
+                     </p>
+                   ))}
+                 </div>
               </CardContent>
             </Card>
           )}
