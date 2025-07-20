@@ -79,7 +79,7 @@ const MarketOverview = ({ refreshTrigger }: MarketOverviewProps) => {
   const cards = [kseData];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <h2 className="text-lg font-semibold text-foreground">Market Overview</h2>
       
       <div className="grid grid-cols-1 gap-4 max-w-lg mx-auto">
@@ -115,6 +115,53 @@ const MarketOverview = ({ refreshTrigger }: MarketOverviewProps) => {
           </Card>
         ))}
       </div>
+
+      {/* Market Analysis Content */}
+      <Card className="bg-card border-border">
+        <CardContent className="p-6">
+          <div className="space-y-4 text-sm text-muted-foreground">
+            <div>
+              <p>
+                • Pakistan's business community witnessed a peaceful nationwide strike protesting Sections 37A, 37B, and 37AA of the Income Tax Ordinance granting the Federal Board of Revenue (FBR) powers to arrest taxpayers without due process. Major trade bodies including Karachi Chamber of Commerce and Pakistan Hosiery Manufacturers and Exporters Association (PHMA) led the widespread shutdown of markets and industries across Pakistan, reflecting collective resistance against these "draconian and anti-business" laws. The strike underscores the current uncertainties for investors and businesses.
+              </p>
+            </div>
+            
+            <div>
+              <p>
+                • Read more:{' '}
+                <a 
+                  href="https://tribune.com.pk/story/2556859/economic-halt-as-nation-strikes"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:text-primary/80 underline transition-colors"
+                >
+                  Economic halt as nation strikes
+                </a>
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Sector Highlights as separate section */}
+      <Card className="bg-card border-border">
+        <CardContent className="p-6">
+          <h3 className="text-base font-semibold text-foreground mb-4">Sector Highlights (Commercial Banks):</h3>
+          <div className="space-y-4 text-sm text-muted-foreground">
+            <div>
+              <p>
+                • The banking sector shows resilience despite regulatory pressures and macroeconomic uncertainty.
+              </p>
+            </div>
+            
+            <div>
+              <p>
+                • Meezan Bank, Pakistan's largest Islamic bank, continues to benefit from digitization trends and rising fee income amid Pakistan's growing $4.6 billion IT export market.
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
