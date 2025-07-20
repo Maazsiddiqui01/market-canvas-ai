@@ -143,25 +143,6 @@ const MarketOverview = ({ refreshTrigger }: MarketOverviewProps) => {
         </CardContent>
       </Card>
 
-      {/* Sector Highlights as separate section */}
-      <Card className="bg-card border-border">
-        <CardContent className="p-6">
-          <h3 className="text-base font-semibold text-foreground mb-4">Sector Highlights (Commercial Banks):</h3>
-          <div className="space-y-4 text-sm text-muted-foreground">
-            <div>
-              <p>
-                • The banking sector shows resilience despite regulatory pressures and macroeconomic uncertainty.
-              </p>
-            </div>
-            
-            <div>
-              <p>
-                • Meezan Bank, Pakistan's largest Islamic bank, continues to benefit from digitization trends and rising fee income amid Pakistan's growing $4.6 billion IT export market.
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 };
