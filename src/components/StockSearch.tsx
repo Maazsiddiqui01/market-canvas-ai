@@ -49,6 +49,7 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
        return part;
      });
    };
+   
   const [selectedSector, setSelectedSector] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
@@ -478,28 +479,28 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                 <h4 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
                   🎯 Stock-Specific Mentions
                 </h4>
-                 <div className="space-y-2">
-                   {sections.stockSpecific.map((item, index) => (
-                     <p key={index} className="text-muted-foreground leading-relaxed">
-                       • {renderTextWithLinks(item)}
-                     </p>
-                   ))}
-                 </div>
+                <div className="space-y-2">
+                  {sections.stockSpecific.map((item, index) => (
+                    <p key={index} className="text-muted-foreground leading-relaxed">
+                      • {renderTextWithLinks(item)}
+                    </p>
+                  ))}
+                </div>
               </CardContent>
             </Card>
           )}
 
           {/* Expert Recommendation */}
           {sections.expertRecommendation.length > 0 && (
-            <Card className="bg-green-500/10 border-green-500/20">
+            <Card className="bg-emerald-500/10 border-emerald-500/20">
               <CardContent className="p-4">
                 <h4 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
-                  💡 Expert Recommendation
+                  ✅ Expert Recommendation
                 </h4>
                 <div className="space-y-2">
                   {sections.expertRecommendation.map((item, index) => (
                     <p key={index} className="text-muted-foreground leading-relaxed">
-                      {item}
+                      • {item}
                     </p>
                   ))}
                 </div>
@@ -509,31 +510,25 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
 
           {/* News Links */}
           {sections.newsLinks.length > 0 && (
-            <Card className="bg-cyan-500/10 border-cyan-500/20">
+            <Card className="bg-slate-500/10 border-slate-500/20">
               <CardContent className="p-4">
                 <h4 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
-                  📰 Relevant News Links
+                  🔗 Relevant News Articles
                 </h4>
-                 <div className="space-y-3">
-                   {sections.newsLinks.map((link, index) => {
-                     // Handle both old string format and new object format
-                     const isObject = typeof link === 'object' && link.title && link.url;
-                     const title = isObject ? link.title : (typeof link === 'string' ? link.split(': ')[0] : '');
-                     const url = isObject ? link.url : (typeof link === 'string' ? link.split(': ')[1] : '');
-                     
-                     return (
-                       <div key={index} className="border-l-2 border-cyan-500/30 pl-3">
-                         <a 
-                           href={url} 
-                           target="_blank" 
-                           rel="noopener noreferrer"
-                           className="text-cyan-400 hover:text-cyan-300 underline font-medium"
-                         >
-                           {title}
-                         </a>
-                       </div>
-                     );
-                   })}
+                <div className="space-y-2">
+                  {sections.newsLinks.map((link, index) => (
+                    <div key={index} className="flex items-center gap-2">
+                      <span className="text-muted-foreground">•</span>
+                      <a 
+                        href={link.url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-primary hover:text-primary/80 underline transition-colors"
+                      >
+                        {link.title}
+                      </a>
+                    </div>
+                  ))}
                 </div>
               </CardContent>
             </Card>
@@ -542,40 +537,53 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
       );
     }
 
-    // Fallback to original JSON display
+    // Handle other data formats (arrays, simple objects)
+    if (Array.isArray(data)) {
+      return (
+        <div className="space-y-4">
+          {data.map((item, index) => (
+            <Card key={index} className="bg-primary/5 border-primary/20">
+              <CardContent className="p-4">
+                <pre className="text-sm text-foreground font-mono whitespace-pre-wrap">
+                  {JSON.stringify(item, null, 2)}
+                </pre>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      );
+    }
+
     return (
-      <div className="space-y-4">
-        <div className="bg-secondary/30 p-4 rounded-lg">
-          <h4 className="text-foreground font-semibold mb-3">Response Data:</h4>
-          <pre className="text-muted-foreground text-sm whitespace-pre-wrap overflow-x-auto">
+      <Card className="bg-primary/5 border-primary/20">
+        <CardContent className="p-4">
+          <pre className="text-sm text-foreground font-mono whitespace-pre-wrap">
             {JSON.stringify(data, null, 2)}
           </pre>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     );
   };
 
   return (
-    <div className="space-y-4">
-      <Card className="bg-card border-border">
+    <div className="w-full space-y-6">
+      <Card className="bg-card border">
         <CardContent className="p-6">
-          <div className="space-y-4">
+          <div className="space-y-6">
             {/* Sector Filter */}
             <div className="space-y-2">
               <label className="text-sm font-medium text-foreground flex items-center gap-2">
                 <Filter className="h-4 w-4" />
-                Filter by Sector (Optional)
+                Filter by Sector
               </label>
-              <Select value={selectedSector} onValueChange={(value) => setSelectedSector(value === 'all_sectors' ? '' : value)}>
-                <SelectTrigger className="bg-card border-border text-foreground">
+              <Select value={selectedSector} onValueChange={setSelectedSector}>
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="All sectors" />
                 </SelectTrigger>
-                <SelectContent className="bg-popover border-border max-h-60">
-                  <SelectItem value="all_sectors" className="text-foreground hover:bg-secondary/50">
-                    All Sectors
-                  </SelectItem>
+                <SelectContent className="bg-popover border-border max-h-60 overflow-y-auto z-[9999]">
+                  <SelectItem value="">All sectors</SelectItem>
                   {SECTORS.map((sector) => (
-                    <SelectItem key={sector} value={sector} className="text-foreground hover:bg-secondary/50">
+                    <SelectItem key={sector} value={sector}>
                       {sector}
                     </SelectItem>
                   ))}
@@ -592,21 +600,21 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
               <div className="relative">
                 <Input
                   type="text"
-                  placeholder={selectedSector ? `Enter stock ticker (e.g., MEBL, HBL, ENGRO)...` : "Enter stock ticker (e.g., MEBL, HBL, ENGRO)..."}
+                  placeholder="Enter ticker symbol (e.g., KSE100, AGTL) or company name..."
                   value={searchQuery}
-                   onChange={(e) => handleInputChange(e.target.value)}
-                   onFocus={() => setIsDropdownOpen(true)}
-                   onBlur={(e) => {
-                     // Only close if not clicking within dropdown
-                     setTimeout(() => {
-                       if (!e.relatedTarget?.closest('[data-suggestions-dropdown]')) {
-                         setIsDropdownOpen(false);
-                       }
-                     }, 150);
-                   }}
-                   className="bg-card border-border text-foreground placeholder:text-muted-foreground"
+                  onChange={(e) => handleInputChange(e.target.value)}
+                  onFocus={() => setIsDropdownOpen(true)}
+                  onBlur={(e) => {
+                    // Only close if not clicking within dropdown
+                    setTimeout(() => {
+                      if (!e.relatedTarget?.closest('[data-suggestions-dropdown]')) {
+                        setIsDropdownOpen(false);
+                      }
+                    }, 150);
+                  }}
+                  className="w-full"
                 />
-                
+
                 {/* Suggestions Dropdown */}
                 {isDropdownOpen && (searchQuery.trim() || (!searchQuery.trim() && selectedSector)) && dropdownSuggestions.length > 0 && (
                   <div 
@@ -698,47 +706,54 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
               <div className="bg-primary/10 border border-primary/20 rounded-lg p-3">
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-bold text-foreground text-lg">{selectedStock.ticker}</div>
+                    <div className="font-semibold text-foreground">{selectedStock.ticker}</div>
                     <div className="text-sm text-muted-foreground">{selectedStock.name}</div>
-                    <div className="text-xs text-primary">{selectedStock.sector}</div>
                   </div>
-                  <div className="text-sm text-muted-foreground">
-                    ✓ Ready for analysis
+                  <div className="text-xs text-muted-foreground bg-secondary/30 px-2 py-1 rounded">
+                    {selectedStock.sector}
                   </div>
                 </div>
               </div>
             )}
-            
-            {/* Search Button */}
-            <div className="flex justify-center">
+
+            {/* Error Display */}
+            {error && (
+              <div className="bg-destructive/10 border border-destructive/20 text-destructive rounded-lg p-3">
+                {error}
+              </div>
+            )}
+
+            {/* Search Actions */}
+            <div className="flex gap-3">
               <Button 
-                onClick={() => handleSearch(false)} 
+                onClick={() => handleSearch(false)}
                 disabled={loading || (!selectedStock && !searchQuery.trim())}
-                size="lg"
-                className="bg-primary hover:bg-primary/90 text-primary-foreground px-8"
+                className="flex items-center gap-2 flex-1"
               >
                 {loading ? (
-                  <div className="flex items-center gap-2">
+                  <>
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    <span>Analyzing...</span>
-                  </div>
+                    <span className="transition-all duration-300">
+                      {loadingMessages[loadingMessageIndex]?.text || "Loading..."}
+                    </span>
+                  </>
                 ) : (
-                  <div className="flex items-center gap-2">
-                    <TrendingUp className="h-4 w-4" />
-                    <span>Get Analysis</span>
-                  </div>
+                  <>
+                    <Search className="h-4 w-4" />
+                    Search Stock
+                  </>
                 )}
               </Button>
               
               {responseData && (
-                <Button 
-                  onClick={() => handleSearch(true)} 
-                  disabled={loading}
+                <Button
                   variant="outline"
-                  size="lg"
-                  className="ml-2 border-border hover:bg-secondary/50"
+                  onClick={() => handleSearch(true)}
+                  disabled={loading}
+                  className="flex items-center gap-2"
                 >
                   <RefreshCw className="h-4 w-4" />
+                  Refresh
                 </Button>
               )}
             </div>
@@ -746,69 +761,10 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
         </CardContent>
       </Card>
 
-      {/* Click outside overlay - removed since we handle this in useEffect */}
-
-      {/* Loading State */}
-      {loading && (
-        <Card className="bg-card border-border">
-          <CardContent className="p-8">
-            <div className="text-center space-y-6">
-              {/* Animated Icons */}
-              <div className="relative flex justify-center">
-                <div className="flex items-center space-x-4">
-                  <Newspaper className="h-8 w-8 text-primary/60 animate-bounce" style={{ animationDelay: '0ms' }} />
-                  <BarChart3 className="h-10 w-10 text-primary animate-bounce" style={{ animationDelay: '200ms' }} />
-                  <Zap className="h-8 w-8 text-primary/60 animate-bounce" style={{ animationDelay: '400ms' }} />
-                </div>
-                <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping"></div>
-              </div>
-
-              {/* Dynamic Loading Message */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-center space-x-3">
-                  {React.createElement(loadingMessages[loadingMessageIndex].icon, {
-                    className: "h-5 w-5 text-primary animate-pulse"
-                  })}
-                  <p className="text-foreground font-medium text-lg animate-fade-in">
-                    {loadingMessages[loadingMessageIndex].text}
-                  </p>
-                </div>
-                <p className="text-muted-foreground text-sm">
-                  This may take a minute or two
-                </p>
-              </div>
-
-              {/* Progress Indicator */}
-              <div className="w-64 mx-auto">
-                <div className="bg-secondary rounded-full h-2 overflow-hidden">
-                  <div className="bg-gradient-to-r from-primary to-primary/60 h-full rounded-full animate-pulse w-full"></div>
-                </div>
-              </div>
-
-              {/* Loading Dots */}
-              <div className="flex justify-center space-x-2">
-                <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Error State */}
-      {error && (
-        <Card className="bg-destructive/20 border-destructive">
-          <CardContent className="p-4">
-            <p className="text-destructive-foreground">{error}</p>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Response Data Display */}
-      {responseData && !loading && (
-        <Card className="bg-card border-border">
-          <CardContent className="p-4">
+      {/* Response Display */}
+      {responseData && (
+        <Card className="bg-card border">
+          <CardContent className="p-6">
             <h3 className="text-lg font-semibold text-foreground mb-4">Market Data Response</h3>
             {renderFormattedData(responseData)}
           </CardContent>
