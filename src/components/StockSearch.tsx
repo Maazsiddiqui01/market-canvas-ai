@@ -148,6 +148,12 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
     setShowSuggestions(false);
   };
 
+  const handleInputChange = (value: string) => {
+    setSearchQuery(value);
+    setSelectedStock(null); // Clear selected stock when manually typing
+    setShowSuggestions(true);
+  };
+
   const handleSearch = async (isRefresh = false) => {
     // Always use the ticker symbol, whether from selected stock or manual input
     const ticker = selectedStock?.ticker || searchQuery.trim();
@@ -574,11 +580,7 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                   type="text"
                   placeholder={selectedSector ? `Enter stock ticker (e.g., MEBL, HBL, ENGRO)...` : "Enter stock ticker (e.g., MEBL, HBL, ENGRO)..."}
                   value={searchQuery}
-                   onChange={(e) => {
-                     setSearchQuery(e.target.value);
-                     setShowSuggestions(true);
-                     setSelectedStock(null);
-                   }}
+                   onChange={(e) => handleInputChange(e.target.value)}
                    onFocus={() => setShowSuggestions(true)}
                    onBlur={(e) => {
                      // Only close if not clicking within dropdown
