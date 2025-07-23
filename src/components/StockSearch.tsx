@@ -193,6 +193,10 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
       console.log('Received data:', data);
       setResponseData(data);
       
+      // Clear search state after successful response
+      setShowSuggestions(false);
+      setSuggestions([]);
+      
       // Notify parent component about ticker change
       onTickerChange?.(ticker.toUpperCase());
       
