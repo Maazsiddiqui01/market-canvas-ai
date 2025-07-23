@@ -52,7 +52,7 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
   const [selectedSector, setSelectedSector] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
-  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [responseData, setResponseData] = useState<any>(null);
@@ -63,18 +63,28 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
   const [sectorStocks, setSectorStocks] = useState<Stock[]>([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
 
+  // Combined suggestions for dropdown
+  const dropdownSuggestions = useMemo(() => {
+    if (searchQuery.trim()) {
+      return suggestions;
+    } else if (selectedSector && sectorStocks.length > 0) {
+      return sectorStocks.slice(0, 10);
+    }
+    return [];
+  }, [suggestions, sectorStocks, searchQuery, selectedSector]);
+
   // Handle clicking outside to close suggestions
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Element;
-      if (showSuggestions && !target.closest('[data-suggestions-dropdown]') && !target.closest('input')) {
-        setShowSuggestions(false);
+      if (!target.closest('[data-search-container]')) {
+        setIsDropdownOpen(false);
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [showSuggestions]);
+  }, []);
 
   // Fetch suggestions when search query or sector changes
   useEffect(() => {
@@ -145,13 +155,13 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
   const handleStockSelect = (stock: Stock) => {
     setSelectedStock(stock);
     setSearchQuery(stock.ticker); // Only show the ticker symbol
-    setShowSuggestions(false);
+    setIsDropdownOpen(false);
   };
 
   const handleInputChange = (value: string) => {
     setSearchQuery(value);
     setSelectedStock(null); // Clear selected stock when manually typing
-    setShowSuggestions(true);
+    setIsDropdownOpen(true);
   };
 
   const handleSearch = async (isRefresh = false) => {
@@ -194,7 +204,7 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
       setResponseData(data);
       
       // Clear search state after successful response
-      setShowSuggestions(false);
+      setIsDropdownOpen(false);
       setSuggestions([]);
       
       // Notify parent component about ticker change
@@ -574,7 +584,7 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
             </div>
 
             {/* Stock Search */}
-            <div className="space-y-2 relative">
+            <div className="space-y-2 relative" data-search-container>
               <label className="text-sm font-medium text-foreground flex items-center gap-2">
                 <Search className="h-4 w-4" />
                 Search by Ticker or Company Name
@@ -585,12 +595,12 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                   placeholder={selectedSector ? `Enter stock ticker (e.g., MEBL, HBL, ENGRO)...` : "Enter stock ticker (e.g., MEBL, HBL, ENGRO)..."}
                   value={searchQuery}
                    onChange={(e) => handleInputChange(e.target.value)}
-                   onFocus={() => setShowSuggestions(true)}
+                   onFocus={() => setIsDropdownOpen(true)}
                    onBlur={(e) => {
                      // Only close if not clicking within dropdown
                      setTimeout(() => {
                        if (!e.relatedTarget?.closest('[data-suggestions-dropdown]')) {
-                         setShowSuggestions(false);
+                         setIsDropdownOpen(false);
                        }
                      }, 150);
                    }}
@@ -598,7 +608,7 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                 />
                 
                 {/* Suggestions Dropdown */}
-                {showSuggestions && (searchQuery.trim() || (!searchQuery.trim() && selectedSector)) && (
+                {isDropdownOpen && (searchQuery.trim() || (!searchQuery.trim() && selectedSector)) && dropdownSuggestions.length > 0 && (
                   <div 
                     data-suggestions-dropdown
                     className="absolute top-full left-0 right-0 mt-1 bg-popover border border-border rounded-md shadow-xl z-[9999] max-h-80 overflow-y-auto"
@@ -736,13 +746,7 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
         </CardContent>
       </Card>
 
-      {/* Click outside to close suggestions */}
-      {showSuggestions && (
-        <div 
-          className="fixed inset-0 z-40" 
-          onClick={() => setShowSuggestions(false)}
-        />
-      )}
+      {/* Click outside overlay - removed since we handle this in useEffect */}
 
       {/* Loading State */}
       {loading && (
