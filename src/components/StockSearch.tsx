@@ -50,7 +50,7 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
      });
    };
    
-  const [selectedSector, setSelectedSector] = useState<string>('');
+  const [selectedSector, setSelectedSector] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -68,7 +68,7 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
   const dropdownSuggestions = useMemo(() => {
     if (searchQuery.trim()) {
       return suggestions;
-    } else if (selectedSector && sectorStocks.length > 0) {
+    } else if (selectedSector && selectedSector !== 'all' && sectorStocks.length > 0) {
       return sectorStocks.slice(0, 10);
     }
     return [];
@@ -97,7 +97,7 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
       
       setLoadingSuggestions(true);
       try {
-        const results = await searchStocks(searchQuery, selectedSector || undefined);
+        const results = await searchStocks(searchQuery, selectedSector === 'all' ? undefined : selectedSector);
         setSuggestions(results.slice(0, 10));
       } catch (error) {
         console.error('Error fetching suggestions:', error);
@@ -114,7 +114,7 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
   // Fetch stocks for selected sector
   useEffect(() => {
     const fetchSectorStocks = async () => {
-      if (!selectedSector) {
+      if (!selectedSector || selectedSector === 'all') {
         setSectorStocks([]);
         return;
       }
@@ -581,7 +581,7 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                   <SelectValue placeholder="All sectors" />
                 </SelectTrigger>
                 <SelectContent className="bg-popover border-border max-h-60 overflow-y-auto z-[9999]">
-                  <SelectItem value="">All sectors</SelectItem>
+                  <SelectItem value="all">All sectors</SelectItem>
                   {SECTORS.map((sector) => (
                     <SelectItem key={sector} value={sector}>
                       {sector}
@@ -616,7 +616,7 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                 />
 
                 {/* Suggestions Dropdown */}
-                {isDropdownOpen && (searchQuery.trim() || (!searchQuery.trim() && selectedSector)) && dropdownSuggestions.length > 0 && (
+                {isDropdownOpen && (searchQuery.trim() || (!searchQuery.trim() && selectedSector !== 'all')) && dropdownSuggestions.length > 0 && (
                   <div 
                     data-suggestions-dropdown
                     className="absolute top-full left-0 right-0 mt-1 bg-popover border border-border rounded-md shadow-xl z-[9999] max-h-80 overflow-y-auto"
