@@ -582,7 +582,7 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                 </SelectTrigger>
                 <SelectContent className="bg-popover border-border max-h-60 overflow-y-auto z-[9999]">
                   <SelectItem value="all">All sectors</SelectItem>
-                  {SECTORS.map((sector) => (
+                  {SECTORS.filter(sector => sector && sector.trim()).map((sector) => (
                     <SelectItem key={sector} value={sector}>
                       {sector}
                     </SelectItem>
