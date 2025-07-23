@@ -436,6 +436,48 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
             </Card>
           )}
 
+          {/* Deep Analysis Links */}
+          {(selectedStock?.ticker || searchQuery.trim()) && (
+            <Card className="bg-slate-500/10 border-slate-500/20">
+              <CardContent className="p-4">
+                <h4 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
+                  🔗 Deep Analysis Links
+                </h4>
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground mb-3">
+                    Explore detailed technical and financial analysis on these platforms:
+                  </p>
+                  <div className="flex flex-wrap gap-3">
+                    <a
+                      href={`https://www.tradingview.com/symbols/PSX-${(selectedStock?.ticker || searchQuery.trim()).toUpperCase()}/`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 hover:bg-primary/20 border border-primary/20 rounded-lg text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+                    >
+                      📊 TradingView Charts
+                    </a>
+                    <a
+                      href={`https://sarmaaya.pk/psx/company/${(selectedStock?.ticker || searchQuery.trim()).toUpperCase()}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-secondary/10 hover:bg-secondary/20 border border-secondary/20 rounded-lg text-sm font-medium text-secondary-foreground hover:text-secondary-foreground/80 transition-colors"
+                    >
+                      📈 Sarmaaya Profile
+                    </a>
+                    <a
+                      href={`https://stockanalysis.com/quote/psx/${(selectedStock?.ticker || searchQuery.trim()).toUpperCase()}/`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 hover:bg-accent/20 border border-accent/20 rounded-lg text-sm font-medium text-accent-foreground hover:text-accent-foreground/80 transition-colors"
+                    >
+                      📊 Stock Analysis
+                    </a>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Market Overview */}
           {sections.marketOverview.length > 0 && (
             <Card className="bg-blue-500/10 border-blue-500/20">
@@ -767,46 +809,6 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
           <CardContent className="p-6">
             <h3 className="text-lg font-semibold text-foreground mb-4">Market Data Response</h3>
             {renderFormattedData(responseData)}
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Deep Analysis Links - Always visible when ticker is available */}
-      {(selectedStock?.ticker || (searchQuery.trim() && responseData)) && (
-        <Card className="bg-slate-500/10 border-slate-500/20">
-          <CardContent className="p-4">
-            <h4 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
-              🔗 Deep Analysis Links
-            </h4>
-            <p className="text-sm text-muted-foreground mb-4">
-              Want to dive deeper? Explore detailed technical and financial analysis on these platforms:
-            </p>
-            <div className="flex flex-wrap gap-3">
-              <a
-                href={`https://www.tradingview.com/symbols/PSX-${(selectedStock?.ticker || searchQuery.trim()).toUpperCase()}/`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 hover:bg-primary/20 border border-primary/20 rounded-lg text-sm font-medium text-primary hover:text-primary/80 transition-colors hover-scale"
-              >
-                📊 TradingView Charts
-              </a>
-              <a
-                href={`https://sarmaaya.pk/psx/company/${(selectedStock?.ticker || searchQuery.trim()).toUpperCase()}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-secondary/10 hover:bg-secondary/20 border border-secondary/20 rounded-lg text-sm font-medium text-secondary-foreground hover:text-secondary-foreground/80 transition-colors hover-scale"
-              >
-                📈 Sarmaaya Profile
-              </a>
-              <a
-                href={`https://stockanalysis.com/quote/psx/${(selectedStock?.ticker || searchQuery.trim()).toUpperCase()}/`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 hover:bg-accent/20 border border-accent/20 rounded-lg text-sm font-medium text-accent-foreground hover:text-accent-foreground/80 transition-colors hover-scale"
-              >
-                📊 Stock Analysis
-              </a>
-            </div>
           </CardContent>
         </Card>
       )}
