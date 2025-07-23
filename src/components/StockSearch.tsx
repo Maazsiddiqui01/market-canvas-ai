@@ -812,6 +812,54 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
           </CardContent>
         </Card>
       )}
+
+      {/* Enhanced Loading Overlay */}
+      {loading && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[10000] flex items-center justify-center">
+          <Card className="w-full max-w-md mx-4 bg-card/95 border border-border/50">
+            <CardContent className="p-8">
+              {/* Loading Icons */}
+              <div className="flex justify-center gap-4 mb-6">
+                <div className="text-red-500 animate-pulse">
+                  <Newspaper className="h-8 w-8" />
+                </div>
+                <div className="text-blue-500 animate-pulse" style={{animationDelay: '0.1s'}}>
+                  <BarChart3 className="h-8 w-8" />
+                </div>
+                <div className="text-yellow-500 animate-pulse" style={{animationDelay: '0.2s'}}>
+                  <Zap className="h-8 w-8" />
+                </div>
+              </div>
+
+              {/* Loading Message */}
+              <div className="text-center mb-6">
+                <h3 className="text-xl font-semibold text-foreground mb-2 flex items-center justify-center gap-2">
+                  {React.createElement(loadingMessages[loadingMessageIndex].icon, { 
+                    className: "h-5 w-5 text-primary animate-spin" 
+                  })}
+                  {loadingMessages[loadingMessageIndex].text}
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  This may take a minute or two
+                </p>
+              </div>
+
+              {/* Progress Bar */}
+              <div className="w-full bg-secondary/20 rounded-full h-2 mb-4">
+                <div className="bg-gradient-to-r from-primary to-primary/80 h-2 rounded-full animate-pulse" 
+                     style={{ width: '60%' }}></div>
+              </div>
+
+              {/* Loading Dots */}
+              <div className="flex justify-center gap-1">
+                <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
+                <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 };
