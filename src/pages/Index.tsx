@@ -86,6 +86,12 @@ const Index = () => {
           </div>
         </div>
         
+        {/* Markets Overview Widget */}
+        <div className="w-full animate-slide-in-bottom hover:scale-[1.01] transition-all duration-300 card-interactive" style={{ animationDelay: '450ms' }}>
+          <object data="https://sarmaaya.pk/public/widgets/markets-overview" width="100%" height="110" type="text/html">
+            Markets Overview
+          </object>
+        </div>
         {/* Stock Chart with slide entrance */}
         <div id="stock-chart" className="w-full animate-slide-in-bottom hover:scale-[1.01] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 card-interactive" style={{ animationDelay: '500ms' }}>
           <object data={`https://sarmaaya.pk/public/widgets/market-history-chart?market_symbol=${selectedTicker}`} width="100%" height="750" type="text/html">
