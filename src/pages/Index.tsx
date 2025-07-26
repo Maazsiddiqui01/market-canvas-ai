@@ -92,9 +92,11 @@ const Index = () => {
           </div>
         </div>
         
-        {/* News Widget with bottom slide entrance */}
-        <div id="news" className="w-full animate-slide-in-bottom hover:scale-[1.01] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 card-interactive" style={{ animationDelay: '800ms' }}>
-          <NewsWidget refreshTrigger={refreshTrigger} />
+        {/* Stocks Overview Widget with bottom slide entrance */}
+        <div id="stocks-overview" className="w-full animate-slide-in-bottom hover:scale-[1.01] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 card-interactive" style={{ animationDelay: '800ms' }}>
+          <object data="https://sarmaaya.pk/public/widgets/stocks-overview" width="100%" height="110" type="text/html">
+            Stocks Overview
+          </object>
         </div>
         
         {/* Top/Bottom 5 with floating entrance */}
