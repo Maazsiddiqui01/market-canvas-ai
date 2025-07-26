@@ -53,6 +53,11 @@ const Index = () => {
       <div className="relative z-10">
         <DashboardHeader onTickerChange={setSelectedTicker} />
         <div className="animate-slide-in-bottom">
+          <object data="https://sarmaaya.pk/public/widgets/markets-overview" width="100%" height="110" type="text/html">
+            Markets Overview
+          </object>
+        </div>
+        <div className="animate-slide-in-bottom">
           <object data="https://sarmaaya.pk/public/widgets/stocks-overview" width="100%" height="110" type="text/html">
             Stocks Overview
           </object>
