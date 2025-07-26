@@ -52,7 +52,11 @@ const Index = () => {
       <InteractiveBackground />
       <div className="relative z-10">
         <DashboardHeader onTickerChange={setSelectedTicker} />
-        <NewsSourcesMarquee className="animate-slide-in-bottom" />
+        <div className="animate-slide-in-bottom">
+          <object data="https://sarmaaya.pk/public/widgets/stocks-overview" width="100%" height="110" type="text/html">
+            Stocks Overview
+          </object>
+        </div>
         <HeroSection onTickerChange={setSelectedTicker} />
       
       <div className="container mx-auto px-4 py-6 space-y-6">
@@ -92,11 +96,9 @@ const Index = () => {
           </div>
         </div>
         
-        {/* Stocks Overview Widget with bottom slide entrance */}
-        <div id="stocks-overview" className="w-full animate-slide-in-bottom hover:scale-[1.01] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 card-interactive" style={{ animationDelay: '800ms' }}>
-          <object data="https://sarmaaya.pk/public/widgets/stocks-overview" width="100%" height="110" type="text/html">
-            Stocks Overview
-          </object>
+        {/* News Widget with bottom slide entrance */}
+        <div id="news" className="w-full animate-slide-in-bottom hover:scale-[1.01] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 card-interactive" style={{ animationDelay: '800ms' }}>
+          <NewsWidget refreshTrigger={refreshTrigger} />
         </div>
         
         {/* Top/Bottom 5 with floating entrance */}
