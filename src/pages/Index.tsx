@@ -93,7 +93,7 @@ const Index = () => {
         
         {/* Stock Chart with slide entrance */}
         <div id="stock-chart" className="w-full animate-slide-in-bottom hover:scale-[1.01] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 card-interactive" style={{ animationDelay: '500ms' }}>
-          <object data={`https://sarmaaya.pk/public/widgets/market-history-chart?market_symbol=${selectedTicker}`} width="100%" height="750" type="text/html">
+          <object data={`https://sarmaaya.pk/public/widgets/market-history-chart?market_symbol=${selectedTicker}`} width="100%" height="450" type="text/html">
             Markets Price History
           </object>
         </div>
