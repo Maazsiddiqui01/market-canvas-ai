@@ -25,9 +25,13 @@ const FinancialAnalysis = ({ ticker = 'MEBL' }: FinancialAnalysisProps) => {
     // Format ticker for TradingView - keep KSE100 as is, add PSX: prefix for others
     const tvSymbol = ticker === 'KSE100' ? 'PSX:KSE100' : `PSX:${ticker}`;
     
+    // Detect current theme
+    const isDarkMode = document.documentElement.classList.contains('dark');
+    const colorTheme = isDarkMode ? 'dark' : 'light';
+    
     script.innerHTML = JSON.stringify({
       "symbol": tvSymbol,
-      "colorTheme": "dark",
+      "colorTheme": colorTheme,
       "displayMode": "regular",
       "isTransparent": false,
       "locale": "en",

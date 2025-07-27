@@ -26,8 +26,12 @@ const TechnicalAnalysis = ({ ticker = 'KSE100' }: TechnicalAnalysisProps) => {
     // Format ticker for TradingView
     const tvSymbol = ticker === 'KSE100' ? 'PSX:KSE100' : `PSX:${ticker}`;
     
+    // Detect current theme
+    const isDarkMode = document.documentElement.classList.contains('dark');
+    const colorTheme = isDarkMode ? 'dark' : 'light';
+    
     script.innerHTML = JSON.stringify({
-      "colorTheme": "dark",
+      "colorTheme": colorTheme,
       "displayMode": "multiple",
       "isTransparent": false,
       "locale": "en",
