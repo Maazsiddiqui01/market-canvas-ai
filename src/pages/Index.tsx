@@ -98,7 +98,7 @@ const Index = () => {
               Markets Price History
             </object>
           </div>
-          <div id="market-snapshot" className="animate-slide-in-bottom hover:scale-[1.01] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 card-interactive" style={{ animationDelay: '600ms' }}>
+          <div id="market-snapshot" className="animate-slide-in-bottom hover:scale-[1.01] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 card-interactive bg-card/50 backdrop-blur-sm border border-border/50 rounded-lg p-2" style={{ animationDelay: '600ms' }}>
             <object data="https://sarmaaya.pk/public/widgets/market-snapshot" width="100%" height="450" type="text/html">
               Market Snapshot
             </object>
