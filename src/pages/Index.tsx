@@ -91,11 +91,18 @@ const Index = () => {
           </div>
         </div>
         
-        {/* Stock Chart with slide entrance */}
-        <div id="stock-chart" className="w-full animate-slide-in-bottom hover:scale-[1.01] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 card-interactive" style={{ animationDelay: '500ms' }}>
-          <object data="https://sarmaaya.pk/public/widgets/market-history-chart?market_symbol=KSE100" width="100%" height="450" type="text/html">
-            Markets Price History
-          </object>
+        {/* Stock Chart and Market Snapshot with slide entrance */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div id="stock-chart" className="animate-slide-in-bottom hover:scale-[1.01] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 card-interactive" style={{ animationDelay: '500ms' }}>
+            <object data="https://sarmaaya.pk/public/widgets/market-history-chart?market_symbol=KSE100" width="100%" height="450" type="text/html">
+              Markets Price History
+            </object>
+          </div>
+          <div id="market-snapshot" className="animate-slide-in-bottom hover:scale-[1.01] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 card-interactive" style={{ animationDelay: '600ms' }}>
+            <object data="https://sarmaaya.pk/public/widgets/market-snapshot" width="100%" height="450" type="text/html">
+              Market Snapshot
+            </object>
+          </div>
         </div>
         
         {/* Technical and Financial Analysis with opposing slide animations */}
