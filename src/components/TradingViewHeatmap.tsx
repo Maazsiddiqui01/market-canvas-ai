@@ -24,6 +24,11 @@ const TradingViewHeatmap = () => {
     const script = document.createElement('script');
     script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-stock-heatmap.js';
     script.async = true;
+    
+    // Detect current theme
+    const isDarkMode = document.documentElement.classList.contains('dark');
+    const colorTheme = isDarkMode ? 'dark' : 'light';
+    
     script.innerHTML = JSON.stringify({
       "dataSource": "PSXKSE100",
       "blockSize": "market_cap_basic",
@@ -31,7 +36,7 @@ const TradingViewHeatmap = () => {
       "grouping": "sector",
       "locale": "en",
       "symbolUrl": "",
-      "colorTheme": "dark",
+      "colorTheme": colorTheme,
       "exchanges": [],
       "hasTopBar": true,
       "isDataSetEnabled": true,
