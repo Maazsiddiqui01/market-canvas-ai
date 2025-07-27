@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 const TradingViewHeatmap = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMarketOpen, setIsMarketOpen] = useState(false);
+  const [currentTheme, setCurrentTheme] = useState<'dark' | 'light'>('dark');
 
   // Check if market is open (9 AM to 5 PM Pakistan time)
   const checkMarketHours = () => {
@@ -14,6 +15,25 @@ const TradingViewHeatmap = () => {
     setIsMarketOpen(hour >= 9 && hour < 17);
   };
 
+  // Track theme changes
+  useEffect(() => {
+    const checkTheme = () => {
+      const isDarkMode = document.documentElement.classList.contains('dark');
+      setCurrentTheme(isDarkMode ? 'dark' : 'light');
+    };
+
+    checkTheme();
+    
+    // Listen for theme changes
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   useEffect(() => {
     checkMarketHours();
     const interval = setInterval(checkMarketHours, 60000); // Check every minute
@@ -21,13 +41,14 @@ const TradingViewHeatmap = () => {
   }, []);
 
   useEffect(() => {
+    if (containerRef.current) {
+      // Clear previous widget
+      containerRef.current.innerHTML = '';
+    }
+
     const script = document.createElement('script');
     script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-stock-heatmap.js';
     script.async = true;
-    
-    // Detect current theme
-    const isDarkMode = document.documentElement.classList.contains('dark');
-    const colorTheme = isDarkMode ? 'dark' : 'light';
     
     script.innerHTML = JSON.stringify({
       "dataSource": "PSXKSE100",
@@ -36,7 +57,7 @@ const TradingViewHeatmap = () => {
       "grouping": "sector",
       "locale": "en",
       "symbolUrl": "",
-      "colorTheme": colorTheme,
+      "colorTheme": currentTheme,
       "exchanges": [],
       "hasTopBar": true,
       "isDataSetEnabled": true,
@@ -56,7 +77,7 @@ const TradingViewHeatmap = () => {
         script.parentNode.removeChild(script);
       }
     };
-  }, []);
+  }, [currentTheme]); // Re-run when theme changes
 
   return (
     <Card className="bg-slate-800/50 border-slate-600">
