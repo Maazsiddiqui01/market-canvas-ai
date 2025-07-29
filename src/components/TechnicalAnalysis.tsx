@@ -11,6 +11,26 @@ interface TechnicalAnalysisProps {
 const TechnicalAnalysis = ({ ticker = 'KSE100' }: TechnicalAnalysisProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentTheme, setCurrentTheme] = useState<'dark' | 'light'>('dark');
+
+  // Track theme changes
+  useEffect(() => {
+    const checkTheme = () => {
+      const isDarkMode = document.documentElement.classList.contains('dark');
+      setCurrentTheme(isDarkMode ? 'dark' : 'light');
+    };
+
+    checkTheme();
+    
+    // Listen for theme changes
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     setIsLoading(true);
@@ -26,12 +46,8 @@ const TechnicalAnalysis = ({ ticker = 'KSE100' }: TechnicalAnalysisProps) => {
     // Format ticker for TradingView
     const tvSymbol = ticker === 'KSE100' ? 'PSX:KSE100' : `PSX:${ticker}`;
     
-    // Detect current theme
-    const isDarkMode = document.documentElement.classList.contains('dark');
-    const colorTheme = isDarkMode ? 'dark' : 'light';
-    
     script.innerHTML = JSON.stringify({
-      "colorTheme": colorTheme,
+      "colorTheme": currentTheme,
       "displayMode": "multiple",
       "isTransparent": false,
       "locale": "en",
@@ -56,7 +72,7 @@ const TechnicalAnalysis = ({ ticker = 'KSE100' }: TechnicalAnalysisProps) => {
         script.parentNode.removeChild(script);
       }
     };
-  }, [ticker]);
+  }, [ticker, currentTheme]); // Re-run when theme changes
 
   return (
     <Card className="bg-card border-border transition-all duration-300 hover:shadow-lg hover-scale">

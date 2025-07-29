@@ -10,6 +10,26 @@ interface FinancialAnalysisProps {
 const FinancialAnalysis = ({ ticker = 'MEBL' }: FinancialAnalysisProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentTheme, setCurrentTheme] = useState<'dark' | 'light'>('dark');
+
+  // Track theme changes
+  useEffect(() => {
+    const checkTheme = () => {
+      const isDarkMode = document.documentElement.classList.contains('dark');
+      setCurrentTheme(isDarkMode ? 'dark' : 'light');
+    };
+
+    checkTheme();
+    
+    // Listen for theme changes
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     setIsLoading(true);
@@ -25,13 +45,9 @@ const FinancialAnalysis = ({ ticker = 'MEBL' }: FinancialAnalysisProps) => {
     // Format ticker for TradingView - keep KSE100 as is, add PSX: prefix for others
     const tvSymbol = ticker === 'KSE100' ? 'PSX:KSE100' : `PSX:${ticker}`;
     
-    // Detect current theme
-    const isDarkMode = document.documentElement.classList.contains('dark');
-    const colorTheme = isDarkMode ? 'dark' : 'light';
-    
     script.innerHTML = JSON.stringify({
       "symbol": tvSymbol,
-      "colorTheme": colorTheme,
+      "colorTheme": currentTheme,
       "displayMode": "regular",
       "isTransparent": false,
       "locale": "en",
@@ -52,7 +68,7 @@ const FinancialAnalysis = ({ ticker = 'MEBL' }: FinancialAnalysisProps) => {
         script.parentNode.removeChild(script);
       }
     };
-  }, [ticker]);
+  }, [ticker, currentTheme]); // Re-run when theme changes
 
   return (
     <Card className="bg-card border-border transition-all duration-300 hover:shadow-lg hover-scale">
