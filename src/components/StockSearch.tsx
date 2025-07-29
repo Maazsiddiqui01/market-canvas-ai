@@ -234,7 +234,8 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
       fundamentalAnalysis: [],
       marketOverview: [],
       recommendation: [],
-      newsLinks: []
+      newsLinks: [],
+      conclusion: ''
     };
 
     // Extract title (first line before first <br><br>)
@@ -324,6 +325,18 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
         }
       }
     });
+
+    // Extract conclusion paragraph after all sections
+    const conclusionMatch = htmlString.match(/F\.\s*<strong>🔗\s*Relevant Links<\/strong>.*?<br><br>(.*?)$/s);
+    if (conclusionMatch) {
+      const conclusionText = conclusionMatch[1]
+        .replace(/<[^>]*>/g, '') // Remove HTML tags
+        .replace(/\s+/g, ' ') // Normalize whitespace
+        .trim();
+      if (conclusionText && conclusionText.length > 20) {
+        sections.conclusion = conclusionText;
+      }
+    }
 
     return sections;
   };
@@ -530,6 +543,15 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                 </div>
               </CardContent>
             </Card>
+          )}
+
+          {/* Conclusion */}
+          {sections.conclusion && (
+            <div className="bg-muted/30 border border-muted-foreground/20 rounded-lg p-4">
+              <p className="text-muted-foreground leading-relaxed italic text-center">
+                {sections.conclusion}
+              </p>
+            </div>
           )}
         </div>
       );
