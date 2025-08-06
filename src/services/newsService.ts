@@ -36,6 +36,9 @@ const getSourceTag = (url: string, source: string): string => {
 // Fetch real news from webhook
 export const fetchPSXNews = async (): Promise<NewsItem[]> => {
   try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
     const response = await fetch('https://n8n-maaz.duckdns.org/webhook/news-analysis', {
       method: 'POST',
       headers: {
@@ -43,8 +46,11 @@ export const fetchPSXNews = async (): Promise<NewsItem[]> => {
       },
       body: JSON.stringify({
         timestamp: new Date().toISOString()
-      })
+      }),
+      signal: controller.signal
     });
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -68,7 +74,7 @@ export const fetchPSXNews = async (): Promise<NewsItem[]> => {
 
     return shuffledNews;
   } catch (error) {
-    console.error('Failed to fetch news from webhook:', error);
+    console.warn('News webhook unavailable, using fallback data:', error instanceof Error ? error.message : 'Unknown error');
     
     // Fallback to mock data if webhook fails
     const mockNews: NewsItem[] = [
