@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mail, Linkedin, AlertTriangle } from 'lucide-react';
+import { Mail, Linkedin, AlertTriangle, Heart, TrendingUp, Globe, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Footer = () => {
@@ -9,8 +9,14 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Creator Info */}
           <div className="text-center md:text-left">
-            <h3 className="text-lg font-semibold text-foreground mb-2">Created by Maaz</h3>
-            <p className="text-sm text-muted-foreground mb-4">
+            <div className="flex items-center gap-2 justify-center md:justify-start mb-2">
+              <div className="p-2 rounded-lg bg-primary/10">
+                <TrendingUp className="h-4 w-4 text-primary" />
+              </div>
+              <h3 className="text-lg font-semibold text-foreground">Created by Maaz</h3>
+            </div>
+            <p className="text-sm text-muted-foreground mb-4 flex items-center gap-2 justify-center md:justify-start">
+              <Heart className="h-4 w-4 text-primary animate-pulse" />
               Market Canvas AI - Your intelligent companion for smarter trading decisions
             </p>
             <div className="flex flex-col sm:flex-row gap-2 justify-center md:justify-start">
@@ -36,11 +42,14 @@ const Footer = () => {
 
           {/* Disclaimer */}
           <div className="text-center md:col-span-2">
-            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 hover:border-yellow-300 dark:hover:border-yellow-700 transition-colors">
               <div className="flex items-start gap-3">
-                <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
+                <div className="p-2 rounded-full bg-yellow-100 dark:bg-yellow-900/30">
+                  <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+                </div>
                 <div className="text-left">
-                  <h4 className="font-semibold text-yellow-800 dark:text-yellow-200 mb-2">
+                  <h4 className="font-semibold text-yellow-800 dark:text-yellow-200 mb-2 flex items-center gap-2">
+                    <Shield className="h-4 w-4" />
                     Important Disclaimer
                   </h4>
                   <p className="text-sm text-yellow-700 dark:text-yellow-300">
@@ -59,17 +68,20 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="border-t border-border mt-8 pt-6 text-center space-y-3">
           <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+            <Globe className="h-4 w-4 text-primary" />
             <span>Market data provided by</span>
             <a 
               href="https://www.tradingview.com/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-primary hover:text-primary/80 font-medium transition-colors"
+              className="text-primary hover:text-primary/80 font-medium transition-colors inline-flex items-center gap-1"
             >
               TradingView
+              <TrendingUp className="h-3 w-3" />
             </a>
           </div>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-muted-foreground flex items-center justify-center gap-2">
+            <Heart className="h-4 w-4 text-primary" />
             © 2025 Market Canvas AI. Built with AI-powered innovation for intelligent market analysis.
           </p>
         </div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { TrendingUp, TrendingDown, Activity } from 'lucide-react';
+import { TrendingUp, TrendingDown, Activity, BarChart3, LineChart } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 interface KSEData {
   kse100_close: string;
   kse100_change_percent: string;
@@ -65,24 +66,36 @@ const MarketOverview = ({
   };
   const cards = [kseData];
   return <div className="space-y-6">
-      <h2 className="text-lg font-semibold text-foreground">Market Overview</h2>
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
+          <BarChart3 className="h-5 w-5 text-primary" />
+          Market Overview
+        </h2>
+        <Badge variant="secondary" className="flex items-center gap-1">
+          <Activity className="h-3 w-3 animate-pulse" />
+          Live
+        </Badge>
+      </div>
       
       <div className="grid grid-cols-1 gap-4 max-w-lg mx-auto">
-        {cards.map((market, index) => <Card key={index} className="bg-card border-border hover:bg-secondary/50 transition-all duration-200">
+        {cards.map((market, index) => <Card key={index} className="bg-card/50 border-border hover:bg-card/80 transition-all duration-300 hover:scale-105 cursor-pointer group backdrop-blur-sm">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground font-medium">{market.name}</p>
-                  <p className="text-2xl font-bold text-foreground mt-1">{market.value}</p>
-                  <div className="flex items-center mt-2">
-                    {market.isPositive ? <TrendingUp className="h-4 w-4 text-green-500 mr-1" /> : <TrendingDown className="h-4 w-4 text-red-500 mr-1" />}
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <LineChart className="h-4 w-4 text-muted-foreground" />
+                    <p className="text-sm text-muted-foreground font-medium">{market.name}</p>
+                  </div>
+                  <p className="text-3xl font-bold text-foreground mt-1 group-hover:text-primary transition-colors">{market.value}</p>
+                  <div className="flex items-center mt-3 gap-1">
+                    {market.isPositive ? <TrendingUp className="h-5 w-5 text-green-500" /> : <TrendingDown className="h-5 w-5 text-red-500" />}
                     <span className={`text-sm font-medium ${market.isPositive ? 'text-green-500' : 'text-red-500'}`}>
                       {market.change} ({market.changePercent})
                     </span>
                   </div>
                 </div>
-                <div className={`p-3 rounded-full ${market.isPositive ? 'bg-green-500/20' : 'bg-red-500/20'}`}>
-                  <Activity className={`h-6 w-6 ${market.isPositive ? 'text-green-500' : 'text-red-500'}`} />
+                <div className={`p-4 rounded-full transition-all duration-300 ${market.isPositive ? 'bg-green-500/20 group-hover:bg-green-500/30' : 'bg-red-500/20 group-hover:bg-red-500/30'}`}>
+                  <Activity className={`h-8 w-8 ${market.isPositive ? 'text-green-500' : 'text-red-500'}`} />
                 </div>
               </div>
             </CardContent>

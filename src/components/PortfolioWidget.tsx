@@ -1,7 +1,7 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Wallet, TrendingUp } from 'lucide-react';
+import { Wallet, TrendingUp, PieChart, Briefcase, DollarSign } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 const PortfolioWidget = () => {
   const portfolioData = {
@@ -16,21 +16,32 @@ const PortfolioWidget = () => {
   };
 
   return (
-    <Card className="bg-slate-800/50 border-slate-600">
+    <Card className="bg-card/50 border-border backdrop-blur-sm hover:bg-card/80 transition-all duration-300">
       <CardHeader>
-        <CardTitle className="text-white flex items-center gap-2">
-          <Wallet className="h-5 w-5 text-purple-500" />
+        <CardTitle className="text-foreground flex items-center gap-2">
+          <div className="p-2 rounded-lg bg-primary/10">
+            <Wallet className="h-5 w-5 text-primary" />
+          </div>
           Portfolio
+          <Badge variant="secondary" className="ml-2">
+            {portfolioData.holdings.length} Holdings
+          </Badge>
         </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
           {/* Total Portfolio Value */}
-          <div className="p-4 rounded-lg bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-purple-500/30">
-            <p className="text-slate-400 text-sm">Total Value</p>
-            <p className="text-2xl font-bold text-white">PKR {portfolioData.totalValue}</p>
-            <div className="flex items-center mt-1">
-              <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
+          <div className="p-4 rounded-lg bg-gradient-to-r from-primary/20 to-accent/20 border border-primary/30 hover:border-primary/50 transition-all duration-300">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-muted-foreground text-sm flex items-center gap-2">
+                <DollarSign className="h-4 w-4" />
+                Total Value
+              </p>
+              <Briefcase className="h-4 w-4 text-primary" />
+            </div>
+            <p className="text-3xl font-bold text-foreground">PKR {portfolioData.totalValue}</p>
+            <div className="flex items-center mt-2 gap-1">
+              <TrendingUp className="h-4 w-4 text-green-500" />
               <span className="text-green-500 text-sm font-medium">
                 {portfolioData.todayChange} ({portfolioData.todayChangePercent})
               </span>
@@ -39,16 +50,30 @@ const PortfolioWidget = () => {
 
           {/* Top Holdings */}
           <div className="space-y-2">
-            <p className="text-slate-400 text-sm font-medium">Top Holdings</p>
+            <p className="text-muted-foreground text-sm font-medium flex items-center gap-2">
+              <PieChart className="h-4 w-4 text-primary" />
+              Top Holdings
+            </p>
             {portfolioData.holdings.map((holding, index) => (
-              <div key={index} className="flex justify-between items-center p-2 rounded bg-slate-700/30">
-                <div>
-                  <p className="text-white font-medium">{holding.symbol}</p>
-                  <p className="text-slate-400 text-xs">{holding.shares} shares</p>
+              <div 
+                key={index} 
+                className="group flex justify-between items-center p-3 rounded-lg bg-muted/30 hover:bg-muted/60 transition-all duration-300 cursor-pointer border border-transparent hover:border-primary/20"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-all">
+                    <TrendingUp className="h-3 w-3 text-primary" />
+                  </div>
+                  <div>
+                    <p className="text-foreground font-medium">{holding.symbol}</p>
+                    <p className="text-muted-foreground text-xs flex items-center gap-1">
+                      <Briefcase className="h-3 w-3" />
+                      {holding.shares} shares
+                    </p>
+                  </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-white text-sm">PKR {holding.value}</p>
-                  <p className="text-green-500 text-xs">{holding.change}</p>
+                  <p className="text-foreground text-sm font-medium">PKR {holding.value}</p>
+                  <p className="text-green-500 text-xs font-medium">{holding.change}</p>
                 </div>
               </div>
             ))}
