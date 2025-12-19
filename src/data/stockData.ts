@@ -56,7 +56,7 @@ export const getAllStocks = async (): Promise<Stock[]> => {
 
   try {
     const { data, error } = await supabase
-      .from('stocks')
+      .from('Stocks' as any)
       .select('symbol, name, sector')
       .order('symbol');
 
@@ -66,11 +66,11 @@ export const getAllStocks = async (): Promise<Stock[]> => {
     }
 
     // Transform data to match our interface
-    stocksCache = data.map(stock => ({
+    stocksCache = (data as any[])?.map(stock => ({
       ticker: stock.symbol,
       name: stock.name,
       sector: stock.sector
-    }));
+    })) || [];
 
     return stocksCache;
   } catch (error) {
@@ -83,7 +83,7 @@ export const getAllStocks = async (): Promise<Stock[]> => {
 export const getStocksBySector = async (sector: string): Promise<Stock[]> => {
   try {
     const { data, error } = await supabase
-      .from('stocks')
+      .from('Stocks' as any)
       .select('symbol, name, sector')
       .eq('sector', sector)
       .order('symbol');
@@ -93,11 +93,11 @@ export const getStocksBySector = async (sector: string): Promise<Stock[]> => {
       return [];
     }
 
-    return data.map(stock => ({
+    return (data as any[])?.map(stock => ({
       ticker: stock.symbol,
       name: stock.name,
       sector: stock.sector
-    }));
+    })) || [];
   } catch (error) {
     console.error('Error fetching stocks by sector:', error);
     return [];
@@ -107,7 +107,7 @@ export const getStocksBySector = async (sector: string): Promise<Stock[]> => {
 export const searchStocks = async (query: string, selectedSector?: string): Promise<Stock[]> => {
   try {
     let supabaseQuery = supabase
-      .from('stocks')
+      .from('Stocks' as any)
       .select('symbol, name, sector');
 
     // Add sector filter if provided
@@ -129,11 +129,11 @@ export const searchStocks = async (query: string, selectedSector?: string): Prom
       return [];
     }
 
-    return data.map(stock => ({
+    return (data as any[])?.map(stock => ({
       ticker: stock.symbol,
       name: stock.name,
       sector: stock.sector
-    }));
+    })) || [];
   } catch (error) {
     console.error('Error searching stocks:', error);
     return [];
@@ -148,7 +148,7 @@ export const getAllTickers = async (): Promise<string[]> => {
 export const getStockByTicker = async (ticker: string): Promise<Stock | undefined> => {
   try {
     const { data, error } = await supabase
-      .from('stocks')
+      .from('Stocks' as any)
       .select('symbol, name, sector')
       .eq('symbol', ticker.toUpperCase())
       .single();
@@ -158,10 +158,11 @@ export const getStockByTicker = async (ticker: string): Promise<Stock | undefine
       return undefined;
     }
 
+    const stockData = data as any;
     return {
-      ticker: data.symbol,
-      name: data.name,
-      sector: data.sector
+      ticker: stockData.symbol,
+      name: stockData.name,
+      sector: stockData.sector
     };
   } catch (error) {
     console.error('Error fetching stock by ticker:', error);
