@@ -639,7 +639,8 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                 {isDropdownOpen && (searchQuery.trim() || (!searchQuery.trim() && selectedSector !== 'all')) && dropdownSuggestions.length > 0 && (
                   <div 
                     data-suggestions-dropdown
-                    className="absolute top-full left-0 right-0 mt-1 bg-popover border border-border rounded-md shadow-xl z-[9999] max-h-80 overflow-y-auto"
+                    className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-md shadow-2xl z-[9999] max-h-80 overflow-y-auto backdrop-blur-none"
+                    style={{ backgroundColor: 'hsl(var(--card))' }}
                   >
                     {loadingSuggestions ? (
                       <div className="p-3 text-center text-muted-foreground">
@@ -652,14 +653,14 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                       suggestions.length > 0 ? (
                         <>
                           {/* Results header - not selectable */}
-                          <div className="p-2 bg-secondary/20 border-b border-border text-sm text-muted-foreground font-medium">
-                            {suggestions.length} result{suggestions.length !== 1 ? 's' : ''} found
+                          <div className="p-2 bg-muted border-b border-border text-sm text-foreground font-medium">
+                            📊 {suggestions.length} result{suggestions.length !== 1 ? 's' : ''} found
                           </div>
                           {/* Actual stock options */}
                           {suggestions.map((stock, index) => (
                             <div
                               key={`suggestion-${stock.ticker}-${index}`}
-                              className="p-3 hover:bg-secondary/50 cursor-pointer border-b border-border/50 last:border-b-0 select-none transition-colors"
+                              className="p-3 hover:bg-primary/10 cursor-pointer border-b border-border/50 last:border-b-0 select-none transition-all duration-200 bg-card"
                               onMouseDown={(e) => {
                                 e.preventDefault();
                                 console.log('Selecting stock:', stock.ticker, 'Index:', index);
@@ -667,11 +668,16 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                               }}
                             >
                               <div className="flex justify-between items-start pointer-events-none">
-                                <div>
-                                  <div className="font-semibold text-foreground">{stock.ticker}</div>
-                                  <div className="text-sm text-muted-foreground">{stock.name}</div>
+                                <div className="flex items-center gap-3">
+                                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                                    <TrendingUp className="h-5 w-5 text-primary" />
+                                  </div>
+                                  <div>
+                                    <div className="font-bold text-foreground text-base">{stock.ticker}</div>
+                                    <div className="text-sm text-muted-foreground">{stock.name}</div>
+                                  </div>
                                 </div>
-                                <div className="text-xs text-muted-foreground bg-secondary/30 px-2 py-1 rounded">
+                                <div className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded-full">
                                   {stock.sector}
                                 </div>
                               </div>
@@ -688,14 +694,14 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                       sectorStocks.length > 0 && (
                         <>
                           {/* Results header for sector stocks - not selectable */}
-                          <div className="p-2 bg-secondary/20 border-b border-border text-sm text-muted-foreground font-medium">
-                            {sectorStocks.length} result{sectorStocks.length !== 1 ? 's' : ''} found
+                          <div className="p-2 bg-muted border-b border-border text-sm text-foreground font-medium">
+                            📁 {sectorStocks.length} stock{sectorStocks.length !== 1 ? 's' : ''} in sector
                           </div>
                           {/* Actual sector stock options */}
                           {sectorStocks.map((stock, index) => (
                             <div
                               key={`sector-${stock.ticker}-${index}`}
-                              className="p-3 hover:bg-secondary/50 cursor-pointer border-b border-border/50 last:border-b-0 select-none transition-colors"
+                              className="p-3 hover:bg-primary/10 cursor-pointer border-b border-border/50 last:border-b-0 select-none transition-all duration-200 bg-card"
                               onMouseDown={(e) => {
                                 e.preventDefault();
                                 console.log('Selecting sector stock:', stock.ticker, 'Index:', index);
@@ -703,11 +709,16 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                               }}
                             >
                               <div className="flex justify-between items-start pointer-events-none">
-                                <div>
-                                  <div className="font-semibold text-foreground">{stock.ticker}</div>
-                                  <div className="text-sm text-muted-foreground">{stock.name}</div>
+                                <div className="flex items-center gap-3">
+                                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                                    <TrendingUp className="h-5 w-5 text-primary" />
+                                  </div>
+                                  <div>
+                                    <div className="font-bold text-foreground text-base">{stock.ticker}</div>
+                                    <div className="text-sm text-muted-foreground">{stock.name}</div>
+                                  </div>
                                 </div>
-                                <div className="text-xs text-muted-foreground bg-secondary/30 px-2 py-1 rounded">
+                                <div className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded-full">
                                   {stock.sector}
                                 </div>
                               </div>
