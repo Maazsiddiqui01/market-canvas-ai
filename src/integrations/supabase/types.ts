@@ -7,37 +7,145 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "12.2.3 (519615d)"
+    PostgrestVersion: "13.0.5"
   }
   public: {
     Tables: {
-      stocks: {
+      automation_leads: {
         Row: {
           created_at: string
+          email: string
+          generated_workflow: Json | null
           id: string
           name: string
-          sector: string
-          symbol: string
           updated_at: string
+          workflow_description: string
         }
         Insert: {
           created_at?: string
+          email: string
+          generated_workflow?: Json | null
           id?: string
           name: string
-          sector: string
-          symbol: string
           updated_at?: string
+          workflow_description: string
         }
         Update: {
           created_at?: string
+          email?: string
+          generated_workflow?: Json | null
           id?: string
           name?: string
-          sector?: string
-          symbol?: string
           updated_at?: string
+          workflow_description?: string
+        }
+        Relationships: []
+      }
+      demo_leads: {
+        Row: {
+          company: string | null
+          created_at: string
+          demo_type: string
+          email: string
+          id: string
+          name: string
+          processed_data: Json | null
+          updated_at: string
+        }
+        Insert: {
+          company?: string | null
+          created_at?: string
+          demo_type: string
+          email: string
+          id?: string
+          name: string
+          processed_data?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          company?: string | null
+          created_at?: string
+          demo_type?: string
+          email?: string
+          id?: string
+          name?: string
+          processed_data?: Json | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      seo_monitoring_results: {
+        Row: {
+          canonical_url: string | null
+          created_at: string
+          has_h1: boolean | null
+          id: string
+          issues: Json | null
+          last_checked_at: string
+          meta_description: string | null
+          page_title: string | null
+          page_url: string
+          status: string
+          updated_at: string
+          warnings: Json | null
+        }
+        Insert: {
+          canonical_url?: string | null
+          created_at?: string
+          has_h1?: boolean | null
+          id?: string
+          issues?: Json | null
+          last_checked_at?: string
+          meta_description?: string | null
+          page_title?: string | null
+          page_url: string
+          status?: string
+          updated_at?: string
+          warnings?: Json | null
+        }
+        Update: {
+          canonical_url?: string | null
+          created_at?: string
+          has_h1?: boolean | null
+          id?: string
+          issues?: Json | null
+          last_checked_at?: string
+          meta_description?: string | null
+          page_title?: string | null
+          page_url?: string
+          status?: string
+          updated_at?: string
+          warnings?: Json | null
+        }
+        Relationships: []
+      }
+      Stocks: {
+        Row: {
+          created_at: string | null
+          id: string
+          name: string | null
+          sector: string | null
+          symbol: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id: string
+          name?: string | null
+          sector?: string | null
+          symbol?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          name?: string | null
+          sector?: string | null
+          symbol?: string | null
+          updated_at?: string | null
         }
         Relationships: []
       }
