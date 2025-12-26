@@ -37,7 +37,7 @@ const getSourceTag = (url: string, source: string): string => {
 export const fetchPSXNews = async (): Promise<NewsItem[]> => {
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout for slower webhook
 
     const response = await fetch('https://n8n-maaz.duckdns.org/webhook/news-analysis', {
       method: 'POST',
