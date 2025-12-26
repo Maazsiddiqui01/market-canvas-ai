@@ -54,16 +54,6 @@ const Index = () => {
         <DashboardHeader onTickerChange={setSelectedTicker} />
         {/* Add top padding to compensate for fixed header */}
         <div className="pt-20">
-          <div className="animate-slide-in-bottom">
-            <object data="https://sarmaaya.pk/public/widgets/markets-overview" width="100%" height="110" type="text/html">
-              Markets Overview
-            </object>
-          </div>
-          <div className="animate-slide-in-bottom">
-            <object data="https://sarmaaya.pk/public/widgets/stocks-overview" width="100%" height="110" type="text/html">
-              Stocks Overview
-            </object>
-          </div>
           <HeroSection onTickerChange={setSelectedTicker} />
         
           <div className="container mx-auto px-4 py-6 space-y-6">
@@ -90,20 +80,6 @@ const Index = () => {
               <div className="relative overflow-hidden rounded-lg">
                 <TradingViewHeatmap />
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-              </div>
-            </div>
-            
-            {/* Stock Chart and Market Snapshot with slide entrance */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div id="stock-chart" className="animate-slide-in-bottom hover:scale-[1.01] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 card-interactive" style={{ animationDelay: '500ms' }}>
-                <object data="https://sarmaaya.pk/public/widgets/market-history-chart?market_symbol=KSE100" width="100%" height="450" type="text/html">
-                  Markets Price History
-                </object>
-              </div>
-              <div id="market-snapshot" className="animate-slide-in-bottom hover:scale-[1.01] transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 card-interactive bg-card/50 backdrop-blur-sm border border-border/50 rounded-lg p-2" style={{ animationDelay: '600ms' }}>
-                <object data="https://sarmaaya.pk/public/widgets/market-snapshot" width="100%" height="450" type="text/html">
-                  Market Snapshot
-                </object>
               </div>
             </div>
             
