@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Search, TrendingUp, Loader2, RefreshCw, BarChart3, Newspaper, Zap, Database, Brain, Activity, Filter } from 'lucide-react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { Search, TrendingUp, Loader2, RefreshCw, BarChart3, Newspaper, Zap, Database, Brain, Activity, Filter, X, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -64,12 +64,18 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
   const [sectorStocks, setSectorStocks] = useState<Stock[]>([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
 
-  // Combined suggestions for dropdown
+  // State for keyboard navigation
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [loadingSectorStocks, setLoadingSectorStocks] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Combined suggestions for dropdown - now shows ALL sector stocks
   const dropdownSuggestions = useMemo(() => {
     if (searchQuery.trim()) {
       return suggestions;
     } else if (selectedSector && selectedSector !== 'all' && sectorStocks.length > 0) {
-      return sectorStocks.slice(0, 10);
+      return sectorStocks; // Show ALL stocks in sector
     }
     return [];
   }, [suggestions, sectorStocks, searchQuery, selectedSector]);
@@ -119,17 +125,89 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
         return;
       }
       
+      setLoadingSectorStocks(true);
       try {
         const results = await getStocksBySector(selectedSector);
         setSectorStocks(results);
       } catch (error) {
         console.error('Error fetching sector stocks:', error);
         setSectorStocks([]);
+      } finally {
+        setLoadingSectorStocks(false);
       }
     };
 
     fetchSectorStocks();
   }, [selectedSector]);
+
+  // Reset highlighted index when dropdown content changes
+  useEffect(() => {
+    setHighlightedIndex(-1);
+  }, [dropdownSuggestions]);
+
+  // Keyboard navigation handler
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!isDropdownOpen || dropdownSuggestions.length === 0) return;
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setHighlightedIndex(prev => 
+          prev < dropdownSuggestions.length - 1 ? prev + 1 : 0
+        );
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setHighlightedIndex(prev => 
+          prev > 0 ? prev - 1 : dropdownSuggestions.length - 1
+        );
+        break;
+      case 'Enter':
+        e.preventDefault();
+        if (highlightedIndex >= 0 && highlightedIndex < dropdownSuggestions.length) {
+          handleStockSelect(dropdownSuggestions[highlightedIndex]);
+        } else if (dropdownSuggestions.length === 1) {
+          handleStockSelect(dropdownSuggestions[0]);
+        }
+        break;
+      case 'Escape':
+        setIsDropdownOpen(false);
+        setHighlightedIndex(-1);
+        break;
+    }
+  }, [isDropdownOpen, dropdownSuggestions, highlightedIndex]);
+
+  // Scroll highlighted item into view
+  useEffect(() => {
+    if (highlightedIndex >= 0 && dropdownRef.current) {
+      const items = dropdownRef.current.querySelectorAll('[data-stock-item]');
+      const highlightedItem = items[highlightedIndex];
+      if (highlightedItem) {
+        highlightedItem.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+    }
+  }, [highlightedIndex]);
+
+  // Function to highlight matching text
+  const highlightMatch = (text: string, query: string) => {
+    if (!query.trim()) return text;
+    
+    const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+    const parts = text.split(regex);
+    
+    return parts.map((part, i) => 
+      regex.test(part) ? (
+        <span key={i} className="bg-primary/30 text-primary font-semibold rounded px-0.5">{part}</span>
+      ) : part
+    );
+  };
+
+  // Clear selection handler
+  const handleClearSelection = () => {
+    setSelectedStock(null);
+    setSearchQuery('');
+    inputRef.current?.focus();
+  };
 
   const loadingMessages = [
     { text: "Spinning up your news...", icon: Newspaper },
@@ -155,8 +233,9 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
 
   const handleStockSelect = (stock: Stock) => {
     setSelectedStock(stock);
-    setSearchQuery(stock.ticker); // Only show the ticker symbol
+    setSearchQuery(stock.ticker); // Only show the ticker symbol in input
     setIsDropdownOpen(false);
+    setHighlightedIndex(-1);
   };
 
   const handleInputChange = (value: string) => {
@@ -619,16 +698,18 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
               </label>
               <div className="relative">
                 <Input
+                  ref={inputRef}
                   type="text"
-                  placeholder="Enter ticker symbol (e.g., KSE100, AGTL) or company name..."
+                  placeholder="Type ticker (e.g., AGTL) or company name..."
                   value={searchQuery}
                   onChange={(e) => handleInputChange(e.target.value)}
                   onFocus={() => setIsDropdownOpen(true)}
+                  onKeyDown={handleKeyDown}
                   onBlur={(e) => {
-                    // Only close if not clicking within dropdown
                     setTimeout(() => {
                       if (!e.relatedTarget?.closest('[data-suggestions-dropdown]')) {
                         setIsDropdownOpen(false);
+                        setHighlightedIndex(-1);
                       }
                     }, 150);
                   }}
@@ -636,113 +717,144 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                 />
 
                 {/* Suggestions Dropdown */}
-                {isDropdownOpen && (searchQuery.trim() || (!searchQuery.trim() && selectedSector !== 'all')) && dropdownSuggestions.length > 0 && (
+                {isDropdownOpen && (searchQuery.trim() || (!searchQuery.trim() && selectedSector !== 'all')) && (
                   <div 
+                    ref={dropdownRef}
                     data-suggestions-dropdown
-                    className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-md shadow-2xl z-[9999] max-h-80 overflow-y-auto backdrop-blur-none"
+                    className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-lg shadow-2xl z-[9999] max-h-[400px] overflow-y-auto scroll-smooth"
                     style={{ backgroundColor: 'hsl(var(--card))' }}
                   >
-                    {loadingSuggestions ? (
-                      <div className="p-3 text-center text-muted-foreground">
-                        <div className="flex items-center justify-center gap-2">
+                    {/* Loading state */}
+                    {(loadingSuggestions || loadingSectorStocks) ? (
+                      <div className="p-4">
+                        <div className="flex items-center justify-center gap-2 text-muted-foreground mb-3">
                           <Loader2 className="h-4 w-4 animate-spin" />
-                          Searching...
+                          Loading stocks...
+                        </div>
+                        {/* Loading skeleton */}
+                        <div className="space-y-2">
+                          {[1, 2, 3].map((i) => (
+                            <div key={i} className="flex items-center gap-3 p-3 animate-pulse">
+                              <div className="w-10 h-10 rounded-lg bg-muted" />
+                              <div className="flex-1 space-y-2">
+                                <div className="h-4 bg-muted rounded w-1/4" />
+                                <div className="h-3 bg-muted rounded w-3/4" />
+                              </div>
+                              <div className="h-5 bg-muted rounded-full w-16" />
+                            </div>
+                          ))}
                         </div>
                       </div>
-                    ) : searchQuery.trim() ? (
-                      suggestions.length > 0 ? (
-                        <>
-                          {/* Results header - not selectable */}
-                          <div className="p-2 bg-muted border-b border-border text-sm text-foreground font-medium">
-                            📊 {suggestions.length} result{suggestions.length !== 1 ? 's' : ''} found
+                    ) : dropdownSuggestions.length > 0 ? (
+                      <>
+                        {/* Results header */}
+                        <div className="p-3 bg-muted/50 border-b border-border text-sm text-foreground font-medium flex items-center justify-between sticky top-0 backdrop-blur-sm">
+                          <div className="flex items-center gap-2">
+                            {searchQuery.trim() ? (
+                              <>
+                                <Search className="h-4 w-4 text-primary" />
+                                <span>{dropdownSuggestions.length} result{dropdownSuggestions.length !== 1 ? 's' : ''} found</span>
+                              </>
+                            ) : (
+                              <>
+                                <Building2 className="h-4 w-4 text-primary" />
+                                <span>{dropdownSuggestions.length} stock{dropdownSuggestions.length !== 1 ? 's' : ''} in {selectedSector}</span>
+                              </>
+                            )}
                           </div>
-                          {/* Actual stock options */}
-                          {suggestions.map((stock, index) => (
-                            <div
-                              key={`suggestion-${stock.ticker}-${index}`}
-                              className="p-3 hover:bg-primary/10 cursor-pointer border-b border-border/50 last:border-b-0 select-none transition-all duration-200 bg-card"
-                              onMouseDown={(e) => {
-                                e.preventDefault();
-                                console.log('Selecting stock:', stock.ticker, 'Index:', index);
-                                handleStockSelect(stock);
-                              }}
-                            >
-                              <div className="flex justify-between items-start pointer-events-none">
-                                <div className="flex items-center gap-3">
-                                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                                    <TrendingUp className="h-5 w-5 text-primary" />
-                                  </div>
-                                  <div>
-                                    <div className="font-bold text-foreground text-base">{stock.ticker}</div>
-                                    <div className="text-sm text-muted-foreground">{stock.name}</div>
-                                  </div>
-                                </div>
-                                <div className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded-full">
-                                  {stock.sector}
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </>
-                      ) : (
-                        <div className="p-3 text-muted-foreground text-center">
-                          No stocks found matching "{searchQuery}"
-                          {selectedSector && ` in ${selectedSector}`}
+                          <span className="text-xs text-muted-foreground">↑↓ Navigate • Enter Select</span>
                         </div>
-                      )
-                    ) : (
-                      sectorStocks.length > 0 && (
-                        <>
-                          {/* Results header for sector stocks - not selectable */}
-                          <div className="p-2 bg-muted border-b border-border text-sm text-foreground font-medium">
-                            📁 {sectorStocks.length} stock{sectorStocks.length !== 1 ? 's' : ''} in sector
-                          </div>
-                          {/* Actual sector stock options */}
-                          {sectorStocks.map((stock, index) => (
-                            <div
-                              key={`sector-${stock.ticker}-${index}`}
-                              className="p-3 hover:bg-primary/10 cursor-pointer border-b border-border/50 last:border-b-0 select-none transition-all duration-200 bg-card"
-                              onMouseDown={(e) => {
-                                e.preventDefault();
-                                console.log('Selecting sector stock:', stock.ticker, 'Index:', index);
-                                handleStockSelect(stock);
-                              }}
-                            >
-                              <div className="flex justify-between items-start pointer-events-none">
-                                <div className="flex items-center gap-3">
-                                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                                    <TrendingUp className="h-5 w-5 text-primary" />
-                                  </div>
-                                  <div>
-                                    <div className="font-bold text-foreground text-base">{stock.ticker}</div>
-                                    <div className="text-sm text-muted-foreground">{stock.name}</div>
-                                  </div>
+                        
+                        {/* Stock options */}
+                        {dropdownSuggestions.map((stock, index) => (
+                          <div
+                            key={`stock-${stock.ticker}-${index}`}
+                            data-stock-item
+                            className={`p-3 cursor-pointer border-b border-border/30 last:border-b-0 select-none transition-all duration-150
+                              ${highlightedIndex === index 
+                                ? 'bg-primary/15 border-l-2 border-l-primary' 
+                                : 'hover:bg-muted/50'
+                              }`}
+                            onMouseDown={(e) => {
+                              e.preventDefault();
+                              handleStockSelect(stock);
+                            }}
+                            onMouseEnter={() => setHighlightedIndex(index)}
+                          >
+                            <div className="flex items-center gap-3 pointer-events-none">
+                              {/* Icon */}
+                              <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0
+                                ${highlightedIndex === index ? 'bg-primary/20' : 'bg-muted'}`}>
+                                <TrendingUp className={`h-5 w-5 ${highlightedIndex === index ? 'text-primary' : 'text-muted-foreground'}`} />
+                              </div>
+                              
+                              {/* Company name (prominent) and symbol */}
+                              <div className="flex-1 min-w-0">
+                                <div className="font-semibold text-foreground text-base truncate">
+                                  {searchQuery.trim() ? highlightMatch(stock.name, searchQuery) : stock.name}
                                 </div>
-                                <div className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded-full">
-                                  {stock.sector}
+                                <div className="text-sm text-muted-foreground flex items-center gap-2">
+                                  <span className="font-mono font-bold text-primary">
+                                    {searchQuery.trim() ? highlightMatch(stock.ticker, searchQuery) : stock.ticker}
+                                  </span>
                                 </div>
                               </div>
+                              
+                              {/* Sector badge */}
+                              <div className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded-full shrink-0 max-w-[120px] truncate">
+                                {stock.sector}
+                              </div>
                             </div>
-                          ))}
-                        </>
-                      )
-                    )}
+                          </div>
+                        ))}
+                      </>
+                    ) : searchQuery.trim() ? (
+                      <div className="p-6 text-center">
+                        <Search className="h-8 w-8 text-muted-foreground/50 mx-auto mb-2" />
+                        <p className="text-muted-foreground">
+                          No stocks found matching "<span className="font-medium text-foreground">{searchQuery}</span>"
+                        </p>
+                        {selectedSector !== 'all' && (
+                          <p className="text-sm text-muted-foreground mt-1">
+                            in {selectedSector}
+                          </p>
+                        )}
+                      </div>
+                    ) : selectedSector !== 'all' ? (
+                      <div className="p-6 text-center">
+                        <Building2 className="h-8 w-8 text-muted-foreground/50 mx-auto mb-2" />
+                        <p className="text-muted-foreground">No stocks found in this sector</p>
+                      </div>
+                    ) : null}
                   </div>
                 )}
               </div>
             </div>
 
-            {/* Selected Stock Display */}
+            {/* Selected Stock Chip */}
             {selectedStock && (
-              <div className="bg-primary/10 border border-primary/20 rounded-lg p-3">
+              <div className="bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20 rounded-lg p-4">
                 <div className="flex items-center justify-between">
-                  <div>
-                    <div className="font-semibold text-foreground">{selectedStock.ticker}</div>
-                    <div className="text-sm text-muted-foreground">{selectedStock.name}</div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center">
+                      <TrendingUp className="h-6 w-6 text-primary" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-lg text-primary font-mono">{selectedStock.ticker}</span>
+                        <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">Selected</span>
+                      </div>
+                      <div className="text-sm text-foreground font-medium">{selectedStock.name}</div>
+                      <div className="text-xs text-muted-foreground mt-0.5">{selectedStock.sector}</div>
+                    </div>
                   </div>
-                  <div className="text-xs text-muted-foreground bg-secondary/30 px-2 py-1 rounded">
-                    {selectedStock.sector}
-                  </div>
+                  <button
+                    onClick={handleClearSelection}
+                    className="p-2 hover:bg-destructive/10 rounded-full transition-colors group"
+                    title="Clear selection"
+                  >
+                    <X className="h-5 w-5 text-muted-foreground group-hover:text-destructive transition-colors" />
+                  </button>
                 </div>
               </div>
             )}
