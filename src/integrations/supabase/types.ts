@@ -122,6 +122,246 @@ export type Database = {
         }
         Relationships: []
       }
+      stg_ghl_contacts: {
+        Row: {
+          contact_id: string | null
+          created: string | null
+          days_since_last_purchase: number | null
+          email: string | null
+          email_norm: string | null
+          first_name: string | null
+          firstname_norm: string | null
+          globalcustomerid: string | null
+          globalcustomerid_norm: string | null
+          id: number
+          last_name: string | null
+          last_purchase_date: string | null
+          lastname_norm: string | null
+          name: string | null
+          phone: string | null
+          phone_norm: string | null
+          tags: string | null
+          total_spend: number | null
+        }
+        Insert: {
+          contact_id?: string | null
+          created?: string | null
+          days_since_last_purchase?: number | null
+          email?: string | null
+          email_norm?: string | null
+          first_name?: string | null
+          firstname_norm?: string | null
+          globalcustomerid?: string | null
+          globalcustomerid_norm?: string | null
+          id?: number
+          last_name?: string | null
+          last_purchase_date?: string | null
+          lastname_norm?: string | null
+          name?: string | null
+          phone?: string | null
+          phone_norm?: string | null
+          tags?: string | null
+          total_spend?: number | null
+        }
+        Update: {
+          contact_id?: string | null
+          created?: string | null
+          days_since_last_purchase?: number | null
+          email?: string | null
+          email_norm?: string | null
+          first_name?: string | null
+          firstname_norm?: string | null
+          globalcustomerid?: string | null
+          globalcustomerid_norm?: string | null
+          id?: number
+          last_name?: string | null
+          last_purchase_date?: string | null
+          lastname_norm?: string | null
+          name?: string | null
+          phone?: string | null
+          phone_norm?: string | null
+          tags?: string | null
+          total_spend?: number | null
+        }
+        Relationships: []
+      }
+      stg_ghl_contacts_clean: {
+        Row: {
+          contact_id: string | null
+          created: string | null
+          days_since_last_purchase: number | null
+          email: string | null
+          email_norm: string | null
+          first_name: string | null
+          firstname_norm: string | null
+          globalcustomerid: string | null
+          globalcustomerid_norm: string | null
+          id: number | null
+          last_name: string | null
+          last_purchase_date: string | null
+          lastname_norm: string | null
+          name: string | null
+          phone: string | null
+          phone_norm: string | null
+          rn: number | null
+          tags: string | null
+          total_spend: number | null
+        }
+        Insert: {
+          contact_id?: string | null
+          created?: string | null
+          days_since_last_purchase?: number | null
+          email?: string | null
+          email_norm?: string | null
+          first_name?: string | null
+          firstname_norm?: string | null
+          globalcustomerid?: string | null
+          globalcustomerid_norm?: string | null
+          id?: number | null
+          last_name?: string | null
+          last_purchase_date?: string | null
+          lastname_norm?: string | null
+          name?: string | null
+          phone?: string | null
+          phone_norm?: string | null
+          rn?: number | null
+          tags?: string | null
+          total_spend?: number | null
+        }
+        Update: {
+          contact_id?: string | null
+          created?: string | null
+          days_since_last_purchase?: number | null
+          email?: string | null
+          email_norm?: string | null
+          first_name?: string | null
+          firstname_norm?: string | null
+          globalcustomerid?: string | null
+          globalcustomerid_norm?: string | null
+          id?: number | null
+          last_name?: string | null
+          last_purchase_date?: string | null
+          lastname_norm?: string | null
+          name?: string | null
+          phone?: string | null
+          phone_norm?: string | null
+          rn?: number | null
+          tags?: string | null
+          total_spend?: number | null
+        }
+        Relationships: []
+      }
+      stg_loyalty_contacts: {
+        Row: {
+          birthday: number | null
+          birthmonth: number | null
+          email: string | null
+          email_norm: string | null
+          firstname: string | null
+          firstname_norm: string | null
+          globalcustomerid: string | null
+          globalcustomerid_norm: string | null
+          id: number
+          joindate: string | null
+          lastname: string | null
+          lastname_norm: string | null
+          phone: string | null
+          phone_norm: string | null
+          zipcode: string | null
+        }
+        Insert: {
+          birthday?: number | null
+          birthmonth?: number | null
+          email?: string | null
+          email_norm?: string | null
+          firstname?: string | null
+          firstname_norm?: string | null
+          globalcustomerid?: string | null
+          globalcustomerid_norm?: string | null
+          id?: number
+          joindate?: string | null
+          lastname?: string | null
+          lastname_norm?: string | null
+          phone?: string | null
+          phone_norm?: string | null
+          zipcode?: string | null
+        }
+        Update: {
+          birthday?: number | null
+          birthmonth?: number | null
+          email?: string | null
+          email_norm?: string | null
+          firstname?: string | null
+          firstname_norm?: string | null
+          globalcustomerid?: string | null
+          globalcustomerid_norm?: string | null
+          id?: number
+          joindate?: string | null
+          lastname?: string | null
+          lastname_norm?: string | null
+          phone?: string | null
+          phone_norm?: string | null
+          zipcode?: string | null
+        }
+        Relationships: []
+      }
+      stg_loyalty_contacts_clean: {
+        Row: {
+          birthday: number | null
+          birthmonth: number | null
+          email: string | null
+          email_norm: string | null
+          firstname: string | null
+          firstname_norm: string | null
+          globalcustomerid: string | null
+          globalcustomerid_norm: string | null
+          id: number | null
+          joindate: string | null
+          lastname: string | null
+          lastname_norm: string | null
+          phone: string | null
+          phone_norm: string | null
+          rn: number | null
+          zipcode: string | null
+        }
+        Insert: {
+          birthday?: number | null
+          birthmonth?: number | null
+          email?: string | null
+          email_norm?: string | null
+          firstname?: string | null
+          firstname_norm?: string | null
+          globalcustomerid?: string | null
+          globalcustomerid_norm?: string | null
+          id?: number | null
+          joindate?: string | null
+          lastname?: string | null
+          lastname_norm?: string | null
+          phone?: string | null
+          phone_norm?: string | null
+          rn?: number | null
+          zipcode?: string | null
+        }
+        Update: {
+          birthday?: number | null
+          birthmonth?: number | null
+          email?: string | null
+          email_norm?: string | null
+          firstname?: string | null
+          firstname_norm?: string | null
+          globalcustomerid?: string | null
+          globalcustomerid_norm?: string | null
+          id?: number | null
+          joindate?: string | null
+          lastname?: string | null
+          lastname_norm?: string | null
+          phone?: string | null
+          phone_norm?: string | null
+          rn?: number | null
+          zipcode?: string | null
+        }
+        Relationships: []
+      }
       Stocks: {
         Row: {
           created_at: string | null
@@ -151,7 +391,50 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      v_contacts_to_create: {
+        Row: {
+          birthday: number | null
+          birthmonth: number | null
+          email: string | null
+          email_norm: string | null
+          firstname: string | null
+          firstname_norm: string | null
+          globalcustomerid: string | null
+          globalcustomerid_norm: string | null
+          id: number | null
+          joindate: string | null
+          lastname: string | null
+          lastname_norm: string | null
+          phone: string | null
+          phone_norm: string | null
+          rn: number | null
+          zipcode: string | null
+        }
+        Relationships: []
+      }
+      v_contacts_to_update: {
+        Row: {
+          birthday: number | null
+          birthmonth: number | null
+          email: string | null
+          email_norm: string | null
+          firstname: string | null
+          firstname_norm: string | null
+          ghl_contact_id: string | null
+          globalcustomerid: string | null
+          globalcustomerid_norm: string | null
+          id: number | null
+          joindate: string | null
+          lastname: string | null
+          lastname_norm: string | null
+          match_method: string | null
+          phone: string | null
+          phone_norm: string | null
+          rn: number | null
+          zipcode: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never
