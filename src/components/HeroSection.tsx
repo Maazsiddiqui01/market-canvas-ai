@@ -1,132 +1,153 @@
 import React from 'react';
-import { TrendingUp, BarChart3, Activity, Target, Search, RefreshCw, Newspaper, TrendingDown } from 'lucide-react';
+import { TrendingUp, BarChart3, Activity, Target, Search, Sparkles, Zap, Shield, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import StockSearch from './StockSearch';
+import { Link } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface HeroSectionProps {
   onTickerChange?: (ticker: string) => void;
 }
 
 const HeroSection = ({ onTickerChange }: HeroSectionProps) => {
+  const { user } = useAuth();
+
   return (
-    <div className="relative min-h-[80vh] bg-gradient-to-br from-background to-secondary/50 border-b border-border overflow-hidden">
-      {/* Clean, minimal background */}
+    <div className="relative min-h-screen bg-background overflow-hidden">
+      {/* Animated gradient background */}
       <div className="absolute inset-0">
-        {/* Simple gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/3 via-transparent to-accent/3"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/5" />
         
-        {/* Subtle geometric pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-20 right-20 w-32 h-32 border border-primary/20 rounded-lg rotate-45"></div>
-          <div className="absolute bottom-32 left-16 w-24 h-24 border border-accent/20 rounded-full"></div>
-          <div className="absolute top-1/2 left-1/3 w-16 h-16 border border-primary/15 rotate-12"></div>
-        </div>
+        {/* Floating orbs */}
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-accent/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-primary/5 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '2s' }} />
+        
+        {/* Grid pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(hsl(var(--border)/0.3)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--border)/0.3)_1px,transparent_1px)] bg-[size:60px_60px] [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_70%)]" />
       </div>
-      
-      <div className="container mx-auto px-4 py-20 relative z-10">
-        <div className="text-center max-w-4xl mx-auto">
-          {/* Clean Logo Section with hover effects */}
-          <div className="flex items-center justify-center mb-8 group">
-            <div className="bg-primary/10 p-4 rounded-2xl mr-4 group-hover:bg-primary/20 transition-all duration-500 group-hover:scale-110 group-hover:rotate-3">
-              <TrendingUp className="h-10 w-10 text-primary transition-transform duration-300 group-hover:scale-110" />
-            </div>
-            <div className="text-left">
-              <h1 className="text-4xl md:text-5xl font-bold text-foreground transition-all duration-300 hover:text-primary">
-                Market Canvas 
-                <span className="text-primary animate-pulse"> AI</span>
-              </h1>
-              <div className="flex items-center gap-2 mt-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="text-sm text-muted-foreground">AI-Powered Analytics</span>
-              </div>
+
+      <div className="container mx-auto px-4 py-32 relative z-10">
+        <div className="max-w-5xl mx-auto">
+          {/* Top badge */}
+          <div className="flex justify-center mb-8 animate-fade-in-scale">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm">
+              <Sparkles className="h-4 w-4 text-primary" />
+              <span className="text-sm font-medium text-primary">AI-Powered Market Intelligence</span>
             </div>
           </div>
 
-          {/* Main Headline with dynamic text effects */}
-          <div className="mb-12">
-            <h2 className="text-2xl md:text-3xl text-foreground/90 mb-6 leading-relaxed font-light">
-              Get your <span className="text-primary font-semibold bg-primary/10 px-2 py-1 rounded-lg hover:bg-primary/20 transition-colors duration-300">competitive edge</span> with 
-              <br />live prices, breaking <span className="text-primary font-semibold bg-primary/10 px-2 py-1 rounded-lg hover:bg-primary/20 transition-colors duration-300">news & AI intelligence</span>
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto hover:text-foreground/80 transition-colors duration-300">
-              Advanced AI-driven technical analysis, predictive market trends, and intelligent recommendations for smarter trading decisions
+          {/* Main headline */}
+          <div className="text-center mb-12 animate-slide-in-bottom">
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
+              <span className="text-foreground">Trade Smarter with</span>
+              <br />
+              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                AI Intelligence
+              </span>
+            </h1>
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              Real-time market analysis, predictive insights, and intelligent recommendations 
+              powered by advanced AI technology
             </p>
           </div>
 
-          {/* How to Use Section with hover effects */}
-          <div className="mb-12">
-            <h3 className="text-2xl font-semibold text-foreground mb-8">How to Use Market Canvas AI</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* Step 1 */}
-              <div className="text-center group hover:scale-105 transition-all duration-300 cursor-pointer">
-                <div className="relative mb-4">
-                  <div className="bg-primary/10 p-6 rounded-2xl mx-auto w-20 h-20 flex items-center justify-center group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110">
-                    <Search className="h-8 w-8 text-primary transition-transform duration-300 group-hover:scale-110" />
-                  </div>
-                  <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full font-bold">1</div>
+          {/* Search box - glassmorphism style */}
+          <div className="max-w-2xl mx-auto mb-16 animate-float-in" style={{ animationDelay: '0.3s' }}>
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-primary to-accent rounded-2xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity duration-500" />
+              <div className="relative bg-card/80 backdrop-blur-xl border border-border rounded-2xl p-2">
+                <StockSearch onTickerChange={onTickerChange} />
+              </div>
+            </div>
+          </div>
+
+          {/* CTA buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20 animate-slide-in-bottom" style={{ animationDelay: '0.4s' }}>
+            {user ? (
+              <Link to="/dashboard">
+                <Button size="lg" className="btn-professional text-lg px-8 py-6 rounded-xl group">
+                  Go to Dashboard
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
+            ) : (
+              <>
+                <Link to="/auth">
+                  <Button size="lg" className="btn-professional text-lg px-8 py-6 rounded-xl group">
+                    Start Free Trial
+                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </Link>
+                <Button size="lg" variant="outline" className="text-lg px-8 py-6 rounded-xl border-border hover:bg-primary/10">
+                  Watch Demo
+                </Button>
+              </>
+            )}
+          </div>
+
+          {/* Feature cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-slide-in-bottom" style={{ animationDelay: '0.5s' }}>
+            {/* Card 1 */}
+            <div className="group relative">
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/50 to-accent/50 rounded-2xl blur opacity-0 group-hover:opacity-30 transition-opacity duration-500" />
+              <div className="relative card-professional p-8 rounded-2xl h-full transition-all duration-300 group-hover:translate-y-[-4px]">
+                <div className="bg-primary/10 p-4 rounded-xl w-fit mb-6 group-hover:bg-primary/20 transition-colors">
+                  <Zap className="h-8 w-8 text-primary" />
                 </div>
-                <h4 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">Search & Select Stock</h4>
-                <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
-                  Enter stock symbol to get AI-powered analysis of any listed company
+                <h3 className="text-xl font-semibold text-foreground mb-3">Real-Time Analysis</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Live market data with AI-powered technical analysis and pattern recognition
                 </p>
               </div>
+            </div>
 
-              {/* Step 2 */}
-              <div className="text-center group hover:scale-105 transition-all duration-300 cursor-pointer">
-                <div className="relative mb-4">
-                  <div className="bg-primary/10 p-6 rounded-2xl mx-auto w-20 h-20 flex items-center justify-center group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110">
-                    <RefreshCw className="h-8 w-8 text-primary transition-transform duration-300 group-hover:scale-110" />
-                  </div>
-                  <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full font-bold">2</div>
+            {/* Card 2 */}
+            <div className="group relative">
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/50 to-accent/50 rounded-2xl blur opacity-0 group-hover:opacity-30 transition-opacity duration-500" />
+              <div className="relative card-professional p-8 rounded-2xl h-full transition-all duration-300 group-hover:translate-y-[-4px]">
+                <div className="bg-primary/10 p-4 rounded-xl w-fit mb-6 group-hover:bg-primary/20 transition-colors">
+                  <Target className="h-8 w-8 text-primary" />
                 </div>
-                <h4 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">AI Analysis & Insights</h4>
-                <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
-                  View AI-generated market insights, technical patterns & smart recommendations
+                <h3 className="text-xl font-semibold text-foreground mb-3">Smart Predictions</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  AI-driven price predictions and market sentiment analysis for better decisions
                 </p>
               </div>
+            </div>
 
-              {/* Step 3 */}
-              <div className="text-center group hover:scale-105 transition-all duration-300 cursor-pointer">
-                <div className="relative mb-4">
-                  <div className="bg-primary/10 p-6 rounded-2xl mx-auto w-20 h-20 flex items-center justify-center group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110">
-                    <Newspaper className="h-8 w-8 text-primary transition-transform duration-300 group-hover:scale-110" />
-                  </div>
-                  <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full font-bold">3</div>
+            {/* Card 3 */}
+            <div className="group relative">
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/50 to-accent/50 rounded-2xl blur opacity-0 group-hover:opacity-30 transition-opacity duration-500" />
+              <div className="relative card-professional p-8 rounded-2xl h-full transition-all duration-300 group-hover:translate-y-[-4px]">
+                <div className="bg-primary/10 p-4 rounded-xl w-fit mb-6 group-hover:bg-primary/20 transition-colors">
+                  <Shield className="h-8 w-8 text-primary" />
                 </div>
-                <h4 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">Smart News & Rankings</h4>
-                <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
-                  Browse AI-curated news and intelligent market rankings
+                <h3 className="text-xl font-semibold text-foreground mb-3">Portfolio Tracking</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Track your investments with personalized watchlists and portfolio analytics
                 </p>
               </div>
             </div>
           </div>
 
-          {/* Stock Search with enhanced styling */}
-          <div className="max-w-xl mx-auto mb-8 group">
-            <div className="transform transition-all duration-300 group-hover:scale-105">
-              <StockSearch onTickerChange={onTickerChange} />
+          {/* Stats section */}
+          <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 animate-slide-in-bottom" style={{ animationDelay: '0.6s' }}>
+            <div className="text-center">
+              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">10K+</div>
+              <div className="text-sm text-muted-foreground">Active Traders</div>
             </div>
-          </div>
-
-          {/* Feature Icons with dynamic effects */}
-          <div className="flex items-center justify-center gap-12">
-            <div className="flex flex-col items-center gap-2 group cursor-pointer">
-              <div className="bg-primary/10 p-3 rounded-full group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110 group-hover:rotate-6">
-                <BarChart3 className="h-6 w-6 text-primary transition-transform duration-300 group-hover:scale-110" />
-              </div>
-              <span className="text-sm text-muted-foreground group-hover:text-primary transition-colors duration-300">Live Charts</span>
+            <div className="text-center">
+              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">5000+</div>
+              <div className="text-sm text-muted-foreground">Stocks Analyzed</div>
             </div>
-            <div className="flex flex-col items-center gap-2 group cursor-pointer">
-              <div className="bg-primary/10 p-3 rounded-full group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110 group-hover:rotate-6">
-                <Activity className="h-6 w-6 text-primary transition-transform duration-300 group-hover:scale-110" />
-              </div>
-              <span className="text-sm text-muted-foreground group-hover:text-primary transition-colors duration-300">Technical Analysis</span>
+            <div className="text-center">
+              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">99.9%</div>
+              <div className="text-sm text-muted-foreground">Uptime</div>
             </div>
-            <div className="flex flex-col items-center gap-2 group cursor-pointer">
-              <div className="bg-primary/10 p-3 rounded-full group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110 group-hover:rotate-6">
-                <Target className="h-6 w-6 text-primary transition-transform duration-300 group-hover:scale-110" />
-              </div>
-              <span className="text-sm text-muted-foreground group-hover:text-primary transition-colors duration-300">AI Insights</span>
+            <div className="text-center">
+              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">24/7</div>
+              <div className="text-sm text-muted-foreground">AI Monitoring</div>
             </div>
           </div>
         </div>
