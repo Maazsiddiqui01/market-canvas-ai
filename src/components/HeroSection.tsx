@@ -1,15 +1,10 @@
 import React from 'react';
-import { TrendingUp, BarChart3, Activity, Target, Search, Sparkles, Zap, Shield, ArrowRight } from 'lucide-react';
+import { Sparkles, Zap, Target, Shield, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import StockSearch from './StockSearch';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 
-interface HeroSectionProps {
-  onTickerChange?: (ticker: string) => void;
-}
-
-const HeroSection = ({ onTickerChange }: HeroSectionProps) => {
+const HeroSection = () => {
   const { user } = useAuth();
 
   return (
@@ -52,18 +47,8 @@ const HeroSection = ({ onTickerChange }: HeroSectionProps) => {
             </p>
           </div>
 
-          {/* Search box - glassmorphism style */}
-          <div className="max-w-2xl mx-auto mb-16 animate-float-in" style={{ animationDelay: '0.3s' }}>
-            <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-primary to-accent rounded-2xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity duration-500" />
-              <div className="relative bg-card/80 backdrop-blur-xl border border-border rounded-2xl p-2">
-                <StockSearch onTickerChange={onTickerChange} />
-              </div>
-            </div>
-          </div>
-
           {/* CTA buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20 animate-slide-in-bottom" style={{ animationDelay: '0.4s' }}>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20 animate-slide-in-bottom" style={{ animationDelay: '0.3s' }}>
             {user ? (
               <Link to="/dashboard">
                 <Button size="lg" className="btn-professional text-lg px-8 py-6 rounded-xl group">
@@ -72,51 +57,46 @@ const HeroSection = ({ onTickerChange }: HeroSectionProps) => {
                 </Button>
               </Link>
             ) : (
-              <>
-                <Link to="/auth">
-                  <Button size="lg" className="btn-professional text-lg px-8 py-6 rounded-xl group">
-                    Start Free Trial
-                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </Link>
-                <Button size="lg" variant="outline" className="text-lg px-8 py-6 rounded-xl border-border hover:bg-primary/10">
-                  Watch Demo
+              <Link to="/auth">
+                <Button size="lg" className="btn-professional text-lg px-8 py-6 rounded-xl group">
+                  Get Started
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
-              </>
+              </Link>
             )}
           </div>
 
           {/* Feature cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-slide-in-bottom" style={{ animationDelay: '0.5s' }}>
-            {/* Card 1 */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-slide-in-bottom" style={{ animationDelay: '0.4s' }}>
+            {/* Card 1 - AI Research */}
             <div className="group relative">
               <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/50 to-accent/50 rounded-2xl blur opacity-0 group-hover:opacity-30 transition-opacity duration-500" />
               <div className="relative card-professional p-8 rounded-2xl h-full transition-all duration-300 group-hover:translate-y-[-4px]">
                 <div className="bg-primary/10 p-4 rounded-xl w-fit mb-6 group-hover:bg-primary/20 transition-colors">
                   <Zap className="h-8 w-8 text-primary" />
                 </div>
-                <h3 className="text-xl font-semibold text-foreground mb-3">Real-Time Analysis</h3>
+                <h3 className="text-xl font-semibold text-foreground mb-3">AI-Powered Research</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  Live market data with AI-powered technical analysis and pattern recognition
+                  Get instant answers to complex market questions with our advanced AI assistant
                 </p>
               </div>
             </div>
 
-            {/* Card 2 */}
+            {/* Card 2 - Real-time Insights */}
             <div className="group relative">
               <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/50 to-accent/50 rounded-2xl blur opacity-0 group-hover:opacity-30 transition-opacity duration-500" />
               <div className="relative card-professional p-8 rounded-2xl h-full transition-all duration-300 group-hover:translate-y-[-4px]">
                 <div className="bg-primary/10 p-4 rounded-xl w-fit mb-6 group-hover:bg-primary/20 transition-colors">
                   <Target className="h-8 w-8 text-primary" />
                 </div>
-                <h3 className="text-xl font-semibold text-foreground mb-3">Smart Predictions</h3>
+                <h3 className="text-xl font-semibold text-foreground mb-3">Real-time Insights</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  AI-driven price predictions and market sentiment analysis for better decisions
+                  Live market data, technical analysis, and sentiment tracking at your fingertips
                 </p>
               </div>
             </div>
 
-            {/* Card 3 */}
+            {/* Card 3 - Portfolio Tracking */}
             <div className="group relative">
               <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/50 to-accent/50 rounded-2xl blur opacity-0 group-hover:opacity-30 transition-opacity duration-500" />
               <div className="relative card-professional p-8 rounded-2xl h-full transition-all duration-300 group-hover:translate-y-[-4px]">
@@ -125,14 +105,14 @@ const HeroSection = ({ onTickerChange }: HeroSectionProps) => {
                 </div>
                 <h3 className="text-xl font-semibold text-foreground mb-3">Portfolio Tracking</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  Track your investments with personalized watchlists and portfolio analytics
+                  Manage your investments with personalized watchlists and portfolio analytics
                 </p>
               </div>
             </div>
           </div>
 
           {/* Stats section */}
-          <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 animate-slide-in-bottom" style={{ animationDelay: '0.6s' }}>
+          <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 animate-slide-in-bottom" style={{ animationDelay: '0.5s' }}>
             <div className="text-center">
               <div className="text-3xl md:text-4xl font-bold text-primary mb-2">10K+</div>
               <div className="text-sm text-muted-foreground">Active Traders</div>
