@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { Search, TrendingUp, Loader2, RefreshCw, BarChart3, Newspaper, Zap, Database, Brain, Activity, Filter, X, Building2 } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -17,7 +20,9 @@ interface StockSearchProps {
 }
 
 const StockSearch = ({ onTickerChange }: StockSearchProps) => {
-  
+  const { user } = useAuth();
+  const { toast } = useToast();
+
    // Function to extract and process links from content
    const extractAndProcessLinks = (content: string) => {
      // Replace HTML links with React-compatible format
@@ -244,6 +249,41 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
     setIsDropdownOpen(true);
   };
 
+  // Save stock search to history
+  const saveSearchToHistory = async (ticker: string, stockName: string | null) => {
+    if (!user) return;
+    
+    try {
+      // Check for recent duplicate (within last 5 minutes)
+      const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+      const { data: existing } = await supabase
+        .from('search_history')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('ticker', ticker.toUpperCase())
+        .gte('searched_at', fiveMinutesAgo)
+        .limit(1);
+      
+      if (existing && existing.length > 0) {
+        // Update timestamp instead of creating duplicate
+        await supabase
+          .from('search_history')
+          .update({ searched_at: new Date().toISOString() })
+          .eq('id', existing[0].id);
+      } else {
+        // Insert new search
+        await supabase.from('search_history').insert({
+          user_id: user.id,
+          ticker: ticker.toUpperCase(),
+          stock_name: stockName,
+          sector: selectedSector !== 'all' ? selectedSector : null
+        });
+      }
+    } catch (error) {
+      console.error('Error saving search history:', error);
+    }
+  };
+
   const handleSearch = async (isRefresh = false) => {
     // Always use the ticker symbol, whether from selected stock or manual input
     const ticker = selectedStock?.ticker || searchQuery.trim();
@@ -259,6 +299,9 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
     }
 
     try {
+      // Save to search history (non-blocking)
+      saveSearchToHistory(ticker, selectedStock?.name || null);
+
       // Use KSE-100 specific webhook for KSE100 ticker
       const webhookUrl = ticker.toUpperCase() === 'KSE100' 
         ? 'https://n8n-maaz.duckdns.org/webhook/KSE-100'
@@ -289,6 +332,11 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
       
       // Notify parent component about ticker change
       onTickerChange?.(ticker.toUpperCase());
+
+      toast({
+        title: 'Search Complete',
+        description: `Data loaded for ${ticker.toUpperCase()}`,
+      });
       
     } catch (err) {
       console.error('Error fetching stock data:', err);

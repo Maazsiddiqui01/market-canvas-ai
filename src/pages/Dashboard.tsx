@@ -1,10 +1,10 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import DashboardHeader from '@/components/DashboardHeader';
 import { PortfolioManager } from '@/components/portfolio/PortfolioManager';
 import { WatchlistManager } from '@/components/watchlist/WatchlistManager';
-import { AISearchWidget } from '@/components/ai/AISearchWidget';
+import { AISearchWidget, AISearchWidgetRef } from '@/components/ai/AISearchWidget';
 import { RecentSearches } from '@/components/dashboard/RecentSearches';
 import Footer from '@/components/Footer';
 import TradingViewHeatmap from '@/components/TradingViewHeatmap';
@@ -25,6 +25,17 @@ const Dashboard = () => {
   const [selectedTicker, setSelectedTicker] = useState('KSE100');
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [activeTab, setActiveTab] = useState('market');
+  const aiSearchRef = useRef<AISearchWidgetRef>(null);
+
+  // Handler for clicking on recent searches
+  const handleRecentSearchClick = useCallback((ticker: string) => {
+    setActiveTab('ai-search');
+    // Give the tab time to switch before triggering the search
+    setTimeout(() => {
+      aiSearchRef.current?.searchTicker(ticker);
+    }, 100);
+  }, []);
 
   const handleRefreshAll = useCallback(async () => {
     setIsRefreshing(true);
@@ -98,7 +109,7 @@ const Dashboard = () => {
         </div>
 
         {/* Main Dashboard Tabs */}
-        <Tabs defaultValue="market" className="space-y-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid gap-2">
             <TabsTrigger value="market" className="gap-2">
               <BarChart3 className="h-4 w-4" />
@@ -125,22 +136,22 @@ const Dashboard = () => {
           {/* Market Tab - Charts and Analysis */}
           <TabsContent value="market" className="space-y-6">
             {/* Heatmap */}
-            <div className="animate-fade-in-scale">
+            <div className="animate-fade-in">
               <TradingViewHeatmap />
             </div>
 
             {/* Technical and Financial Analysis */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="animate-slide-in-left">
+              <div className="animate-fade-in" style={{ animationDelay: '100ms' }}>
                 <TechnicalAnalysis ticker={selectedTicker} />
               </div>
-              <div className="animate-slide-in-right">
+              <div className="animate-fade-in" style={{ animationDelay: '200ms' }}>
                 <FinancialAnalysis ticker={selectedTicker} />
               </div>
             </div>
 
             {/* Top/Bottom 5 */}
-            <div className="animate-slide-in-bottom">
+            <div className="animate-fade-in" style={{ animationDelay: '300ms' }}>
               <TopBottom5 refreshTrigger={refreshTrigger} />
             </div>
           </TabsContent>
@@ -148,11 +159,11 @@ const Dashboard = () => {
           {/* AI Search Tab */}
           <TabsContent value="ai-search" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-2">
-                <AISearchWidget />
+              <div className="lg:col-span-2 animate-fade-in">
+                <AISearchWidget ref={aiSearchRef} />
               </div>
-              <div>
-                <RecentSearches />
+              <div className="animate-fade-in" style={{ animationDelay: '100ms' }}>
+                <RecentSearches onSearchClick={handleRecentSearchClick} />
               </div>
             </div>
           </TabsContent>
