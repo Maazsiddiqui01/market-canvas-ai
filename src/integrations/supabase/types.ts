@@ -169,6 +169,48 @@ export type Database = {
         }
         Relationships: []
       }
+      price_alerts: {
+        Row: {
+          alert_type: string
+          created_at: string
+          id: string
+          is_triggered: boolean
+          n8n_notified: boolean
+          stock_name: string | null
+          target_price: number
+          ticker: string
+          triggered_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          alert_type: string
+          created_at?: string
+          id?: string
+          is_triggered?: boolean
+          n8n_notified?: boolean
+          stock_name?: string | null
+          target_price: number
+          ticker: string
+          triggered_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          alert_type?: string
+          created_at?: string
+          id?: string
+          is_triggered?: boolean
+          n8n_notified?: boolean
+          stock_name?: string | null
+          target_price?: number
+          ticker?: string
+          triggered_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null

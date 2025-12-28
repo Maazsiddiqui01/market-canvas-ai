@@ -5,7 +5,10 @@ import DashboardHeader from '@/components/DashboardHeader';
 import { PortfolioManager } from '@/components/portfolio/PortfolioManager';
 import { WatchlistManager } from '@/components/watchlist/WatchlistManager';
 import { AISearchWidget, AISearchWidgetRef } from '@/components/ai/AISearchWidget';
+import { StockComparison } from '@/components/ai/StockComparison';
 import { RecentSearches } from '@/components/dashboard/RecentSearches';
+import { PriceAlertManager } from '@/components/alerts/PriceAlertManager';
+import { ExportManager } from '@/components/export/ExportManager';
 import Footer from '@/components/Footer';
 import TradingViewHeatmap from '@/components/TradingViewHeatmap';
 import TechnicalAnalysis from '@/components/TechnicalAnalysis';
@@ -14,10 +17,9 @@ import MarketOverview from '@/components/MarketOverview';
 import TopBottom5 from '@/components/TopBottom5';
 import NewsWidget from '@/components/NewsWidget';
 import StockSearch from '@/components/StockSearch';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Briefcase, Eye, Brain, History, TrendingUp, Sparkles, BarChart3, RefreshCw, Newspaper, Activity } from 'lucide-react';
+import { Briefcase, Eye, Brain, TrendingUp, Sparkles, BarChart3, RefreshCw, Newspaper, Bell, Settings } from 'lucide-react';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -72,7 +74,7 @@ const Dashboard = () => {
       
       <main className="container mx-auto px-4 py-8 pt-24">
         {/* Welcome Section with Stock Search */}
-        <div className="mb-8 animate-fade-in-scale">
+        <div className="mb-8 animate-fade-in">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-6">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-gradient-to-r from-primary to-accent rounded-lg">
@@ -110,14 +112,14 @@ const Dashboard = () => {
 
         {/* Main Dashboard Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid gap-2">
+          <TabsList className="grid w-full grid-cols-7 lg:w-auto lg:inline-grid gap-2">
             <TabsTrigger value="market" className="gap-2">
               <BarChart3 className="h-4 w-4" />
               <span className="hidden sm:inline">Market</span>
             </TabsTrigger>
             <TabsTrigger value="ai-search" className="gap-2">
               <Brain className="h-4 w-4" />
-              <span className="hidden sm:inline">AI Search</span>
+              <span className="hidden sm:inline">AI Tools</span>
             </TabsTrigger>
             <TabsTrigger value="portfolio" className="gap-2">
               <Briefcase className="h-4 w-4" />
@@ -127,9 +129,17 @@ const Dashboard = () => {
               <Eye className="h-4 w-4" />
               <span className="hidden sm:inline">Watchlist</span>
             </TabsTrigger>
+            <TabsTrigger value="alerts" className="gap-2">
+              <Bell className="h-4 w-4" />
+              <span className="hidden sm:inline">Alerts</span>
+            </TabsTrigger>
             <TabsTrigger value="news" className="gap-2">
               <Newspaper className="h-4 w-4" />
               <span className="hidden sm:inline">News</span>
+            </TabsTrigger>
+            <TabsTrigger value="tools" className="gap-2">
+              <Settings className="h-4 w-4" />
+              <span className="hidden sm:inline">Tools</span>
             </TabsTrigger>
           </TabsList>
 
@@ -156,13 +166,18 @@ const Dashboard = () => {
             </div>
           </TabsContent>
 
-          {/* AI Search Tab */}
+          {/* AI Search Tab - Now includes comparison */}
           <TabsContent value="ai-search" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-2 animate-fade-in">
-                <AISearchWidget ref={aiSearchRef} />
+              <div className="lg:col-span-2 space-y-6">
+                <div className="animate-fade-in">
+                  <AISearchWidget ref={aiSearchRef} />
+                </div>
+                <div className="animate-fade-in" style={{ animationDelay: '100ms' }}>
+                  <StockComparison />
+                </div>
               </div>
-              <div className="animate-fade-in" style={{ animationDelay: '100ms' }}>
+              <div className="animate-fade-in" style={{ animationDelay: '150ms' }}>
                 <RecentSearches onSearchClick={handleRecentSearchClick} />
               </div>
             </div>
@@ -178,9 +193,25 @@ const Dashboard = () => {
             <WatchlistManager />
           </TabsContent>
 
+          {/* Alerts Tab */}
+          <TabsContent value="alerts" className="space-y-6">
+            <div className="animate-fade-in">
+              <PriceAlertManager />
+            </div>
+          </TabsContent>
+
           {/* News Tab */}
           <TabsContent value="news" className="space-y-6">
             <NewsWidget refreshTrigger={refreshTrigger} />
+          </TabsContent>
+
+          {/* Tools Tab - Export and utilities */}
+          <TabsContent value="tools" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="animate-fade-in">
+                <ExportManager />
+              </div>
+            </div>
           </TabsContent>
         </Tabs>
       </main>

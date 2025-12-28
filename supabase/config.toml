@@ -1,7 +1,13 @@
-project_id = "bnhnhiaeobjyyulgmxho"
+project_id = "rfuflyhitqwxtcecllya"
 
 [functions.ai-search]
 verify_jwt = false
 
 [functions.scrape-news]
+verify_jwt = false
+
+[functions.check-alerts]
+verify_jwt = false
+
+[functions.compare-stocks]
 verify_jwt = false
