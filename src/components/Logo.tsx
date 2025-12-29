@@ -18,19 +18,23 @@ const sizeClasses = {
 const Logo = ({ size = 'md', className = '' }: LogoProps) => {
   const { resolvedTheme } = useTheme();
   
-  // Red logo for dark mode, teal logo for light mode
-  const logoSrc = resolvedTheme === 'dark' ? logoDark : logoLight;
+  const isDark = resolvedTheme === 'dark';
+  const logoSrc = isDark ? logoDark : logoLight;
 
   return (
-    <img 
-      src={logoSrc} 
-      alt="Market Canvas AI" 
-      className={`${sizeClasses[size]} w-auto object-contain ${className}`}
-      style={{ 
-        background: 'transparent',
-        maxWidth: 'none',
-      }}
-    />
+    <div 
+      className={`inline-flex items-center justify-center rounded-lg ${isDark ? 'bg-white/90 px-2 py-1' : ''}`}
+    >
+      <img 
+        src={logoSrc} 
+        alt="Market Canvas AI" 
+        className={`${sizeClasses[size]} w-auto object-contain ${className}`}
+        style={{ 
+          background: 'transparent',
+          maxWidth: 'none',
+        }}
+      />
+    </div>
   );
 };
 
