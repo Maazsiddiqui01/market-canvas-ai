@@ -76,7 +76,6 @@ export const PortfolioManager = () => {
 
   useEffect(() => {
     if (holdings.length > 0) {
-      fetchPrices();
       fetchAllPositions();
       fetchSectorInfo();
     }
@@ -166,22 +165,26 @@ export const PortfolioManager = () => {
 
       if (data?.prices) {
         setPrices(data.prices);
-        toast({
-          title: 'Prices Updated',
-          description: `Fetched prices for ${Object.keys(data.prices).length} stocks`,
-        });
       }
     } catch (error) {
       console.error('Error fetching prices:', error);
-      toast({
-        title: 'Price Fetch Failed',
-        description: 'Could not fetch live prices. Showing cost basis.',
-        variant: 'destructive',
-      });
     } finally {
       setLoadingPrices(false);
     }
-  }, [holdings, toast]);
+  }, [holdings]);
+
+  // Fetch prices on initial load and auto-refresh every 30 seconds
+  useEffect(() => {
+    if (holdings.length === 0) return;
+
+    fetchPrices();
+
+    const intervalId = setInterval(() => {
+      fetchPrices();
+    }, 30000);
+
+    return () => clearInterval(intervalId);
+  }, [holdings, fetchPrices]);
 
   const createPortfolio = async () => {
     if (!user) return;
