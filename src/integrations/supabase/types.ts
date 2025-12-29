@@ -104,6 +104,50 @@ export type Database = {
         }
         Relationships: []
       }
+      portfolio_history: {
+        Row: {
+          created_at: string
+          holdings_snapshot: Json
+          id: string
+          pnl_percentage: number
+          portfolio_id: string
+          snapshot_date: string
+          total_cost: number
+          total_pnl: number
+          total_value: number
+        }
+        Insert: {
+          created_at?: string
+          holdings_snapshot?: Json
+          id?: string
+          pnl_percentage: number
+          portfolio_id: string
+          snapshot_date: string
+          total_cost: number
+          total_pnl: number
+          total_value: number
+        }
+        Update: {
+          created_at?: string
+          holdings_snapshot?: Json
+          id?: string
+          pnl_percentage?: number
+          portfolio_id?: string
+          snapshot_date?: string
+          total_cost?: number
+          total_pnl?: number
+          total_value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "portfolio_history_portfolio_id_fkey"
+            columns: ["portfolio_id"]
+            isOneToOne: false
+            referencedRelation: "portfolios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       portfolio_holdings: {
         Row: {
           added_at: string
