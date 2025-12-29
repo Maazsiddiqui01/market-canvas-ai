@@ -5,43 +5,43 @@ const sections = [
     id: 'market',
     icon: BarChart3,
     title: 'Market',
-    description: 'Live heatmaps, technical & financial analysis, top gainers/losers',
+    description: 'Heatmaps & Analysis',
   },
   {
     id: 'ai-search',
     icon: Brain,
     title: 'AI Tools',
-    description: 'AI-powered stock analysis, market queries, stock comparison',
+    description: 'AI Stock Research',
   },
   {
     id: 'portfolio',
     icon: Briefcase,
     title: 'Portfolio',
-    description: 'Track holdings, P&L, sector breakdown, performance history',
+    description: 'Track Holdings',
   },
   {
     id: 'watchlist',
     icon: Eye,
     title: 'Watchlist',
-    description: 'Monitor saved stocks with live prices',
+    description: 'Monitor Stocks',
   },
   {
     id: 'alerts',
     icon: Bell,
     title: 'Alerts',
-    description: 'Set price notifications for target levels',
+    description: 'Price Notifications',
   },
   {
     id: 'news',
     icon: Newspaper,
     title: 'News',
-    description: 'Latest market news from PSX sources',
+    description: 'Market Updates',
   },
   {
     id: 'tools',
     icon: Settings,
     title: 'Tools',
-    description: 'Export data and utilities',
+    description: 'Export & Utilities',
   },
 ];
 
@@ -52,33 +52,37 @@ interface NavigationGuideProps {
 
 export const NavigationGuide = ({ activeTab, onTabChange }: NavigationGuideProps) => {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-2 mb-6">
-      {sections.map((section) => {
-        const Icon = section.icon;
-        const isActive = activeTab === section.id;
-        
-        return (
-          <button
-            key={section.id}
-            onClick={() => onTabChange(section.id)}
-            className={`
-              group p-3 rounded-lg text-left transition-all duration-200
-              ${isActive 
-                ? 'bg-primary text-primary-foreground shadow-md scale-[1.02]' 
-                : 'bg-secondary/50 hover:bg-secondary/80 hover:scale-[1.01]'
-              }
-            `}
-          >
-            <div className="flex items-center gap-2 mb-1">
-              <Icon className={`h-4 w-4 ${isActive ? 'text-primary-foreground' : 'text-primary'}`} />
-              <span className="font-medium text-sm">{section.title}</span>
-            </div>
-            <p className={`text-xs leading-snug ${isActive ? 'text-primary-foreground/80' : 'text-muted-foreground'}`}>
-              {section.description}
-            </p>
-          </button>
-        );
-      })}
-    </div>
+    <nav className="sticky top-16 z-40 -mx-4 px-4 py-3 mb-6 bg-background/80 backdrop-blur-xl border-b border-border/50">
+      <div className="flex items-center justify-center gap-1 overflow-x-auto scrollbar-hide">
+        {sections.map((section, index) => {
+          const Icon = section.icon;
+          const isActive = activeTab === section.id;
+          
+          return (
+            <button
+              key={section.id}
+              onClick={() => onTabChange(section.id)}
+              style={{ animationDelay: `${index * 50}ms` }}
+              className={`
+                relative flex flex-col items-center gap-1 px-4 py-2 rounded-xl
+                transition-all duration-300 min-w-[80px] animate-fade-in
+                ${isActive 
+                  ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30 scale-105' 
+                  : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+                }
+              `}
+            >
+              <Icon className={`h-5 w-5 transition-transform duration-300 ${isActive ? 'scale-110' : 'group-hover:scale-105'}`} />
+              <span className="font-medium text-xs whitespace-nowrap">{section.title}</span>
+              
+              {/* Active indicator line */}
+              {isActive && (
+                <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-primary rounded-full" />
+              )}
+            </button>
+          );
+        })}
+      </div>
+    </nav>
   );
 };

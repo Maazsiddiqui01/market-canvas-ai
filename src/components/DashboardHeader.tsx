@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TrendingUp, BarChart3, Newspaper, Calculator, TrendingDown, Mail, User, LogOut, LayoutDashboard } from 'lucide-react';
+import { TrendingUp, User, LogOut, LayoutDashboard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ThemeToggle from './ThemeToggle';
 import { Link, useNavigate } from 'react-router-dom';
@@ -23,7 +23,7 @@ const DashboardHeader = ({ onTickerChange }: DashboardHeaderProps) => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 100);
+      setIsScrolled(window.scrollY > 50);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -36,67 +36,50 @@ const DashboardHeader = ({ onTickerChange }: DashboardHeaderProps) => {
   };
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
       isScrolled 
-        ? 'bg-background/95 backdrop-blur-md border-b border-border shadow-lg shadow-primary/5' 
-        : 'bg-background/95 backdrop-blur-sm border-b border-border'
+        ? 'bg-background/80 backdrop-blur-xl border-b border-border/50 shadow-lg shadow-primary/5 py-2' 
+        : 'bg-gradient-to-b from-background to-transparent py-4'
     }`}>
-      <div className="container mx-auto px-4 py-3">
+      <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
           {/* Logo and Title */}
-          <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-            <div className={`bg-gradient-to-r from-primary to-accent p-2 rounded-lg transition-all duration-300 ${
-              isScrolled ? 'scale-75' : 'scale-100'
+          <Link to="/" className="flex items-center space-x-3 group">
+            <div className={`bg-gradient-to-r from-primary to-accent p-2.5 rounded-xl transition-all duration-500 group-hover:shadow-lg group-hover:shadow-primary/30 ${
+              isScrolled ? 'scale-90' : 'scale-100'
             }`}>
-              <TrendingUp className="h-6 w-6 text-primary-foreground" />
+              <TrendingUp className="h-5 w-5 text-primary-foreground" />
             </div>
-            <div>
+            <div className="overflow-hidden">
               <h1 className={`font-bold text-foreground transition-all duration-300 ${
-                isScrolled ? 'text-base' : 'text-xl'
-              }`}>Market Canvas AI</h1>
-              {!isScrolled && (
-                <p className="text-xs text-muted-foreground">AI-powered market intelligence</p>
-              )}
+                isScrolled ? 'text-lg' : 'text-xl'
+              }`}>
+                Market Canvas AI
+              </h1>
+              <p className={`text-xs text-muted-foreground transition-all duration-300 ${
+                isScrolled ? 'opacity-0 h-0' : 'opacity-100 h-auto'
+              }`}>
+                AI-powered market intelligence
+              </p>
             </div>
           </Link>
           
-          {/* Navigation Menu and Auth */}
-          <div className="flex items-center space-x-2">
-            <nav className="hidden md:flex items-center space-x-1">
-              <Button variant="ghost" size={isScrolled ? "sm" : "default"} className="text-muted-foreground hover:text-foreground hover:bg-primary/10" onClick={() => document.getElementById('heatmap')?.scrollIntoView({ behavior: 'smooth' })}>
-                <BarChart3 className="h-4 w-4 mr-2" />
-                {!isScrolled && "Heatmap"}
-              </Button>
-              <Button variant="ghost" size={isScrolled ? "sm" : "default"} className="text-muted-foreground hover:text-foreground hover:bg-primary/10" onClick={() => document.getElementById('technical-analysis')?.scrollIntoView({ behavior: 'smooth' })}>
-                <TrendingUp className="h-4 w-4 mr-2" />
-                {!isScrolled && "Technical"}
-              </Button>
-              <Button variant="ghost" size={isScrolled ? "sm" : "default"} className="text-muted-foreground hover:text-foreground hover:bg-primary/10" onClick={() => document.getElementById('financial-analysis')?.scrollIntoView({ behavior: 'smooth' })}>
-                <Calculator className="h-4 w-4 mr-2" />
-                {!isScrolled && "Fundamental"}
-              </Button>
-              <Button variant="ghost" size={isScrolled ? "sm" : "default"} className="text-muted-foreground hover:text-foreground hover:bg-primary/10" onClick={() => document.getElementById('news')?.scrollIntoView({ behavior: 'smooth' })}>
-                <Newspaper className="h-4 w-4 mr-2" />
-                {!isScrolled && "News"}
-              </Button>
-              <Button variant="ghost" size={isScrolled ? "sm" : "default"} className="text-muted-foreground hover:text-foreground hover:bg-primary/10" onClick={() => document.getElementById('top-bottom-5')?.scrollIntoView({ behavior: 'smooth' })}>
-                <TrendingDown className="h-4 w-4 mr-2" />
-                {!isScrolled && "Rankings"}
-              </Button>
-            </nav>
-            
-            {/* Theme Toggle */}
+          {/* Right side: Theme + Auth */}
+          <div className="flex items-center gap-2">
             <ThemeToggle />
 
-            {/* Auth buttons */}
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="rounded-full bg-primary/10 hover:bg-primary/20">
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="rounded-full bg-primary/10 hover:bg-primary/20 hover:scale-105 transition-all duration-300"
+                  >
                     <User className="h-5 w-5 text-primary" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuContent align="end" className="w-48 animate-fade-in">
                   <DropdownMenuItem className="text-muted-foreground text-sm">
                     {user.email}
                   </DropdownMenuItem>
@@ -115,14 +98,14 @@ const DashboardHeader = ({ onTickerChange }: DashboardHeaderProps) => {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center gap-2">
                 <Link to="/auth">
-                  <Button variant="ghost" size={isScrolled ? "sm" : "default"} className="text-muted-foreground hover:text-foreground">
+                  <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
                     Sign In
                   </Button>
                 </Link>
                 <Link to="/auth">
-                  <Button size={isScrolled ? "sm" : "default"} className="btn-professional">
+                  <Button size="sm" className="btn-professional">
                     Get Started
                   </Button>
                 </Link>
