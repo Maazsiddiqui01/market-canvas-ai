@@ -15,19 +15,26 @@ interface DashboardLayoutProps {
   children: React.ReactNode;
   showSearch?: boolean;
   showMarketOverview?: boolean;
+  onTickerChange?: (ticker: string) => void;
+  selectedTicker?: string;
 }
 
 export const DashboardLayout = ({ 
   children, 
   showSearch = false,
-  showMarketOverview = false 
+  showMarketOverview = false,
+  onTickerChange: externalTickerChange,
+  selectedTicker: externalTicker,
 }: DashboardLayoutProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, loading } = useAuth();
-  const [selectedTicker, setSelectedTicker] = useState('KSE100');
+  const [internalTicker, setInternalTicker] = useState('KSE100');
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // Use external ticker if provided, otherwise use internal
+  const selectedTicker = externalTicker ?? internalTicker;
 
   const isHomePage = location.pathname === '/dashboard';
 
@@ -68,8 +75,9 @@ export const DashboardLayout = ({
   }, []);
 
   const handleTickerChange = useCallback((ticker: string) => {
-    setSelectedTicker(ticker);
-  }, []);
+    setInternalTicker(ticker);
+    externalTickerChange?.(ticker);
+  }, [externalTickerChange]);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -94,11 +102,11 @@ export const DashboardLayout = ({
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <DashboardHeader onTickerChange={setSelectedTicker} />
+      <DashboardHeader onTickerChange={handleTickerChange} />
       
       <main className="container mx-auto px-4 pt-20 flex-1">
-        {/* Welcome Section */}
-        <div className="py-6 animate-fade-in">
+        {/* Welcome Section - lower z-index */}
+        <div className="py-6 animate-fade-in relative z-10">
           <div className="flex flex-col items-center text-center mb-6">
             <div className="flex items-center gap-3 mb-2">
               <div className="p-2.5 bg-gradient-to-r from-primary to-accent rounded-xl shadow-lg shadow-primary/20 animate-pulse-glow">
@@ -113,9 +121,9 @@ export const DashboardLayout = ({
             </p>
           </div>
 
-          {/* Search Hero Section - Only on Market page */}
+          {/* Search Hero Section - higher z-index for dropdown */}
           {showSearch && (
-            <div className="mb-6">
+            <div className="mb-6 relative z-50">
               <SearchHero 
                 onTickerChange={handleTickerChange} 
                 selectedTicker={selectedTicker} 
@@ -140,7 +148,7 @@ export const DashboardLayout = ({
           )}
         </div>
 
-        {/* Navigation Guide - Sticky */}
+        {/* Navigation Guide - Sticky but lower z-index than search dropdown */}
         <NavigationGuide activeTab={getActiveTab()} onTabChange={handleTabChange} />
 
         {/* Breadcrumb */}
