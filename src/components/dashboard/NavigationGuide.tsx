@@ -1,6 +1,12 @@
-import { BarChart3, Brain, Briefcase, Eye, Bell, Newspaper, Settings } from 'lucide-react';
+import { Home, BarChart3, Brain, Briefcase, Eye, Bell, Newspaper, Settings } from 'lucide-react';
 
 const sections = [
+  {
+    id: 'home',
+    icon: Home,
+    title: 'Home',
+    description: 'Dashboard Overview',
+  },
   {
     id: 'market',
     icon: BarChart3,
@@ -65,7 +71,7 @@ export const NavigationGuide = ({ activeTab, onTabChange }: NavigationGuideProps
               style={{ animationDelay: `${index * 50}ms` }}
               className={`
                 relative flex flex-col items-center gap-1 px-4 py-2 rounded-xl
-                transition-all duration-300 min-w-[80px] animate-fade-in
+                transition-all duration-300 min-w-[70px] animate-fade-in
                 ${isActive 
                   ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30 scale-105' 
                   : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'

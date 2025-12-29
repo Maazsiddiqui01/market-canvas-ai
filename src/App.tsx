@@ -9,6 +9,7 @@ import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
 // Dashboard pages
+import DashboardHomePage from "./pages/dashboard/DashboardHomePage";
 import MarketPage from "./pages/dashboard/MarketPage";
 import AIToolsPage from "./pages/dashboard/AIToolsPage";
 import PortfolioPage from "./pages/dashboard/PortfolioPage";
@@ -31,7 +32,7 @@ const App = () => (
             <Route path="/auth" element={<Auth />} />
             
             {/* Dashboard routes */}
-            <Route path="/dashboard" element={<MarketPage />} />
+            <Route path="/dashboard" element={<DashboardHomePage />} />
             <Route path="/dashboard/market" element={<MarketPage />} />
             <Route path="/dashboard/ai-tools" element={<AIToolsPage />} />
             <Route path="/dashboard/portfolio" element={<PortfolioPage />} />
