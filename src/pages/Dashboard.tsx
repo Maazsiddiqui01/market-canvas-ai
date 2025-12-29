@@ -16,8 +16,8 @@ import FinancialAnalysis from '@/components/FinancialAnalysis';
 import MarketOverview from '@/components/MarketOverview';
 import TopBottom5 from '@/components/TopBottom5';
 import NewsWidget from '@/components/NewsWidget';
-import StockSearch from '@/components/StockSearch';
 import { NavigationGuide } from '@/components/dashboard/NavigationGuide';
+import { SearchHero } from '@/components/dashboard/SearchHero';
 import { Tabs, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { TrendingUp, Sparkles, RefreshCw } from 'lucide-react';
@@ -31,10 +31,8 @@ const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('market');
   const aiSearchRef = useRef<AISearchWidgetRef>(null);
 
-  // Handler for clicking on recent searches
   const handleRecentSearchClick = useCallback((ticker: string) => {
     setActiveTab('ai-search');
-    // Give the tab time to switch before triggering the search
     setTimeout(() => {
       aiSearchRef.current?.searchTicker(ticker);
     }, 100);
@@ -48,6 +46,14 @@ const Dashboard = () => {
     }, 1000);
   }, []);
 
+  const handleTickerChange = useCallback((ticker: string) => {
+    setSelectedTicker(ticker);
+    // If not on market tab, switch to it to show the analysis
+    if (activeTab !== 'market') {
+      setActiveTab('market');
+    }
+  }, [activeTab]);
+
   useEffect(() => {
     if (!loading && !user) {
       navigate('/auth');
@@ -57,8 +63,10 @@ const Dashboard = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="animate-pulse flex flex-col items-center gap-4">
-          <TrendingUp className="h-12 w-12 text-primary" />
+        <div className="flex flex-col items-center gap-4 animate-pulse-glow">
+          <div className="p-4 bg-gradient-to-r from-primary to-accent rounded-2xl">
+            <TrendingUp className="h-10 w-10 text-primary-foreground" />
+          </div>
           <p className="text-muted-foreground">Loading dashboard...</p>
         </div>
       </div>
@@ -73,118 +81,118 @@ const Dashboard = () => {
     <div className="min-h-screen bg-background">
       <DashboardHeader onTickerChange={setSelectedTicker} />
       
-      <main className="container mx-auto px-4 py-8 pt-24">
-        {/* Welcome Section with Stock Search */}
-        <div className="mb-6 animate-fade-in">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-gradient-to-r from-primary to-accent rounded-lg">
+      <main className="container mx-auto px-4 pt-20">
+        {/* Welcome Section */}
+        <div className="py-6 animate-fade-in">
+          <div className="flex flex-col items-center text-center mb-6">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2.5 bg-gradient-to-r from-primary to-accent rounded-xl shadow-lg shadow-primary/20 animate-pulse-glow">
                 <Sparkles className="h-5 w-5 text-primary-foreground" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold">
-                  Welcome{user.user_metadata?.full_name ? `, ${user.user_metadata.full_name}` : ''}!
+                <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+                  Welcome back{user.user_metadata?.full_name ? `, ${user.user_metadata.full_name}` : ''}!
                 </h1>
-                <p className="text-sm text-muted-foreground">
-                  Your PSX dashboard for portfolio, analysis, and AI insights
-                </p>
               </div>
             </div>
-            
-            {/* Stock Search and Refresh */}
-            <div className="flex items-center gap-3">
-              <div className="w-56">
-                <StockSearch onTickerChange={setSelectedTicker} />
-              </div>
-              <Button 
-                onClick={handleRefreshAll}
-                disabled={isRefreshing}
-                variant="outline"
-                size="icon"
-              >
-                <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-              </Button>
-            </div>
+            <p className="text-muted-foreground max-w-lg">
+              Your AI-powered PSX dashboard for portfolio tracking, market analysis, and intelligent insights
+            </p>
           </div>
 
-          {/* Market Overview */}
-          <MarketOverview refreshTrigger={refreshTrigger} />
+          {/* Search Hero Section */}
+          <div className="mb-6">
+            <SearchHero 
+              onTickerChange={handleTickerChange} 
+              selectedTicker={selectedTicker} 
+            />
+          </div>
+
+          {/* Market Overview - Compact */}
+          <div className="flex items-center justify-center gap-4 mb-2">
+            <MarketOverview refreshTrigger={refreshTrigger} />
+            <Button 
+              onClick={handleRefreshAll}
+              disabled={isRefreshing}
+              variant="outline"
+              size="icon"
+              className="h-10 w-10 rounded-xl hover:bg-primary/10 hover:border-primary/50 transition-all"
+            >
+              <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+            </Button>
+          </div>
         </div>
 
-        {/* Navigation Guide */}
+        {/* Navigation Guide - Sticky */}
         <NavigationGuide activeTab={activeTab} onTabChange={setActiveTab} />
 
         {/* Main Dashboard Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 pb-8">
 
           {/* Market Tab - Charts and Analysis */}
-          <TabsContent value="market" className="space-y-6">
+          <TabsContent value="market" className="space-y-6 animate-fade-in">
             {/* Heatmap */}
-            <div className="animate-fade-in">
+            <div className="stagger-1">
               <TradingViewHeatmap />
             </div>
 
             {/* Technical and Financial Analysis */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="animate-fade-in" style={{ animationDelay: '100ms' }}>
+              <div className="stagger-2">
                 <TechnicalAnalysis ticker={selectedTicker} />
               </div>
-              <div className="animate-fade-in" style={{ animationDelay: '200ms' }}>
+              <div className="stagger-3">
                 <FinancialAnalysis ticker={selectedTicker} />
               </div>
             </div>
 
             {/* Top/Bottom 5 */}
-            <div className="animate-fade-in" style={{ animationDelay: '300ms' }}>
+            <div className="stagger-4">
               <TopBottom5 refreshTrigger={refreshTrigger} />
             </div>
           </TabsContent>
 
-          {/* AI Search Tab - Now includes comparison */}
-          <TabsContent value="ai-search" className="space-y-6">
+          {/* AI Search Tab */}
+          <TabsContent value="ai-search" className="space-y-6 animate-fade-in">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2 space-y-6">
-                <div className="animate-fade-in">
+                <div className="stagger-1">
                   <AISearchWidget ref={aiSearchRef} />
                 </div>
-                <div className="animate-fade-in" style={{ animationDelay: '100ms' }}>
+                <div className="stagger-2">
                   <StockComparison />
                 </div>
               </div>
-              <div className="animate-fade-in" style={{ animationDelay: '150ms' }}>
+              <div className="stagger-3">
                 <RecentSearches onSearchClick={handleRecentSearchClick} />
               </div>
             </div>
           </TabsContent>
 
           {/* Portfolio Tab */}
-          <TabsContent value="portfolio">
+          <TabsContent value="portfolio" className="animate-fade-in">
             <PortfolioManager />
           </TabsContent>
 
           {/* Watchlist Tab */}
-          <TabsContent value="watchlist">
+          <TabsContent value="watchlist" className="animate-fade-in">
             <WatchlistManager />
           </TabsContent>
 
           {/* Alerts Tab */}
-          <TabsContent value="alerts" className="space-y-6">
-            <div className="animate-fade-in">
-              <PriceAlertManager />
-            </div>
+          <TabsContent value="alerts" className="space-y-6 animate-fade-in">
+            <PriceAlertManager />
           </TabsContent>
 
           {/* News Tab */}
-          <TabsContent value="news" className="space-y-6">
+          <TabsContent value="news" className="space-y-6 animate-fade-in">
             <NewsWidget refreshTrigger={refreshTrigger} />
           </TabsContent>
 
-          {/* Tools Tab - Export and utilities */}
-          <TabsContent value="tools" className="space-y-6">
+          {/* Tools Tab */}
+          <TabsContent value="tools" className="space-y-6 animate-fade-in">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="animate-fade-in">
-                <ExportManager />
-              </div>
+              <ExportManager />
             </div>
           </TabsContent>
         </Tabs>
