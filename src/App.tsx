@@ -6,8 +6,16 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
-import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
+
+// Dashboard pages
+import MarketPage from "./pages/dashboard/MarketPage";
+import AIToolsPage from "./pages/dashboard/AIToolsPage";
+import PortfolioPage from "./pages/dashboard/PortfolioPage";
+import WatchlistPage from "./pages/dashboard/WatchlistPage";
+import AlertsPage from "./pages/dashboard/AlertsPage";
+import NewsPage from "./pages/dashboard/NewsPage";
+import ToolsPage from "./pages/dashboard/ToolsPage";
 
 const queryClient = new QueryClient();
 
@@ -21,7 +29,17 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            
+            {/* Dashboard routes */}
+            <Route path="/dashboard" element={<MarketPage />} />
+            <Route path="/dashboard/market" element={<MarketPage />} />
+            <Route path="/dashboard/ai-tools" element={<AIToolsPage />} />
+            <Route path="/dashboard/portfolio" element={<PortfolioPage />} />
+            <Route path="/dashboard/watchlist" element={<WatchlistPage />} />
+            <Route path="/dashboard/alerts" element={<AlertsPage />} />
+            <Route path="/dashboard/news" element={<NewsPage />} />
+            <Route path="/dashboard/tools" element={<ToolsPage />} />
+            
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
