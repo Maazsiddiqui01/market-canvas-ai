@@ -16,25 +16,20 @@ const sizeClasses = {
 
 const Logo = ({ size = 'md', className = '' }: LogoProps) => {
   return (
-    <span className="inline-flex items-center">
-      {/* Light mode */}
+    <>
+      {/* Light mode logo */}
       <img
         src={logoLight}
-        alt="Market Canvas AI logo"
-        className={`${sizeClasses[size]} w-auto object-contain ${className} block dark:hidden`}
-        style={{ background: 'transparent', maxWidth: 'none' }}
+        alt="Market Canvas AI"
+        className={`${sizeClasses[size]} w-auto object-contain block dark:hidden ${className}`}
       />
-
-      {/* Dark mode (with a subtle plate so the dark text is readable) */}
-      <span className="hidden dark:inline-flex items-center justify-center rounded-lg bg-foreground/15 ring-1 ring-foreground/10 px-2 py-1">
-        <img
-          src={logoDark}
-          alt="Market Canvas AI logo"
-          className={`${sizeClasses[size]} w-auto object-contain ${className}`}
-          style={{ background: 'transparent', maxWidth: 'none' }}
-        />
-      </span>
-    </span>
+      {/* Dark mode logo - no background */}
+      <img
+        src={logoDark}
+        alt="Market Canvas AI"
+        className={`${sizeClasses[size]} w-auto object-contain hidden dark:block ${className}`}
+      />
+    </>
   );
 };
 
