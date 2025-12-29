@@ -325,12 +325,20 @@ export const PortfolioManager = () => {
   };
 
   // Calculate portfolio metrics
+  // P&L = (Market Price - Average Purchase Price) * Volume
   const totalCostBasis = holdings.reduce((sum, h) => sum + (h.shares * (h.avg_buy_price || 0)), 0);
   const totalCurrentValue = holdings.reduce((sum, h) => {
-    const price = prices[h.ticker]?.price ?? h.avg_buy_price ?? 0;
-    return sum + (h.shares * price);
+    const marketPrice = prices[h.ticker]?.price;
+    // Only use market price if we have it from API, otherwise show 0 for current value
+    return sum + (h.shares * (marketPrice ?? 0));
   }, 0);
-  const totalPnL = totalCurrentValue - totalCostBasis;
+  const totalPnL = holdings.reduce((sum, h) => {
+    const marketPrice = prices[h.ticker]?.price;
+    const avgBuyPrice = h.avg_buy_price || 0;
+    if (!marketPrice) return sum;
+    // P&L = (Market Price - Avg Purchase Price) * Shares
+    return sum + ((marketPrice - avgBuyPrice) * h.shares);
+  }, 0);
   const totalPnLPercent = totalCostBasis > 0 ? (totalPnL / totalCostBasis) * 100 : 0;
   const todayChange = holdings.reduce((sum, h) => {
     const priceData = prices[h.ticker];
@@ -504,11 +512,13 @@ export const PortfolioManager = () => {
             <div className="space-y-3">
               {holdings.map((holding) => {
                 const priceData = prices[holding.ticker];
-                const currentPrice = priceData?.price ?? holding.avg_buy_price ?? 0;
-                const costBasis = holding.shares * (holding.avg_buy_price || 0);
-                const currentValue = holding.shares * currentPrice;
-                const pnl = currentValue - costBasis;
-                const pnlPercent = costBasis > 0 ? (pnl / costBasis) * 100 : 0;
+                const marketPrice = priceData?.price ?? null;
+                const avgBuyPrice = holding.avg_buy_price || 0;
+                const costBasis = holding.shares * avgBuyPrice;
+                // P&L = (Market Price - Avg Purchase Price) * Shares
+                const pnl = marketPrice !== null ? (marketPrice - avgBuyPrice) * holding.shares : null;
+                const pnlPercent = pnl !== null && costBasis > 0 ? (pnl / costBasis) * 100 : null;
+                const currentValue = marketPrice !== null ? holding.shares * marketPrice : null;
                 const isExpanded = expandedHoldings.has(holding.id);
                 const holdingPositions = positions[holding.id] || [];
 
@@ -530,11 +540,13 @@ export const PortfolioManager = () => {
                               )}
                             </Button>
                           </CollapsibleTrigger>
-                          <div className={`p-2 rounded-lg ${pnl >= 0 ? 'bg-green-500/10' : 'bg-red-500/10'}`}>
-                            {pnl >= 0 ? (
-                              <TrendingUp className={`h-5 w-5 ${pnl >= 0 ? 'text-green-500' : 'text-red-500'}`} />
-                            ) : (
+                          <div className={`p-2 rounded-lg ${pnl !== null && pnl >= 0 ? 'bg-green-500/10' : pnl !== null ? 'bg-red-500/10' : 'bg-secondary'}`}>
+                            {pnl !== null && pnl >= 0 ? (
+                              <TrendingUp className="h-5 w-5 text-green-500" />
+                            ) : pnl !== null ? (
                               <TrendingDown className="h-5 w-5 text-red-500" />
+                            ) : (
+                              <Activity className="h-5 w-5 text-muted-foreground" />
                             )}
                           </div>
                           <div>
@@ -543,30 +555,44 @@ export const PortfolioManager = () => {
                           </div>
                         </div>
                         <div className="flex items-center gap-6">
-                          {/* Live Price */}
+                          {/* Market Price (from n8n) */}
                           <div className="text-right">
-                            <p className="font-medium">PKR {currentPrice.toLocaleString()}</p>
-                            {priceData && (
-                              <p className={`text-xs ${priceData.changePercent >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                                {priceData.changePercent >= 0 ? '+' : ''}{priceData.changePercent.toFixed(2)}%
-                              </p>
+                            <p className="text-xs text-muted-foreground">Market Price</p>
+                            {marketPrice !== null ? (
+                              <>
+                                <p className="font-medium">PKR {marketPrice.toLocaleString()}</p>
+                                {priceData && (
+                                  <p className={`text-xs ${priceData.changePercent >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                                    {priceData.changePercent >= 0 ? '+' : ''}{priceData.changePercent.toFixed(2)}%
+                                  </p>
+                                )}
+                              </>
+                            ) : (
+                              <p className="text-sm text-muted-foreground">Loading...</p>
                             )}
                           </div>
-                          {/* Shares & Avg */}
+                          {/* Shares & Avg Buy Price */}
                           <div className="text-right">
                             <p className="font-medium">{holding.shares} shares</p>
                             <p className="text-sm text-muted-foreground">
-                              @ PKR {holding.avg_buy_price?.toLocaleString() || '-'}
+                              Avg: PKR {avgBuyPrice.toLocaleString()}
                             </p>
                           </div>
-                          {/* P&L */}
+                          {/* P&L = (Market - Avg) * Shares */}
                           <div className="text-right min-w-[100px]">
-                            <p className={`font-semibold ${pnl >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                              {pnl >= 0 ? '+' : ''}{pnl.toLocaleString()}
-                            </p>
-                            <p className={`text-xs ${pnl >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                              {pnl >= 0 ? '+' : ''}{pnlPercent.toFixed(2)}%
-                            </p>
+                            <p className="text-xs text-muted-foreground">P&L</p>
+                            {pnl !== null ? (
+                              <>
+                                <p className={`font-semibold ${pnl >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                                  {pnl >= 0 ? '+' : ''}PKR {pnl.toLocaleString()}
+                                </p>
+                                <p className={`text-xs ${pnl >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                                  {pnlPercent !== null && (pnlPercent >= 0 ? '+' : '')}{pnlPercent?.toFixed(2)}%
+                                </p>
+                              </>
+                            ) : (
+                              <p className="text-sm text-muted-foreground">--</p>
+                            )}
                           </div>
                           {/* Actions */}
                           <div className="flex items-center gap-1">

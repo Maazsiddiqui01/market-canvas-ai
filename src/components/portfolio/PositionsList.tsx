@@ -29,10 +29,11 @@ export const PositionsList = ({ positions, currentPrice, onDelete }: PositionsLi
   return (
     <div className="space-y-2 pl-4 border-l-2 border-border/50 ml-4">
       {positions.map((position) => {
-        const positionValue = position.shares * position.buy_price;
-        const currentValue = currentPrice ? position.shares * currentPrice : null;
-        const pnl = currentValue ? currentValue - positionValue : null;
-        const pnlPercent = pnl && positionValue > 0 ? (pnl / positionValue) * 100 : null;
+        const positionCost = position.shares * position.buy_price;
+        // P&L = (Market Price - Buy Price) * Shares
+        const pnl = currentPrice !== null ? (currentPrice - position.buy_price) * position.shares : null;
+        const pnlPercent = pnl !== null && positionCost > 0 ? (pnl / positionCost) * 100 : null;
+        const currentValue = currentPrice !== null ? position.shares * currentPrice : null;
 
         return (
           <div
@@ -60,11 +61,13 @@ export const PositionsList = ({ positions, currentPrice, onDelete }: PositionsLi
             </div>
             <div className="flex items-center gap-4">
               <div className="text-right">
-                <p className="text-muted-foreground">Cost: PKR {positionValue.toLocaleString()}</p>
-                {pnl !== null && (
+                <p className="text-muted-foreground">Cost: PKR {positionCost.toLocaleString()}</p>
+                {pnl !== null ? (
                   <p className={`text-xs font-medium ${pnl >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                    {pnl >= 0 ? '+' : ''}{pnl.toLocaleString()} ({pnlPercent?.toFixed(2)}%)
+                    P&L: {pnl >= 0 ? '+' : ''}PKR {pnl.toLocaleString()} ({pnlPercent?.toFixed(2)}%)
                   </p>
+                ) : (
+                  <p className="text-xs text-muted-foreground">P&L: --</p>
                 )}
               </div>
               <Button
