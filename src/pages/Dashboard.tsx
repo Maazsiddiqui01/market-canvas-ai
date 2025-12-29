@@ -17,9 +17,10 @@ import MarketOverview from '@/components/MarketOverview';
 import TopBottom5 from '@/components/TopBottom5';
 import NewsWidget from '@/components/NewsWidget';
 import StockSearch from '@/components/StockSearch';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { NavigationGuide } from '@/components/dashboard/NavigationGuide';
+import { Tabs, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Briefcase, Eye, Brain, TrendingUp, Sparkles, BarChart3, RefreshCw, Newspaper, Bell, Settings } from 'lucide-react';
+import { TrendingUp, Sparkles, RefreshCw } from 'lucide-react';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -74,25 +75,25 @@ const Dashboard = () => {
       
       <main className="container mx-auto px-4 py-8 pt-24">
         {/* Welcome Section with Stock Search */}
-        <div className="mb-8 animate-fade-in">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-6">
+        <div className="mb-6 animate-fade-in">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-4">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-gradient-to-r from-primary to-accent rounded-lg">
                 <Sparkles className="h-5 w-5 text-primary-foreground" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold">
-                  Welcome back{user.user_metadata?.full_name ? `, ${user.user_metadata.full_name}` : ''}!
+                <h1 className="text-2xl font-bold">
+                  Welcome{user.user_metadata?.full_name ? `, ${user.user_metadata.full_name}` : ''}!
                 </h1>
-                <p className="text-muted-foreground">
-                  Manage your portfolio, track stocks, and get AI-powered insights
+                <p className="text-sm text-muted-foreground">
+                  Your PSX dashboard for portfolio, analysis, and AI insights
                 </p>
               </div>
             </div>
             
             {/* Stock Search and Refresh */}
-            <div className="flex items-center gap-4">
-              <div className="w-64">
+            <div className="flex items-center gap-3">
+              <div className="w-56">
                 <StockSearch onTickerChange={setSelectedTicker} />
               </div>
               <Button 
@@ -110,38 +111,11 @@ const Dashboard = () => {
           <MarketOverview refreshTrigger={refreshTrigger} />
         </div>
 
+        {/* Navigation Guide */}
+        <NavigationGuide activeTab={activeTab} onTabChange={setActiveTab} />
+
         {/* Main Dashboard Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-7 lg:w-auto lg:inline-grid gap-2">
-            <TabsTrigger value="market" className="gap-2">
-              <BarChart3 className="h-4 w-4" />
-              <span className="hidden sm:inline">Market</span>
-            </TabsTrigger>
-            <TabsTrigger value="ai-search" className="gap-2">
-              <Brain className="h-4 w-4" />
-              <span className="hidden sm:inline">AI Tools</span>
-            </TabsTrigger>
-            <TabsTrigger value="portfolio" className="gap-2">
-              <Briefcase className="h-4 w-4" />
-              <span className="hidden sm:inline">Portfolio</span>
-            </TabsTrigger>
-            <TabsTrigger value="watchlist" className="gap-2">
-              <Eye className="h-4 w-4" />
-              <span className="hidden sm:inline">Watchlist</span>
-            </TabsTrigger>
-            <TabsTrigger value="alerts" className="gap-2">
-              <Bell className="h-4 w-4" />
-              <span className="hidden sm:inline">Alerts</span>
-            </TabsTrigger>
-            <TabsTrigger value="news" className="gap-2">
-              <Newspaper className="h-4 w-4" />
-              <span className="hidden sm:inline">News</span>
-            </TabsTrigger>
-            <TabsTrigger value="tools" className="gap-2">
-              <Settings className="h-4 w-4" />
-              <span className="hidden sm:inline">Tools</span>
-            </TabsTrigger>
-          </TabsList>
 
           {/* Market Tab - Charts and Analysis */}
           <TabsContent value="market" className="space-y-6">
