@@ -9,6 +9,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useActivityLog } from '@/hooks/useActivityLog';
 import { Brain, Search, Sparkles, Loader2, ExternalLink, TrendingUp, Globe, Copy, Check } from 'lucide-react';
 
 interface SearchResult {
@@ -32,6 +33,7 @@ export const AISearchWidget = forwardRef<AISearchWidgetRef, AISearchWidgetProps>
   ({ onSearchComplete }, ref) => {
     const { user } = useAuth();
     const { toast } = useToast();
+    const { logActivity } = useActivityLog();
     const [query, setQuery] = useState('');
     const [searchType, setSearchType] = useState<'stock' | 'general'>('stock');
     const [isSearching, setIsSearching] = useState(false);
@@ -93,6 +95,14 @@ export const AISearchWidget = forwardRef<AISearchWidgetRef, AISearchWidgetProps>
           answer: data.answer || data.content || 'No results found.',
           citations: data.citations || [],
           ticker: data.ticker,
+        });
+
+        // Log activity
+        logActivity({
+          activityType: 'ai_search',
+          description: searchQuery,
+          ticker: data.ticker || (type === 'stock' ? searchQuery.split(' ')[0].toUpperCase() : undefined),
+          data: { type, hasResult: true },
         });
 
         onSearchComplete?.();

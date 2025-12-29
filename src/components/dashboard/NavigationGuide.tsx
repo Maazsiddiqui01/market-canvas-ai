@@ -1,4 +1,4 @@
-import { Home, BarChart3, Brain, Briefcase, Eye, Bell, Newspaper, Settings } from 'lucide-react';
+import { Home, BarChart3, Brain, Briefcase, Eye, Bell, Newspaper, Settings, History } from 'lucide-react';
 
 const sections = [
   {
@@ -42,6 +42,12 @@ const sections = [
     icon: Newspaper,
     title: 'News',
     description: 'Market Updates',
+  },
+  {
+    id: 'history',
+    icon: History,
+    title: 'History',
+    description: 'Activity Log',
   },
   {
     id: 'tools',
