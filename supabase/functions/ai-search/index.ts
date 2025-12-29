@@ -32,32 +32,50 @@ serve(async (req) => {
 
     console.log('AI Search query:', query, 'type:', type);
 
+    // Get today's date for context
+    const today = new Date();
+    const todayStr = today.toLocaleDateString('en-US', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+
     // Build the prompt based on type
     let systemPrompt: string;
     let searchDomainFilter: string[] | undefined;
     
+    const dateContext = `IMPORTANT: Today's date is ${todayStr}. You MUST prioritize the most recent information available. 
+In financial markets, even a single day can bring significant changes. Always search for and cite the LATEST available data first.
+If information from today (${todayStr}) is not available, try yesterday, then the day before, and so on.
+NEVER cite information that is more than a few days old unless absolutely necessary, and if you do, explicitly warn the user that the data may be outdated.`;
+
     if (type === 'stock') {
       systemPrompt = `You are a financial analyst specializing in the Pakistan Stock Exchange (PSX). 
-         Provide accurate, current information about PSX stocks, market trends, and financial analysis.
-         Be concise but thorough. Include specific data when available.
-         Focus on: stock performance, company fundamentals, sector trends, and market sentiment.
-         Always mention if the information might be outdated and recommend checking latest prices.`;
+${dateContext}
+
+Provide accurate, CURRENT information about PSX stocks, market trends, and financial analysis.
+Be concise but thorough. Include specific data when available.
+Focus on: stock performance, company fundamentals, sector trends, and market sentiment.
+Always include the date of the data you're citing. If citing data older than today, clearly indicate "as of [date]".`;
       searchDomainFilter = ['psx.com.pk', 'investing.com', 'bloomberg.com', 'reuters.com'];
     } else if (type === 'general') {
       systemPrompt = `You are an expert financial analyst and market researcher specializing in the Pakistan Stock Exchange (PSX) and Pakistani economy.
-         Provide comprehensive, well-researched answers to questions about:
-         - Sector analysis and outlook (banking, cement, oil & gas, textiles, etc.)
-         - Market trends and sentiment
-         - Economic indicators affecting PSX
-         - Investment strategies for Pakistani markets
-         - Company comparisons and recommendations
-         - Dividend stocks and value investing in PSX
-         Be thorough but organized. Use bullet points for clarity. Cite specific data when available.
-         Focus on actionable insights for investors.`;
+${dateContext}
+
+Provide comprehensive, well-researched answers to questions about:
+- Sector analysis and outlook (banking, cement, oil & gas, textiles, etc.)
+- Market trends and sentiment
+- Economic indicators affecting PSX
+- Investment strategies for Pakistani markets
+- Company comparisons and recommendations
+- Dividend stocks and value investing in PSX
+Be thorough but organized. Use bullet points for clarity. Cite specific data when available.
+Focus on actionable insights for investors. Always include dates for all data points.`;
       // For general queries, search more broadly
       searchDomainFilter = undefined;
     } else {
-      systemPrompt = `You are a helpful financial assistant. Provide accurate and helpful information.`;
+      systemPrompt = `You are a helpful financial assistant. ${dateContext} Provide accurate and helpful information with dates for all data.`;
       searchDomainFilter = ['psx.com.pk', 'investing.com', 'bloomberg.com', 'reuters.com'];
     }
 
@@ -65,9 +83,9 @@ serve(async (req) => {
       model: 'sonar',
       messages: [
         { role: 'system', content: systemPrompt },
-        { role: 'user', content: query }
+        { role: 'user', content: `${query}\n\n(Note: Today is ${todayStr}. Please provide the most recent information available.)` }
       ],
-      search_recency_filter: 'week',
+      search_recency_filter: 'day',
     };
 
     if (searchDomainFilter) {
