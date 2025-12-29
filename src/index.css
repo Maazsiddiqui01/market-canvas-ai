@@ -363,9 +363,18 @@ All colors MUST be HSL.
   animation: shimmer 1.5s infinite;
 }
 
+@keyframes gradient-text {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
 .animate-gradient {
-  background-size: 200% 200%;
-  animation: gradient-shift 3s ease infinite;
+  background-size: 200% auto;
+  animation: gradient-text 3s ease infinite;
 }
 
 .animate-float {
