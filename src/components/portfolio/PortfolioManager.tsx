@@ -11,6 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { AddPositionDialog } from './AddPositionDialog';
 import { PositionsList } from './PositionsList';
 import { PortfolioCharts } from './PortfolioCharts';
+import { PortfolioHistoryChart } from './PortfolioHistoryChart';
 import { 
   Briefcase, Plus, Trash2, TrendingUp, TrendingDown, DollarSign, 
   PieChart, RefreshCw, ChevronDown, ChevronRight, Loader2, Activity
@@ -429,6 +430,18 @@ export const PortfolioManager = () => {
 
       {/* Charts */}
       <PortfolioCharts holdings={chartData} />
+
+      {/* Portfolio History Chart */}
+      {selectedPortfolio && (
+        <PortfolioHistoryChart
+          portfolioId={selectedPortfolio}
+          currentValue={totalCurrentValue}
+          currentCost={totalCostBasis}
+          currentPnl={totalPnL}
+          currentPnlPercent={totalPnLPercent}
+          holdingsSnapshot={chartData}
+        />
+      )}
 
       {/* Holdings Table */}
       <Card className="border-border/50 bg-card/80 backdrop-blur-sm">
