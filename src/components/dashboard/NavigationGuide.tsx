@@ -58,7 +58,7 @@ interface NavigationGuideProps {
 
 export const NavigationGuide = ({ activeTab, onTabChange }: NavigationGuideProps) => {
   return (
-    <nav className="sticky top-16 z-40 -mx-4 px-4 py-3 mb-6 bg-background/80 backdrop-blur-xl border-b border-border/50">
+    <nav className="sticky top-16 z-30 -mx-4 px-4 py-3 mb-6 bg-background/80 backdrop-blur-xl border-b border-border/50">
       <div className="flex items-center justify-center gap-1 overflow-x-auto scrollbar-hide">
         {sections.map((section, index) => {
           const Icon = section.icon;

@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback } from 'react';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import TradingViewHeatmap from '@/components/TradingViewHeatmap';
 import TechnicalAnalysis from '@/components/TechnicalAnalysis';
@@ -9,8 +9,17 @@ const MarketPage = () => {
   const [selectedTicker, setSelectedTicker] = useState('KSE100');
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
+  const handleTickerChange = useCallback((ticker: string) => {
+    setSelectedTicker(ticker);
+  }, []);
+
   return (
-    <DashboardLayout showSearch showMarketOverview>
+    <DashboardLayout 
+      showSearch 
+      showMarketOverview 
+      onTickerChange={handleTickerChange}
+      selectedTicker={selectedTicker}
+    >
       <div className="space-y-6">
         {/* Heatmap */}
         <div className="stagger-1">
