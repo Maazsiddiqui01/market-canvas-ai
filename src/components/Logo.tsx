@@ -1,5 +1,4 @@
 import React from 'react';
-import { useTheme } from 'next-themes';
 import logoDark from '@/assets/logo-dark.png';
 import logoLight from '@/assets/logo-light.png';
 
@@ -16,26 +15,28 @@ const sizeClasses = {
 };
 
 const Logo = ({ size = 'md', className = '' }: LogoProps) => {
-  const { resolvedTheme } = useTheme();
-  
-  const isDark = resolvedTheme === 'dark';
-  const logoSrc = isDark ? logoDark : logoLight;
-
   return (
-    <div 
-      className={`inline-flex items-center justify-center rounded-lg ${isDark ? 'bg-white/90 px-2 py-1' : ''}`}
-    >
-      <img 
-        src={logoSrc} 
-        alt="Market Canvas AI" 
-        className={`${sizeClasses[size]} w-auto object-contain ${className}`}
-        style={{ 
-          background: 'transparent',
-          maxWidth: 'none',
-        }}
+    <span className="inline-flex items-center">
+      {/* Light mode */}
+      <img
+        src={logoLight}
+        alt="Market Canvas AI logo"
+        className={`${sizeClasses[size]} w-auto object-contain ${className} block dark:hidden`}
+        style={{ background: 'transparent', maxWidth: 'none' }}
       />
-    </div>
+
+      {/* Dark mode (with a subtle plate so the dark text is readable) */}
+      <span className="hidden dark:inline-flex items-center justify-center rounded-lg bg-foreground/15 ring-1 ring-foreground/10 px-2 py-1">
+        <img
+          src={logoDark}
+          alt="Market Canvas AI logo"
+          className={`${sizeClasses[size]} w-auto object-contain ${className}`}
+          style={{ background: 'transparent', maxWidth: 'none' }}
+        />
+      </span>
+    </span>
   );
 };
 
 export default Logo;
+
