@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import DashboardHeader from '@/components/DashboardHeader';
 import { NavigationGuide } from '@/components/dashboard/NavigationGuide';
+import { Breadcrumb } from '@/components/dashboard/Breadcrumb';
 import { SearchHero } from '@/components/dashboard/SearchHero';
 import MarketOverview from '@/components/MarketOverview';
 import Footer from '@/components/Footer';
@@ -27,22 +28,26 @@ export const DashboardLayout = ({
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
+  const isHomePage = location.pathname === '/dashboard';
+
   // Get active tab from current route
   const getActiveTab = () => {
     const path = location.pathname;
-    if (path === '/dashboard' || path === '/dashboard/market') return 'market';
+    if (path === '/dashboard') return 'home';
+    if (path === '/dashboard/market') return 'market';
     if (path === '/dashboard/ai-tools') return 'ai-search';
     if (path === '/dashboard/portfolio') return 'portfolio';
     if (path === '/dashboard/watchlist') return 'watchlist';
     if (path === '/dashboard/alerts') return 'alerts';
     if (path === '/dashboard/news') return 'news';
     if (path === '/dashboard/tools') return 'tools';
-    return 'market';
+    return 'home';
   };
 
   const handleTabChange = (tab: string) => {
     const routes: Record<string, string> = {
-      'market': '/dashboard',
+      'home': '/dashboard',
+      'market': '/dashboard/market',
       'ai-search': '/dashboard/ai-tools',
       'portfolio': '/dashboard/portfolio',
       'watchlist': '/dashboard/watchlist',
@@ -138,6 +143,9 @@ export const DashboardLayout = ({
 
         {/* Navigation Guide - Sticky */}
         <NavigationGuide activeTab={getActiveTab()} onTabChange={handleTabChange} />
+
+        {/* Breadcrumb */}
+        <Breadcrumb />
 
         {/* Page Content */}
         <div className="pb-8 animate-fade-in">
