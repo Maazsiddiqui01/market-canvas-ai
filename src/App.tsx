@@ -17,6 +17,7 @@ import WatchlistPage from "./pages/dashboard/WatchlistPage";
 import AlertsPage from "./pages/dashboard/AlertsPage";
 import NewsPage from "./pages/dashboard/NewsPage";
 import ToolsPage from "./pages/dashboard/ToolsPage";
+import HistoryPage from "./pages/dashboard/HistoryPage";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +41,7 @@ const App = () => (
             <Route path="/dashboard/alerts" element={<AlertsPage />} />
             <Route path="/dashboard/news" element={<NewsPage />} />
             <Route path="/dashboard/tools" element={<ToolsPage />} />
+            <Route path="/dashboard/history" element={<HistoryPage />} />
             
             <Route path="*" element={<NotFound />} />
           </Routes>
