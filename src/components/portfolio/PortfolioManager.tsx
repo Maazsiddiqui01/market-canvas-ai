@@ -12,6 +12,8 @@ import { AddPositionDialog } from './AddPositionDialog';
 import { PositionsList } from './PositionsList';
 import { PortfolioCharts } from './PortfolioCharts';
 import { PortfolioHistoryChart } from './PortfolioHistoryChart';
+import { SectorBreakdown } from './SectorBreakdown';
+import { getStockByTicker } from '@/data/stockData';
 import { 
   Briefcase, Plus, Trash2, TrendingUp, TrendingDown, DollarSign, 
   PieChart, RefreshCw, ChevronDown, ChevronRight, Loader2, Activity
@@ -56,6 +58,7 @@ export const PortfolioManager = () => {
   const [holdings, setHoldings] = useState<Holding[]>([]);
   const [positions, setPositions] = useState<Record<string, Position[]>>({});
   const [prices, setPrices] = useState<Record<string, StockPrice>>({});
+  const [stockSectors, setStockSectors] = useState<Record<string, string>>({});
   const [expandedHoldings, setExpandedHoldings] = useState<Set<string>>(new Set());
   const [selectedPortfolio, setSelectedPortfolio] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -79,6 +82,7 @@ export const PortfolioManager = () => {
     if (holdings.length > 0) {
       fetchPrices();
       fetchAllPositions();
+      fetchSectorInfo();
     }
   }, [holdings]);
 
@@ -139,6 +143,17 @@ export const PortfolioManager = () => {
       grouped[pos.holding_id].push(pos);
     });
     setPositions(grouped);
+  };
+
+  const fetchSectorInfo = async () => {
+    const sectors: Record<string, string> = {};
+    for (const h of holdings) {
+      const stock = await getStockByTicker(h.ticker);
+      if (stock?.sector) {
+        sectors[h.ticker] = stock.sector;
+      }
+    }
+    setStockSectors(sectors);
   };
 
   const fetchPrices = useCallback(async () => {
@@ -430,6 +445,9 @@ export const PortfolioManager = () => {
 
       {/* Charts */}
       <PortfolioCharts holdings={chartData} />
+
+      {/* Sector Breakdown */}
+      <SectorBreakdown holdings={chartData} stockSectors={stockSectors} />
 
       {/* Portfolio History Chart */}
       {selectedPortfolio && (

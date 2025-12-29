@@ -796,21 +796,11 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                     ) : dropdownSuggestions.length > 0 ? (
                       <>
                         {/* Results header */}
-                        <div className="p-3 bg-muted/50 border-b border-border text-sm text-foreground font-medium flex items-center justify-between sticky top-0 backdrop-blur-sm">
-                          <div className="flex items-center gap-2">
-                            {searchQuery.trim() ? (
-                              <>
-                                <Search className="h-4 w-4 text-primary" />
-                                <span>{dropdownSuggestions.length} result{dropdownSuggestions.length !== 1 ? 's' : ''} found</span>
-                              </>
-                            ) : (
-                              <>
-                                <Building2 className="h-4 w-4 text-primary" />
-                                <span>{dropdownSuggestions.length} stock{dropdownSuggestions.length !== 1 ? 's' : ''} in {selectedSector}</span>
-                              </>
-                            )}
-                          </div>
-                          <span className="text-xs text-muted-foreground">↑↓ Navigate • Enter Select</span>
+                        <div className="px-3 py-2 bg-muted/30 border-b border-border text-xs text-muted-foreground flex items-center justify-between sticky top-0 backdrop-blur-sm">
+                          <span>
+                            {dropdownSuggestions.length} result{dropdownSuggestions.length !== 1 ? 's' : ''}
+                          </span>
+                          <span>↑↓ Navigate • Enter Select</span>
                         </div>
                         
                         {/* Stock options */}
@@ -818,10 +808,10 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                           <div
                             key={`stock-${stock.ticker}-${index}`}
                             data-stock-item
-                            className={`p-3 cursor-pointer border-b border-border/30 last:border-b-0 select-none transition-all duration-150
+                            className={`px-3 py-2.5 cursor-pointer border-b border-border/20 last:border-b-0 select-none transition-colors
                               ${highlightedIndex === index 
-                                ? 'bg-primary/15 border-l-2 border-l-primary' 
-                                : 'hover:bg-muted/50'
+                                ? 'bg-primary/10' 
+                                : 'hover:bg-muted/30'
                               }`}
                             onMouseDown={(e) => {
                               e.preventDefault();
@@ -829,28 +819,15 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                             }}
                             onMouseEnter={() => setHighlightedIndex(index)}
                           >
-                            <div className="flex items-center gap-3 pointer-events-none">
-                              {/* Icon */}
-                              <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0
-                                ${highlightedIndex === index ? 'bg-primary/20' : 'bg-muted'}`}>
-                                <TrendingUp className={`h-5 w-5 ${highlightedIndex === index ? 'text-primary' : 'text-muted-foreground'}`} />
-                              </div>
-                              
-                              {/* Company name (prominent) and symbol */}
-                              <div className="flex-1 min-w-0">
-                                <div className="font-semibold text-foreground text-base truncate">
+                            <div className="flex items-center gap-2">
+                              {/* Company name and ticker inline */}
+                              <div className="flex-1 min-w-0 flex items-center gap-2">
+                                <span className="font-mono text-sm font-bold text-primary shrink-0">
+                                  {searchQuery.trim() ? highlightMatch(stock.ticker, searchQuery) : stock.ticker}
+                                </span>
+                                <span className="text-sm text-foreground truncate">
                                   {searchQuery.trim() ? highlightMatch(stock.name, searchQuery) : stock.name}
-                                </div>
-                                <div className="text-sm text-muted-foreground flex items-center gap-2">
-                                  <span className="font-mono font-bold text-primary">
-                                    {searchQuery.trim() ? highlightMatch(stock.ticker, searchQuery) : stock.ticker}
-                                  </span>
-                                </div>
-                              </div>
-                              
-                              {/* Sector badge */}
-                              <div className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded-full shrink-0 max-w-[120px] truncate">
-                                {stock.sector}
+                                </span>
                               </div>
                             </div>
                           </div>
