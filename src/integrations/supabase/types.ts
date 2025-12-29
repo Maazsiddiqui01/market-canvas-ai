@@ -145,6 +145,44 @@ export type Database = {
           },
         ]
       }
+      portfolio_positions: {
+        Row: {
+          buy_date: string | null
+          buy_price: number
+          created_at: string
+          holding_id: string
+          id: string
+          notes: string | null
+          shares: number
+        }
+        Insert: {
+          buy_date?: string | null
+          buy_price: number
+          created_at?: string
+          holding_id: string
+          id?: string
+          notes?: string | null
+          shares: number
+        }
+        Update: {
+          buy_date?: string | null
+          buy_price?: number
+          created_at?: string
+          holding_id?: string
+          id?: string
+          notes?: string | null
+          shares?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "portfolio_positions_holding_id_fkey"
+            columns: ["holding_id"]
+            isOneToOne: false
+            referencedRelation: "portfolio_holdings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       portfolios: {
         Row: {
           created_at: string
