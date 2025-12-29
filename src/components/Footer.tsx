@@ -1,6 +1,7 @@
 import React from 'react';
 import { Mail, Linkedin, AlertTriangle, Heart, TrendingUp, Globe, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import Logo from './Logo';
 
 const Footer = () => {
   return (
@@ -10,11 +11,9 @@ const Footer = () => {
           {/* Creator Info */}
           <div className="text-center md:text-left">
             <div className="flex items-center gap-2 justify-center md:justify-start mb-2">
-              <div className="p-2 rounded-lg bg-primary/10">
-                <TrendingUp className="h-4 w-4 text-primary" />
-              </div>
-              <h3 className="text-lg font-semibold text-foreground">Created by Maaz</h3>
+              <Logo size="sm" />
             </div>
+            <p className="text-sm text-muted-foreground mb-2">Created by Maaz</p>
             <p className="text-sm text-muted-foreground mb-4 flex items-center gap-2 justify-center md:justify-start">
               <Heart className="h-4 w-4 text-primary animate-pulse" />
               Market Canvas AI - Your intelligent companion for smarter trading decisions
