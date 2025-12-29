@@ -37,21 +37,42 @@ serve(async (req) => {
       });
     }
 
+    // Get today's date for context
+    const today = new Date();
+    const todayStr = today.toLocaleDateString('en-US', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+
     const tickerList = tickers.join(', ');
     const prompt = `Compare these Pakistan Stock Exchange (PSX) stocks: ${tickerList}
 
+IMPORTANT: Today is ${todayStr}. Provide the LATEST available data. In financial markets, even a day can make significant differences.
+
 Provide a detailed comparison including:
-1. Current market performance and recent price movements
+1. Current market performance and recent price movements (cite dates for all prices)
 2. Key financial metrics (P/E ratio, market cap, dividend yield if available)
 3. Sector analysis and competitive positioning
-4. Recent news and developments affecting each stock
+4. Recent news and developments affecting each stock (from the last 1-3 days if available)
 5. Technical indicators and trading patterns
 6. Risk assessment for each stock
 7. Investment recommendation with pros and cons for each
 
-Format the response clearly with sections for each comparison aspect. Be specific with numbers and data where available.`;
+Format the response clearly with sections for each comparison aspect. Be specific with numbers and data where available.
+ALWAYS include the date for each data point you mention.`;
 
     console.log('Calling Perplexity API...');
+
+    const systemPrompt = `You are a professional financial analyst specializing in the Pakistan Stock Exchange (PSX). 
+
+CRITICAL: Today's date is ${todayStr}. You MUST prioritize the most recent information available.
+In financial markets, even a single day can bring significant changes. Always search for and cite the LATEST available data first.
+If information from today is not available, try yesterday, then the day before, and so on.
+NEVER cite information that is more than a few days old unless absolutely necessary, and if you do, explicitly warn the user that the data may be outdated.
+
+Provide accurate, data-driven analysis with specific numbers and actionable insights. Always include dates for all data points.`;
 
     const perplexityResponse = await fetch('https://api.perplexity.ai/chat/completions', {
       method: 'POST',
@@ -62,13 +83,10 @@ Format the response clearly with sections for each comparison aspect. Be specifi
       body: JSON.stringify({
         model: 'sonar',
         messages: [
-          { 
-            role: 'system', 
-            content: 'You are a professional financial analyst specializing in the Pakistan Stock Exchange (PSX). Provide accurate, data-driven analysis with specific numbers and actionable insights.' 
-          },
+          { role: 'system', content: systemPrompt },
           { role: 'user', content: prompt }
         ],
-        search_recency_filter: 'week',
+        search_recency_filter: 'day',
       }),
     });
 
