@@ -1,5 +1,7 @@
 import React from 'react';
-import logoImage from '@/assets/logo.png';
+import { useTheme } from 'next-themes';
+import logoDark from '@/assets/logo-dark.png';
+import logoLight from '@/assets/logo-light.png';
 
 interface LogoProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
@@ -14,9 +16,14 @@ const sizeClasses = {
 };
 
 const Logo = ({ size = 'md', className = '' }: LogoProps) => {
+  const { resolvedTheme } = useTheme();
+  
+  // Red logo for dark mode, teal logo for light mode
+  const logoSrc = resolvedTheme === 'dark' ? logoDark : logoLight;
+
   return (
     <img 
-      src={logoImage} 
+      src={logoSrc} 
       alt="Market Canvas AI" 
       className={`${sizeClasses[size]} w-auto object-contain ${className}`}
       style={{ 
