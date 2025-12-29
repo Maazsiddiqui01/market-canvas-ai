@@ -2,14 +2,16 @@ import React from 'react';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 
 const stocks = [
-  { symbol: 'AAPL', price: '193.42', change: '+2.34%', up: true },
-  { symbol: 'GOOGL', price: '141.80', change: '+1.12%', up: true },
-  { symbol: 'MSFT', price: '378.91', change: '+0.89%', up: true },
-  { symbol: 'TSLA', price: '252.64', change: '-1.45%', up: false },
-  { symbol: 'AMZN', price: '186.51', change: '+1.78%', up: true },
-  { symbol: 'NVDA', price: '495.22', change: '+3.21%', up: true },
-  { symbol: 'META', price: '353.96', change: '+0.67%', up: true },
-  { symbol: 'NFLX', price: '487.82', change: '-0.52%', up: false },
+  { symbol: 'OGDC', price: '98.45', change: '+2.15%', up: true },
+  { symbol: 'PPL', price: '75.20', change: '+1.82%', up: true },
+  { symbol: 'HBL', price: '142.50', change: '+0.95%', up: true },
+  { symbol: 'LUCK', price: '512.75', change: '-1.23%', up: false },
+  { symbol: 'ENGRO', price: '268.30', change: '+2.45%', up: true },
+  { symbol: 'MCB', price: '185.60', change: '+1.12%', up: true },
+  { symbol: 'PSO', price: '345.80', change: '-0.67%', up: false },
+  { symbol: 'HUBC', price: '89.25', change: '+3.21%', up: true },
+  { symbol: 'UBL', price: '178.90', change: '+0.88%', up: true },
+  { symbol: 'FFC', price: '112.40', change: '-0.45%', up: false },
 ];
 
 const StockTicker = () => {

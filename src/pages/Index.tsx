@@ -7,6 +7,7 @@ import TrustedBy from '../components/landing/TrustedBy';
 import TestimonialSection from '../components/landing/TestimonialSection';
 import CTASection from '../components/landing/CTASection';
 import AnimatedCounter from '../components/landing/AnimatedCounter';
+import ScrollReveal from '../components/landing/ScrollReveal';
 
 const Index = () => {
   return (
@@ -22,14 +23,16 @@ const Index = () => {
           <HeroSection />
           
           {/* Stats Section */}
-          <section className="py-16 px-4 border-y border-border/30 bg-card/20">
-            <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
-              <AnimatedCounter end={10000} suffix="+" label="Active Traders" />
-              <AnimatedCounter end={5000} suffix="+" label="Stocks Analyzed" />
-              <AnimatedCounter end={99} suffix=".9%" label="Uptime" />
-              <AnimatedCounter end={24} suffix="/7" label="AI Monitoring" />
-            </div>
-          </section>
+          <ScrollReveal>
+            <section className="py-16 px-4 border-y border-border/30 bg-card/50 dark:bg-card/20">
+              <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
+                <AnimatedCounter end={10000} suffix="+" label="Active Traders" />
+                <AnimatedCounter end={500} suffix="+" label="PSX Stocks" />
+                <AnimatedCounter end={99} suffix=".9%" label="Uptime" />
+                <AnimatedCounter end={24} suffix="/7" label="AI Monitoring" />
+              </div>
+            </section>
+          </ScrollReveal>
           
           {/* Trusted By Section */}
           <TrustedBy />
