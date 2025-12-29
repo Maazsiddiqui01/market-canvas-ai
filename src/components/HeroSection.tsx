@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import DashboardMockup from './landing/DashboardMockup';
+import MarketParticles from './landing/MarketParticles';
+import ScrollReveal from './landing/ScrollReveal';
 
 const HeroSection = () => {
   const { user } = useAuth();
@@ -12,15 +14,18 @@ const HeroSection = () => {
     <div className="relative min-h-screen bg-background overflow-hidden">
       {/* Animated gradient background */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/5" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/5 dark:from-primary/5 dark:via-background dark:to-accent/5" />
         
         {/* Floating orbs - slower, more elegant */}
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/8 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '8s' }} />
-        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-accent/8 rounded-full blur-[100px] animate-pulse" style={{ animationDuration: '10s', animationDelay: '2s' }} />
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/10 dark:bg-primary/8 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '8s' }} />
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-accent/10 dark:bg-accent/8 rounded-full blur-[100px] animate-pulse" style={{ animationDuration: '10s', animationDelay: '2s' }} />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[150px]" />
         
         {/* Grid pattern */}
-        <div className="absolute inset-0 bg-[linear-gradient(hsl(var(--border)/0.2)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--border)/0.2)_1px,transparent_1px)] bg-[size:80px_80px] [mask-image:radial-gradient(ellipse_at_center,black_10%,transparent_60%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(hsl(var(--border)/0.3)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--border)/0.3)_1px,transparent_1px)] bg-[size:80px_80px] [mask-image:radial-gradient(ellipse_at_center,black_10%,transparent_60%)]" />
+        
+        {/* Market Particles */}
+        <MarketParticles />
       </div>
 
       <div className="container mx-auto px-4 pt-20 pb-12 relative z-10">
@@ -77,16 +82,18 @@ const HeroSection = () => {
           </div>
 
           {/* Dashboard Mockup */}
-          <div className="mb-20 animate-slide-in-bottom" style={{ animationDelay: '0.4s' }}>
+          <ScrollReveal delay={200}>
             <DashboardMockup />
-          </div>
+          </ScrollReveal>
+        </div>
 
-          {/* Feature cards */}
+        {/* Feature cards */}
+        <ScrollReveal className="max-w-6xl mx-auto mt-20" delay={100}>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
             {/* Card 1 - AI Research */}
-            <div className="group relative animate-slide-in-bottom" style={{ animationDelay: '0.5s' }}>
+            <div className="group relative">
               <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/50 to-accent/50 rounded-2xl blur opacity-0 group-hover:opacity-40 transition-opacity duration-500" />
-              <div className="relative bg-card/60 backdrop-blur-xl border border-border/50 p-8 rounded-2xl h-full transition-all duration-300 group-hover:translate-y-[-4px] group-hover:border-primary/30 group-hover:shadow-xl group-hover:shadow-primary/10">
+              <div className="relative bg-card/80 dark:bg-card/60 backdrop-blur-xl border border-border/50 p-8 rounded-2xl h-full transition-all duration-300 group-hover:translate-y-[-4px] group-hover:border-primary/30 group-hover:shadow-xl group-hover:shadow-primary/10">
                 <div className="bg-gradient-to-br from-primary/20 to-accent/20 p-4 rounded-xl w-fit mb-6 group-hover:from-primary/30 group-hover:to-accent/30 transition-colors">
                   <Zap className="h-8 w-8 text-primary" />
                 </div>
@@ -98,9 +105,9 @@ const HeroSection = () => {
             </div>
 
             {/* Card 2 - Real-time Insights */}
-            <div className="group relative animate-slide-in-bottom" style={{ animationDelay: '0.6s' }}>
+            <div className="group relative">
               <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/50 to-accent/50 rounded-2xl blur opacity-0 group-hover:opacity-40 transition-opacity duration-500" />
-              <div className="relative bg-card/60 backdrop-blur-xl border border-border/50 p-8 rounded-2xl h-full transition-all duration-300 group-hover:translate-y-[-4px] group-hover:border-primary/30 group-hover:shadow-xl group-hover:shadow-primary/10">
+              <div className="relative bg-card/80 dark:bg-card/60 backdrop-blur-xl border border-border/50 p-8 rounded-2xl h-full transition-all duration-300 group-hover:translate-y-[-4px] group-hover:border-primary/30 group-hover:shadow-xl group-hover:shadow-primary/10">
                 <div className="bg-gradient-to-br from-primary/20 to-accent/20 p-4 rounded-xl w-fit mb-6 group-hover:from-primary/30 group-hover:to-accent/30 transition-colors">
                   <Target className="h-8 w-8 text-primary" />
                 </div>
@@ -112,9 +119,9 @@ const HeroSection = () => {
             </div>
 
             {/* Card 3 - Portfolio Tracking */}
-            <div className="group relative animate-slide-in-bottom" style={{ animationDelay: '0.7s' }}>
+            <div className="group relative">
               <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/50 to-accent/50 rounded-2xl blur opacity-0 group-hover:opacity-40 transition-opacity duration-500" />
-              <div className="relative bg-card/60 backdrop-blur-xl border border-border/50 p-8 rounded-2xl h-full transition-all duration-300 group-hover:translate-y-[-4px] group-hover:border-primary/30 group-hover:shadow-xl group-hover:shadow-primary/10">
+              <div className="relative bg-card/80 dark:bg-card/60 backdrop-blur-xl border border-border/50 p-8 rounded-2xl h-full transition-all duration-300 group-hover:translate-y-[-4px] group-hover:border-primary/30 group-hover:shadow-xl group-hover:shadow-primary/10">
                 <div className="bg-gradient-to-br from-primary/20 to-accent/20 p-4 rounded-xl w-fit mb-6 group-hover:from-primary/30 group-hover:to-accent/30 transition-colors">
                   <Shield className="h-8 w-8 text-primary" />
                 </div>
@@ -125,7 +132,7 @@ const HeroSection = () => {
               </div>
             </div>
           </div>
-        </div>
+        </ScrollReveal>
       </div>
     </div>
   );
