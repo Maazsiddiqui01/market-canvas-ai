@@ -3,12 +3,10 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useToast } from '@/hooks/use-toast';
 import { AddPositionDialog } from './AddPositionDialog';
+import { AddHoldingDialog } from './AddHoldingDialog';
 import { PositionsList } from './PositionsList';
 import { PortfolioCharts } from './PortfolioCharts';
 import { PortfolioHistoryChart } from './PortfolioHistoryChart';
@@ -63,8 +61,6 @@ export const PortfolioManager = () => {
   const [selectedPortfolio, setSelectedPortfolio] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadingPrices, setLoadingPrices] = useState(false);
-  const [isAddingHolding, setIsAddingHolding] = useState(false);
-  const [newHolding, setNewHolding] = useState({ ticker: '', stockName: '', shares: '', avgPrice: '' });
 
   useEffect(() => {
     if (user) {
@@ -206,19 +202,29 @@ export const PortfolioManager = () => {
     toast({ title: 'Success', description: 'Portfolio created!' });
   };
 
-  const addHolding = async () => {
+  const addHoldingWithPositions = async (
+    ticker: string, 
+    stockName: string, 
+    positionsData: Array<{ shares: number; buyPrice: number; buyDate?: string; notes?: string }>
+  ) => {
     if (!selectedPortfolio) return;
 
-    const shares = parseFloat(newHolding.shares);
-    const avgPrice = newHolding.avgPrice ? parseFloat(newHolding.avgPrice) : 0;
+    // Calculate totals
+    let totalShares = 0;
+    let totalCost = 0;
+    positionsData.forEach(p => {
+      totalShares += p.shares;
+      totalCost += p.shares * p.buyPrice;
+    });
+    const avgPrice = totalShares > 0 ? totalCost / totalShares : 0;
 
     const { data: holdingData, error: holdingError } = await supabase
       .from('portfolio_holdings')
       .insert({
         portfolio_id: selectedPortfolio,
-        ticker: newHolding.ticker.toUpperCase(),
-        stock_name: newHolding.stockName || null,
-        shares: shares,
+        ticker: ticker.toUpperCase(),
+        stock_name: stockName || null,
+        shares: totalShares,
         avg_buy_price: avgPrice,
       })
       .select()
@@ -229,19 +235,19 @@ export const PortfolioManager = () => {
       return;
     }
 
-    // Also create an initial position
-    if (shares > 0 && avgPrice > 0) {
-      await supabase.from('portfolio_positions').insert({
-        holding_id: holdingData.id,
-        shares: shares,
-        buy_price: avgPrice,
-      });
-    }
+    // Insert all positions
+    const positionInserts = positionsData.map(p => ({
+      holding_id: holdingData.id,
+      shares: p.shares,
+      buy_price: p.buyPrice,
+      buy_date: p.buyDate || null,
+      notes: p.notes || null,
+    }));
 
-    setNewHolding({ ticker: '', stockName: '', shares: '', avgPrice: '' });
-    setIsAddingHolding(false);
+    await supabase.from('portfolio_positions').insert(positionInserts);
+
     fetchHoldings(selectedPortfolio);
-    toast({ title: 'Success', description: 'Holding added!' });
+    toast({ title: 'Success', description: 'Holding added with all positions!' });
   };
 
   const addPosition = async (holdingId: string, shares: number, buyPrice: number, buyDate?: string, notes?: string) => {
@@ -486,58 +492,7 @@ export const PortfolioManager = () => {
               )}
               Refresh Prices
             </Button>
-            <Dialog open={isAddingHolding} onOpenChange={setIsAddingHolding}>
-              <DialogTrigger asChild>
-                <Button size="sm" className="gap-2">
-                  <Plus className="h-4 w-4" />
-                  Add Holding
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Add New Holding</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4 pt-4">
-                  <div className="space-y-2">
-                    <Label>Ticker Symbol</Label>
-                    <Input 
-                      placeholder="e.g., OGDC" 
-                      value={newHolding.ticker}
-                      onChange={(e) => setNewHolding({ ...newHolding, ticker: e.target.value })}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Stock Name (Optional)</Label>
-                    <Input 
-                      placeholder="e.g., Oil & Gas Development" 
-                      value={newHolding.stockName}
-                      onChange={(e) => setNewHolding({ ...newHolding, stockName: e.target.value })}
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label>Shares</Label>
-                      <Input 
-                        type="number" 
-                        placeholder="100" 
-                        value={newHolding.shares}
-                        onChange={(e) => setNewHolding({ ...newHolding, shares: e.target.value })}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Avg. Buy Price (PKR)</Label>
-                      <Input 
-                        type="number" 
-                        placeholder="150.00" 
-                        value={newHolding.avgPrice}
-                        onChange={(e) => setNewHolding({ ...newHolding, avgPrice: e.target.value })}
-                      />
-                    </div>
-                  </div>
-                  <Button onClick={addHolding} className="w-full">Add to Portfolio</Button>
-                </div>
-              </DialogContent>
-            </Dialog>
+            <AddHoldingDialog onAdd={addHoldingWithPositions} />
           </div>
         </CardHeader>
         <CardContent>
