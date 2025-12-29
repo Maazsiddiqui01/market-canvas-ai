@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -185,10 +187,10 @@ export const StockComparison = () => {
               </div>
             </div>
             
-            <div className="prose prose-sm dark:prose-invert max-w-none">
-              <div className="text-foreground whitespace-pre-wrap leading-relaxed">
+            <div className="prose prose-sm dark:prose-invert max-w-none prose-headings:text-foreground prose-headings:font-semibold prose-h1:text-xl prose-h2:text-lg prose-h3:text-base prose-p:text-foreground/90 prose-strong:text-foreground prose-li:text-foreground/90 prose-a:text-primary prose-table:text-sm prose-th:bg-secondary/50 prose-th:p-2 prose-td:p-2 prose-tr:border-border">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
                 {result.comparison}
-              </div>
+              </ReactMarkdown>
             </div>
 
             {result.citations && result.citations.length > 0 && (
