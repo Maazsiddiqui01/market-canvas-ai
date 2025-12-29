@@ -1,12 +1,13 @@
-import { useState, useEffect, useImperativeHandle, forwardRef } from 'react';
+import { useState, useImperativeHandle, forwardRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { Brain, Search, Sparkles, Loader2, ExternalLink } from 'lucide-react';
+import { Brain, Search, Sparkles, Loader2, ExternalLink, TrendingUp, Globe } from 'lucide-react';
 
 interface SearchResult {
   answer: string;
@@ -22,11 +23,15 @@ interface AISearchWidgetProps {
   onSearchComplete?: () => void;
 }
 
+const stockSuggestions = ['OGDC outlook', 'HBL analysis', 'Top gainers today', 'Market sentiment'];
+const generalSuggestions = ['Banking sector outlook', 'Best dividend stocks in PSX', 'Cement sector analysis', 'Interest rate impact on stocks'];
+
 export const AISearchWidget = forwardRef<AISearchWidgetRef, AISearchWidgetProps>(
   ({ onSearchComplete }, ref) => {
     const { user } = useAuth();
     const { toast } = useToast();
     const [query, setQuery] = useState('');
+    const [searchType, setSearchType] = useState<'stock' | 'general'>('stock');
     const [isSearching, setIsSearching] = useState(false);
     const [result, setResult] = useState<SearchResult | null>(null);
 
@@ -34,24 +39,23 @@ export const AISearchWidget = forwardRef<AISearchWidgetRef, AISearchWidgetProps>
     useImperativeHandle(ref, () => ({
       searchTicker: (ticker: string) => {
         setQuery(ticker);
-        // Trigger search after state update
-        setTimeout(() => handleSearchWithQuery(ticker), 100);
+        setSearchType('stock');
+        setTimeout(() => handleSearchWithQuery(ticker, 'stock'), 100);
       }
     }));
 
-    const handleSearchWithQuery = async (searchQuery: string) => {
+    const handleSearchWithQuery = async (searchQuery: string, type: 'stock' | 'general') => {
       if (!searchQuery.trim()) return;
 
       setIsSearching(true);
       setResult(null);
 
       try {
-        // Save search to history
-        if (user) {
+        // Save search to history for stock searches
+        if (user && type === 'stock') {
           const tickerMatch = searchQuery.toUpperCase().match(/([A-Z]{2,6})/);
           const ticker = tickerMatch ? tickerMatch[1] : searchQuery.split(' ')[0].toUpperCase();
           
-          // Check for recent duplicate
           const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
           const { data: existing } = await supabase
             .from('search_history')
@@ -77,7 +81,7 @@ export const AISearchWidget = forwardRef<AISearchWidgetRef, AISearchWidgetProps>
 
         // Call AI search edge function
         const { data, error } = await supabase.functions.invoke('ai-search', {
-          body: { query: searchQuery, type: 'stock' },
+          body: { query: searchQuery, type },
         });
 
         if (error) throw error;
@@ -102,10 +106,11 @@ export const AISearchWidget = forwardRef<AISearchWidgetRef, AISearchWidgetProps>
     };
 
     const handleSearch = async () => {
-      await handleSearchWithQuery(query);
+      await handleSearchWithQuery(query, searchType);
     };
 
-    // Skeleton loader for results
+    const suggestions = searchType === 'stock' ? stockSuggestions : generalSuggestions;
+
     const ResultSkeleton = () => (
       <div className="mt-6 p-4 rounded-lg bg-secondary/50 border border-border/50">
         <div className="flex items-start gap-3 mb-4">
@@ -132,19 +137,35 @@ export const AISearchWidget = forwardRef<AISearchWidgetRef, AISearchWidgetProps>
             <div className="p-2 bg-gradient-to-r from-primary to-accent rounded-lg">
               <Brain className="h-5 w-5 text-primary-foreground" />
             </div>
-            AI Stock Search
+            AI Search
           </CardTitle>
           <CardDescription>
-            Ask anything about PSX stocks, market trends, or financial analysis
+            Ask about specific stocks or get general market insights
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          {/* Search Type Tabs */}
+          <Tabs value={searchType} onValueChange={(v) => setSearchType(v as 'stock' | 'general')}>
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="stock" className="gap-2">
+                <TrendingUp className="h-4 w-4" />
+                Stock Search
+              </TabsTrigger>
+              <TabsTrigger value="general" className="gap-2">
+                <Globe className="h-4 w-4" />
+                General Query
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+
           {/* Search Input */}
           <div className="flex gap-2">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="e.g., What's happening with OGDC? or Analysis of banking sector"
+                placeholder={searchType === 'stock' 
+                  ? "e.g., What's happening with OGDC?" 
+                  : "e.g., What's the outlook on banking sector?"}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
@@ -172,14 +193,14 @@ export const AISearchWidget = forwardRef<AISearchWidgetRef, AISearchWidgetProps>
 
           {/* Quick Search Suggestions */}
           <div className="flex flex-wrap gap-2">
-            {['OGDC outlook', 'Banking sector analysis', 'Top gainers today', 'Market sentiment'].map((suggestion) => (
+            {suggestions.map((suggestion) => (
               <Button
                 key={suggestion}
                 variant="outline"
                 size="sm"
                 onClick={() => {
                   setQuery(suggestion);
-                  setTimeout(() => handleSearchWithQuery(suggestion), 100);
+                  setTimeout(() => handleSearchWithQuery(suggestion, searchType), 100);
                 }}
                 className="text-xs hover:scale-105 transition-transform"
                 disabled={isSearching}

@@ -11,3 +11,6 @@ verify_jwt = false
 
 [functions.compare-stocks]
 verify_jwt = false
+
+[functions.get-stock-prices]
+verify_jwt = false

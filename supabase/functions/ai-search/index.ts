@@ -33,13 +33,46 @@ serve(async (req) => {
     console.log('AI Search query:', query, 'type:', type);
 
     // Build the prompt based on type
-    const systemPrompt = type === 'stock' 
-      ? `You are a financial analyst specializing in the Pakistan Stock Exchange (PSX). 
+    let systemPrompt: string;
+    let searchDomainFilter: string[] | undefined;
+    
+    if (type === 'stock') {
+      systemPrompt = `You are a financial analyst specializing in the Pakistan Stock Exchange (PSX). 
          Provide accurate, current information about PSX stocks, market trends, and financial analysis.
          Be concise but thorough. Include specific data when available.
          Focus on: stock performance, company fundamentals, sector trends, and market sentiment.
-         Always mention if the information might be outdated and recommend checking latest prices.`
-      : `You are a helpful financial assistant. Provide accurate and helpful information.`;
+         Always mention if the information might be outdated and recommend checking latest prices.`;
+      searchDomainFilter = ['psx.com.pk', 'investing.com', 'bloomberg.com', 'reuters.com'];
+    } else if (type === 'general') {
+      systemPrompt = `You are an expert financial analyst and market researcher specializing in the Pakistan Stock Exchange (PSX) and Pakistani economy.
+         Provide comprehensive, well-researched answers to questions about:
+         - Sector analysis and outlook (banking, cement, oil & gas, textiles, etc.)
+         - Market trends and sentiment
+         - Economic indicators affecting PSX
+         - Investment strategies for Pakistani markets
+         - Company comparisons and recommendations
+         - Dividend stocks and value investing in PSX
+         Be thorough but organized. Use bullet points for clarity. Cite specific data when available.
+         Focus on actionable insights for investors.`;
+      // For general queries, search more broadly
+      searchDomainFilter = undefined;
+    } else {
+      systemPrompt = `You are a helpful financial assistant. Provide accurate and helpful information.`;
+      searchDomainFilter = ['psx.com.pk', 'investing.com', 'bloomberg.com', 'reuters.com'];
+    }
+
+    const requestBody: any = {
+      model: 'sonar',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: query }
+      ],
+      search_recency_filter: 'week',
+    };
+
+    if (searchDomainFilter) {
+      requestBody.search_domain_filter = searchDomainFilter;
+    }
 
     const response = await fetch('https://api.perplexity.ai/chat/completions', {
       method: 'POST',
@@ -47,15 +80,7 @@ serve(async (req) => {
         'Authorization': `Bearer ${PERPLEXITY_API_KEY}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        model: 'sonar',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: query }
-        ],
-        search_domain_filter: ['psx.com.pk', 'investing.com', 'bloomberg.com', 'reuters.com'],
-        search_recency_filter: 'week',
-      }),
+      body: JSON.stringify(requestBody),
     });
 
     const data = await response.json();
