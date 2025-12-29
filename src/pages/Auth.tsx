@@ -7,8 +7,9 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
-import { TrendingUp, Mail, Lock, User, Sparkles, ArrowLeft } from 'lucide-react';
+import { Mail, Lock, User, Sparkles, ArrowLeft } from 'lucide-react';
 import { z } from 'zod';
+import Logo from '@/components/Logo';
 import { Separator } from '@/components/ui/separator';
 
 const emailSchema = z.string().email('Please enter a valid email address');
@@ -115,7 +116,7 @@ const Auth = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="animate-pulse flex flex-col items-center gap-4">
-          <TrendingUp className="h-12 w-12 text-primary" />
+          <Logo size="lg" />
           <p className="text-muted-foreground">Loading...</p>
         </div>
       </div>
@@ -148,16 +149,8 @@ const Auth = () => {
           <div className="w-full max-w-md">
             {/* Logo */}
             <div className="text-center mb-8 animate-fade-in-scale">
-              <div className="inline-flex items-center justify-center gap-3 mb-4">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent blur-xl opacity-50" />
-                  <div className="relative bg-gradient-to-r from-primary to-accent p-3 rounded-xl">
-                    <TrendingUp className="h-8 w-8 text-primary-foreground" />
-                  </div>
-                </div>
-                <span className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                  Market Canvas AI
-                </span>
+              <div className="flex justify-center mb-4">
+                <Logo size="xl" />
               </div>
               <p className="text-muted-foreground">
                 Your AI-powered PSX market intelligence platform

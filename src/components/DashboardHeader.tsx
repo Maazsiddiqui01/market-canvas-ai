@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { TrendingUp, User, LogOut, LayoutDashboard } from 'lucide-react';
+import { User, LogOut, LayoutDashboard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ThemeToggle from './ThemeToggle';
+import Logo from './Logo';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import {
@@ -43,24 +44,10 @@ const DashboardHeader = ({ onTickerChange }: DashboardHeaderProps) => {
     }`}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
-          {/* Logo and Title */}
-          <Link to="/" className="flex items-center space-x-3 group">
-            <div className={`bg-gradient-to-r from-primary to-accent p-2.5 rounded-xl transition-all duration-500 group-hover:shadow-lg group-hover:shadow-primary/30 ${
-              isScrolled ? 'scale-90' : 'scale-100'
-            }`}>
-              <TrendingUp className="h-5 w-5 text-primary-foreground" />
-            </div>
-            <div className="overflow-hidden">
-              <h1 className={`font-bold text-foreground transition-all duration-300 ${
-                isScrolled ? 'text-lg' : 'text-xl'
-              }`}>
-                Market Canvas AI
-              </h1>
-              <p className={`text-xs text-muted-foreground transition-all duration-300 ${
-                isScrolled ? 'opacity-0 h-0' : 'opacity-100 h-auto'
-              }`}>
-                AI-powered market intelligence
-              </p>
+          {/* Logo */}
+          <Link to="/" className="flex items-center group">
+            <div className={`transition-all duration-500 ${isScrolled ? 'scale-90' : 'scale-100'}`}>
+              <Logo size={isScrolled ? 'sm' : 'md'} />
             </div>
           </Link>
           

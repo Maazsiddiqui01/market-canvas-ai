@@ -7,8 +7,9 @@ import { Breadcrumb } from '@/components/dashboard/Breadcrumb';
 import { SearchHero } from '@/components/dashboard/SearchHero';
 import MarketOverview from '@/components/MarketOverview';
 import Footer from '@/components/Footer';
+import Logo from '@/components/Logo';
 import { Button } from '@/components/ui/button';
-import { TrendingUp, Sparkles, RefreshCw } from 'lucide-react';
+import { Sparkles, RefreshCw } from 'lucide-react';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -80,9 +81,7 @@ export const DashboardLayout = ({
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-4 animate-pulse-glow">
-          <div className="p-4 bg-gradient-to-r from-primary to-accent rounded-2xl">
-            <TrendingUp className="h-10 w-10 text-primary-foreground" />
-          </div>
+          <Logo size="lg" />
           <p className="text-muted-foreground">Loading...</p>
         </div>
       </div>
