@@ -4,27 +4,24 @@ import ScrollReveal from './ScrollReveal';
 
 const testimonials = [
   {
-    name: 'Ahmed Hassan',
-    role: 'Portfolio Manager',
-    company: 'NBP Funds',
+    name: 'Ahmed H.',
+    role: 'Retail Investor',
     avatar: 'AH',
-    content: 'The AI-powered insights have completely transformed how I analyze PSX trends. The real-time data is incredibly accurate.',
+    content: 'The AI research summaries save me so much time. Instead of reading through multiple reports, I get quick insights to help with my analysis.',
     rating: 5,
   },
   {
-    name: 'Fatima Khan',
-    role: 'Day Trader',
-    company: 'Independent',
+    name: 'Fatima K.',
+    role: 'Part-time Trader',
     avatar: 'FK',
-    content: 'Best investment I\'ve made for my trading career. The price alerts and portfolio tracking save me hours every day.',
+    content: 'Love the price alerts feature! I don\'t have to constantly watch the market anymore. The portfolio tracking is really convenient too.',
     rating: 5,
   },
   {
-    name: 'Ali Raza',
-    role: 'Financial Analyst',
-    company: 'JS Investments',
+    name: 'Ali R.',
+    role: 'Finance Student',
     avatar: 'AR',
-    content: 'The technical analysis tools are on par with Bloomberg terminals, but at a fraction of the cost. Highly recommended.',
+    content: 'Great tool for learning about PSX stocks. The AI explanations help me understand market trends better. Perfect for beginners like me.',
     rating: 5,
   },
 ];
@@ -71,7 +68,7 @@ const TestimonialSection = () => {
                     </div>
                     <div>
                       <div className="font-semibold text-foreground">{testimonial.name}</div>
-                      <div className="text-sm text-muted-foreground">{testimonial.role} • {testimonial.company}</div>
+                      <div className="text-sm text-muted-foreground">{testimonial.role}</div>
                     </div>
                   </div>
                 </div>
