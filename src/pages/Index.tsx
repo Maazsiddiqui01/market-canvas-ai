@@ -2,7 +2,6 @@ import React from 'react';
 import DashboardHeader from '../components/DashboardHeader';
 import HeroSection from '../components/HeroSection';
 import Footer from '../components/Footer';
-import StockTicker from '../components/landing/StockTicker';
 import TrustedBy from '../components/landing/TrustedBy';
 import TestimonialSection from '../components/landing/TestimonialSection';
 import CTASection from '../components/landing/CTASection';
@@ -16,9 +15,6 @@ const Index = () => {
         <DashboardHeader />
         {/* Add top padding to compensate for fixed header */}
         <div className="pt-20">
-          {/* Stock Ticker */}
-          <StockTicker />
-          
           {/* Hero Section */}
           <HeroSection />
           

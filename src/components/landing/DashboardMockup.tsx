@@ -47,12 +47,12 @@ const DashboardMockup = () => {
           <div className="grid grid-cols-3 gap-3 mb-4">
             <div className="p-3 rounded-xl bg-card/80 border border-border/30">
               <div className="text-xs text-muted-foreground mb-1">Portfolio Value</div>
-              <div className="text-lg font-bold text-foreground">$124,532</div>
+              <div className="text-lg font-bold text-foreground">PKR 2.45M</div>
               <div className="text-xs text-green-500">+12.4%</div>
             </div>
             <div className="p-3 rounded-xl bg-card/80 border border-border/30">
               <div className="text-xs text-muted-foreground mb-1">Today's P&L</div>
-              <div className="text-lg font-bold text-foreground">+$2,341</div>
+              <div className="text-lg font-bold text-foreground">+PKR 48,230</div>
               <div className="text-xs text-green-500">+1.9%</div>
             </div>
             <div className="p-3 rounded-xl bg-card/80 border border-border/30">
@@ -101,7 +101,7 @@ const DashboardMockup = () => {
       <div className="absolute -right-4 top-1/4 p-3 bg-card/90 backdrop-blur-sm border border-border/50 rounded-xl shadow-lg animate-float">
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-          <span className="text-xs font-medium text-foreground">AAPL +2.3%</span>
+          <span className="text-xs font-medium text-foreground">MEBL +2.3%</span>
         </div>
       </div>
       
