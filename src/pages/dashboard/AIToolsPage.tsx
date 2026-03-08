@@ -1,10 +1,12 @@
 import { useCallback, useRef } from 'react';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { AISearchWidget, AISearchWidgetRef } from '@/components/ai/AISearchWidget';
 import { StockComparison } from '@/components/ai/StockComparison';
 import { RecentSearches } from '@/components/dashboard/RecentSearches';
 
 const AIToolsPage = () => {
+  useDocumentTitle('AI Tools | Market Canvas AI');
   const aiSearchRef = useRef<AISearchWidgetRef>(null);
 
   const handleRecentSearchClick = useCallback((ticker: string) => {

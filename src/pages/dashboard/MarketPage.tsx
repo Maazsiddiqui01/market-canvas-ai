@@ -7,6 +7,7 @@ import FinancialAnalysis from '@/components/FinancialAnalysis';
 import TopBottom5 from '@/components/TopBottom5';
 
 const MarketPage = () => {
+  useDocumentTitle('Market Analysis | Market Canvas AI');
   const [selectedTicker, setSelectedTicker] = useState('KSE100');
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
