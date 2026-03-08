@@ -35,6 +35,14 @@ export const DashboardLayout = ({
   const [internalTicker, setInternalTicker] = useState('KSE100');
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const isMobile = useIsMobile();
+
+  const { containerRef, pullDistance, isRefreshing: isPullRefreshing } = usePullToRefresh({
+    onRefresh: async () => {
+      setRefreshTrigger(prev => prev + 1);
+      await new Promise(resolve => setTimeout(resolve, 800));
+    },
+  });
 
   // Use external ticker if provided, otherwise use internal
   const selectedTicker = externalTicker ?? internalTicker;
