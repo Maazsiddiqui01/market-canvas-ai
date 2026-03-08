@@ -104,58 +104,69 @@ const featureCards = [
 
 const DashboardHomePage = () => {
   useDocumentTitle('Dashboard | Market Canvas AI');
+  const { user } = useAuth();
+  const [stats, setStats] = useState({ watchlist: 0, alerts: 0, searches: 0, holdings: 0 });
+  const [loadingStats, setLoadingStats] = useState(true);
+
+  useEffect(() => {
+    if (!user) return;
+    const fetchStats = async () => {
+      setLoadingStats(true);
+      const [watchlistRes, alertsRes, searchesRes, holdingsRes] = await Promise.all([
+        supabase.from('watchlists').select('id', { count: 'exact', head: true }).eq('user_id', user.id),
+        supabase.from('price_alerts').select('id', { count: 'exact', head: true }).eq('user_id', user.id).eq('is_triggered', false),
+        supabase.from('search_history').select('id', { count: 'exact', head: true }).eq('user_id', user.id),
+        supabase.from('portfolios').select('id').eq('user_id', user.id).limit(1).then(async (res) => {
+          if (res.data && res.data.length > 0) {
+            const holdRes = await supabase.from('portfolio_holdings').select('id', { count: 'exact', head: true }).eq('portfolio_id', res.data[0].id);
+            return holdRes;
+          }
+          return { count: 0 };
+        }),
+      ]);
+      setStats({
+        watchlist: watchlistRes.count ?? 0,
+        alerts: alertsRes.count ?? 0,
+        searches: searchesRes.count ?? 0,
+        holdings: (holdingsRes as any).count ?? 0,
+      });
+      setLoadingStats(false);
+    };
+    fetchStats();
+  }, [user]);
+
+  const statCards = [
+    { value: stats.holdings, label: 'Holdings', icon: Briefcase, gradient: 'from-green-500/10 to-emerald-500/10', border: 'border-green-500/20', iconBg: 'bg-green-500/20', iconColor: 'text-green-500' },
+    { value: stats.watchlist, label: 'Watchlist Stocks', icon: Eye, gradient: 'from-blue-500/10 to-cyan-500/10', border: 'border-blue-500/20', iconBg: 'bg-blue-500/20', iconColor: 'text-blue-500' },
+    { value: stats.alerts, label: 'Active Alerts', icon: Bell, gradient: 'from-yellow-500/10 to-orange-500/10', border: 'border-yellow-500/20', iconBg: 'bg-yellow-500/20', iconColor: 'text-yellow-500' },
+    { value: stats.searches, label: 'AI Searches', icon: Brain, gradient: 'from-purple-500/10 to-pink-500/10', border: 'border-purple-500/20', iconBg: 'bg-purple-500/20', iconColor: 'text-purple-500' },
+  ];
+
   return (
     <DashboardLayout showMarketOverview>
       <div className="space-y-8">
         {/* Quick Stats Row */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Card className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border-green-500/20">
-            <CardContent className="p-4 flex items-center gap-3">
-              <div className="p-2 bg-green-500/20 rounded-lg">
-                <TrendingUp className="h-5 w-5 text-green-500" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-foreground">+2.4%</p>
-                <p className="text-xs text-muted-foreground">Portfolio Today</p>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border-blue-500/20">
-            <CardContent className="p-4 flex items-center gap-3">
-              <div className="p-2 bg-blue-500/20 rounded-lg">
-                <Eye className="h-5 w-5 text-blue-500" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-foreground">12</p>
-                <p className="text-xs text-muted-foreground">Watchlist Stocks</p>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-gradient-to-br from-yellow-500/10 to-orange-500/10 border-yellow-500/20">
-            <CardContent className="p-4 flex items-center gap-3">
-              <div className="p-2 bg-yellow-500/20 rounded-lg">
-                <Bell className="h-5 w-5 text-yellow-500" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-foreground">3</p>
-                <p className="text-xs text-muted-foreground">Active Alerts</p>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 border-purple-500/20">
-            <CardContent className="p-4 flex items-center gap-3">
-              <div className="p-2 bg-purple-500/20 rounded-lg">
-                <Brain className="h-5 w-5 text-purple-500" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-foreground">24</p>
-                <p className="text-xs text-muted-foreground">AI Searches</p>
-              </div>
-            </CardContent>
-          </Card>
+          {statCards.map((card) => {
+            const Icon = card.icon;
+            return (
+              <Card key={card.label} className={`bg-gradient-to-br ${card.gradient} ${card.border}`}>
+                <CardContent className="p-4 flex items-center gap-3">
+                  <div className={`p-2 ${card.iconBg} rounded-lg`}>
+                    <Icon className={`h-5 w-5 ${card.iconColor}`} />
+                  </div>
+                  <div>
+                    {loadingStats ? (
+                      <Skeleton className="h-7 w-10 mb-1" />
+                    ) : (
+                      <p className="text-2xl font-bold text-foreground">{card.value}</p>
+                    )}
+                    <p className="text-xs text-muted-foreground">{card.label}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
 
         {/* Feature Cards Grid */}
