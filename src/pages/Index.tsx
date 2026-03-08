@@ -1,4 +1,5 @@
 import React from 'react';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import DashboardHeader from '../components/DashboardHeader';
 import HeroSection from '../components/HeroSection';
 import Footer from '../components/Footer';
