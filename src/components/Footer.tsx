@@ -70,6 +70,28 @@ const Footer = () => {
             </div>
           </div>
 
+          {/* Newsletter Signup */}
+          <div className="text-center md:text-left">
+            <h4 className="font-semibold text-foreground mb-2 flex items-center gap-2 justify-center md:justify-start">
+              <Sparkles className="h-4 w-4 text-primary" />
+              Daily Market Insights
+            </h4>
+            <p className="text-sm text-muted-foreground mb-3">Get AI-powered PSX analysis in your inbox.</p>
+            <form onSubmit={handleFooterSubscribe} className="flex gap-2">
+              <Input
+                type="email"
+                placeholder="you@email.com"
+                value={footerEmail}
+                onChange={(e) => setFooterEmail(e.target.value)}
+                required
+                className="flex-1 h-9 text-sm"
+              />
+              <Button type="submit" size="sm" disabled={submittingFooter} className="shrink-0">
+                <Mail className="h-4 w-4" />
+              </Button>
+            </form>
+          </div>
+
           {/* Disclaimer */}
           <div className="text-center md:col-span-2">
             <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 hover:border-yellow-300 dark:hover:border-yellow-700 transition-colors">
