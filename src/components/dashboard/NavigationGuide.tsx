@@ -12,16 +12,17 @@ const primarySections = [
   { id: 'portfolio', icon: Briefcase, title: 'Portfolio' },
 ];
 
-const secondarySections = [
+const baseSections = [
   { id: 'watchlist', icon: Eye, title: 'Watchlist', description: 'Monitor Stocks' },
   { id: 'alerts', icon: Bell, title: 'Alerts', description: 'Price Notifications' },
   { id: 'news', icon: Newspaper, title: 'News', description: 'Market Updates' },
   { id: 'history', icon: History, title: 'History', description: 'Activity Log' },
   { id: 'tools', icon: Settings, title: 'Tools', description: 'Export & Utilities' },
-  { id: 'analytics', icon: PieChart, title: 'Analytics', description: 'Admin Stats' },
 ];
 
-const allSections = [
+const analyticsSection = { id: 'analytics', icon: PieChart, title: 'Analytics', description: 'Admin Stats' };
+
+const baseAllSections = [
   { id: 'home', icon: Home, title: 'Home', description: 'Dashboard Overview' },
   { id: 'market', icon: BarChart3, title: 'Market', description: 'Heatmaps & Analysis' },
   { id: 'ai-search', icon: Brain, title: 'AI Tools', description: 'AI Stock Research' },
@@ -31,7 +32,6 @@ const allSections = [
   { id: 'news', icon: Newspaper, title: 'News', description: 'Market Updates' },
   { id: 'history', icon: History, title: 'History', description: 'Activity Log' },
   { id: 'tools', icon: Settings, title: 'Tools', description: 'Export & Utilities' },
-  { id: 'analytics', icon: PieChart, title: 'Analytics', description: 'Admin Stats' },
 ];
 
 interface NavigationGuideProps {
