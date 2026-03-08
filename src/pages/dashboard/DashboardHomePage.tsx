@@ -99,6 +99,7 @@ const featureCards = [
 ];
 
 const DashboardHomePage = () => {
+  useDocumentTitle('Dashboard | Market Canvas AI');
   return (
     <DashboardLayout showMarketOverview>
       <div className="space-y-8">

@@ -134,6 +134,7 @@ export const NavigationGuide = ({ activeTab, onTabChange }: NavigationGuideProps
           return (
             <button
               key={section.id}
+              aria-label={`Navigate to ${section.title}`}
               onClick={() => onTabChange(section.id)}
               style={{ animationDelay: `${index * 50}ms` }}
               className={`

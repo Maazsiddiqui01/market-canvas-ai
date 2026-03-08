@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import TradingViewHeatmap from '@/components/TradingViewHeatmap';
 import TechnicalAnalysis from '@/components/TechnicalAnalysis';

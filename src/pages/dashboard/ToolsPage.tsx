@@ -1,7 +1,9 @@
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { ExportManager } from '@/components/export/ExportManager';
 
 const ToolsPage = () => {
+  useDocumentTitle('Tools & Export | Market Canvas AI');
   return (
     <DashboardLayout>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

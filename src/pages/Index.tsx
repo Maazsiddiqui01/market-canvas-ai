@@ -10,6 +10,11 @@ import AnimatedCounter from '../components/landing/AnimatedCounter';
 import ScrollReveal from '../components/landing/ScrollReveal';
 
 const Index = () => {
+  useDocumentTitle(
+    'Market Canvas AI — AI-Powered PSX Stock Analytics & Trading Intelligence',
+    'AI-powered Pakistan Stock Exchange analytics with real-time market data, portfolio tracking, price alerts, and intelligent trading recommendations.'
+  );
+
   return (
     <main className="min-h-screen bg-background relative overflow-hidden">
       <div className="relative z-10">
