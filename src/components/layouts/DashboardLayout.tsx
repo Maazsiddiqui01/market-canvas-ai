@@ -37,6 +37,18 @@ export const DashboardLayout = ({
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const isMobile = useIsMobile();
+  const { logActivity } = useActivityLog();
+
+  // Log page views on route change
+  useEffect(() => {
+    if (user) {
+      logActivity({
+        activityType: 'page_view',
+        description: `Viewed ${location.pathname}`,
+        data: { path: location.pathname } as any,
+      });
+    }
+  }, [location.pathname, user]);
 
   const { containerRef, pullDistance, isRefreshing: isPullRefreshing } = usePullToRefresh({
     onRefresh: async () => {
