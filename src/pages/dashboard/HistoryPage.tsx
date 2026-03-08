@@ -73,6 +73,7 @@ const activityLabels: Record<string, string> = {
 };
 
 const HistoryPage = () => {
+  useDocumentTitle('Activity History | Market Canvas AI');
   const { user } = useAuth();
   const { toast } = useToast();
   const [activities, setActivities] = useState<ActivityItem[]>([]);
