@@ -24,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useActivityLog } from '@/hooks/useActivityLog';
 import {
   AlertDialog,
   AlertDialogAction,

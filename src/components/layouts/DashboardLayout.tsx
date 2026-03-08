@@ -13,6 +13,7 @@ import { Sparkles, RefreshCw } from 'lucide-react';
 import { usePullToRefresh } from '@/hooks/usePullToRefresh';
 import { PullToRefreshIndicator } from '@/components/PullToRefreshIndicator';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useActivityLog } from '@/hooks/useActivityLog';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;

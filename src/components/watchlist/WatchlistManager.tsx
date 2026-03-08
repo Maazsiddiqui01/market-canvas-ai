@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { Eye, Plus, Trash2, TrendingUp, Search, Star } from 'lucide-react';
+import { useActivityLog } from '@/hooks/useActivityLog';
 
 interface WatchlistItem {
   id: string;

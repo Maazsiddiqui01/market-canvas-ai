@@ -9,6 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 import { Scale, Plus, X, Loader2, ExternalLink, Sparkles } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { useActivityLog } from '@/hooks/useActivityLog';
 
 interface ComparisonResult {
   tickers: string[];
