@@ -81,7 +81,7 @@ const Footer = () => {
           </div>
           <p className="text-sm text-muted-foreground flex items-center justify-center gap-2">
             <Heart className="h-4 w-4 text-primary" />
-            © 2025 Market Canvas AI. Built with AI-powered innovation for intelligent market analysis.
+            © 2026 Market Canvas AI. Built with AI-powered innovation for intelligent market analysis.
           </p>
         </div>
       </div>
