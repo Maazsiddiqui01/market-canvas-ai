@@ -53,6 +53,7 @@ interface StockPrice {
 export const PortfolioManager = () => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { logActivity } = useActivityLog();
   const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
   const [holdings, setHoldings] = useState<Holding[]>([]);
   const [positions, setPositions] = useState<Record<string, Position[]>>({});
