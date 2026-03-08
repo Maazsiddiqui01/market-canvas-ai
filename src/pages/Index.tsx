@@ -19,6 +19,7 @@ const Index = () => {
 
   return (
     <main className="min-h-screen bg-background relative overflow-hidden">
+      <NewsletterPopup />
       <div className="relative z-10">
         <DashboardHeader />
         {/* Add top padding to compensate for fixed header */}

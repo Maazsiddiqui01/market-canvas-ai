@@ -23,6 +23,11 @@ import HistoryPage from "./pages/dashboard/HistoryPage";
 
 const queryClient = new QueryClient();
 
+const PageTracker = () => {
+  usePageTracking();
+  return null;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
@@ -30,6 +35,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <PageTracker />
           <PWAInstallPrompt />
           <Routes>
             <Route path="/" element={<Index />} />

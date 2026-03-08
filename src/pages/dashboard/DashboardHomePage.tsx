@@ -146,6 +146,9 @@ const DashboardHomePage = () => {
   return (
     <DashboardLayout showMarketOverview>
       <div className="space-y-8">
+        {/* Onboarding Checklist for new users */}
+        <OnboardingChecklist />
+
         {/* Quick Stats Row */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {statCards.map((card) => {

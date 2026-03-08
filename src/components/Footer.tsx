@@ -1,7 +1,10 @@
-import React from 'react';
-import { Mail, Linkedin, AlertTriangle, Heart, TrendingUp, Globe, Shield } from 'lucide-react';
+import React, { useState } from 'react';
+import { Mail, Linkedin, AlertTriangle, Heart, TrendingUp, Globe, Shield, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import Logo from './Logo';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 const Footer = () => {
   return (
