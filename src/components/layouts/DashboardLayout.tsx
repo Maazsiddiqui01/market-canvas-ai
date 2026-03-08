@@ -88,6 +88,7 @@ export const DashboardLayout = ({
       'news': '/dashboard/news',
       'history': '/dashboard/history',
       'tools': '/dashboard/tools',
+      'analytics': '/dashboard/analytics',
     };
     navigate(routes[tab] || '/dashboard');
   };
