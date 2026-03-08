@@ -37,6 +37,9 @@ const Index = () => {
             </section>
           </ScrollReveal>
           
+          {/* Features Section */}
+          <FeaturesSection />
+          
           {/* Trusted By Section */}
           <TrustedBy />
           
