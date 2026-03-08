@@ -316,8 +316,10 @@ export const PortfolioManager = () => {
       return;
     }
 
+    const removed = holdings.find(h => h.id === holdingId);
     setHoldings(holdings.filter(h => h.id !== holdingId));
     toast({ title: 'Success', description: 'Holding removed!' });
+    if (removed) logActivity({ activityType: 'portfolio_action', description: `Removed holding ${removed.ticker}`, ticker: removed.ticker });
   };
 
   const toggleExpanded = (holdingId: string) => {

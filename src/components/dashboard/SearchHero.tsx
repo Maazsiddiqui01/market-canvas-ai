@@ -224,6 +224,7 @@ export const SearchHero = ({ onTickerChange, selectedTicker }: SearchHeroProps) 
     setSearchQuery(stock.ticker);
     setIsDropdownOpen(false);
     setHighlightedIndex(-1);
+    logActivity({ activityType: 'stock_view', description: `Selected ${stock.ticker}`, ticker: stock.ticker });
   };
 
   const handleInputChange = (value: string) => {
