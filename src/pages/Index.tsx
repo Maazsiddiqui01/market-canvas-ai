@@ -9,6 +9,7 @@ import CTASection from '../components/landing/CTASection';
 import FeaturesSection from '../components/landing/FeaturesSection';
 import AnimatedCounter from '../components/landing/AnimatedCounter';
 import ScrollReveal from '../components/landing/ScrollReveal';
+import { NewsletterPopup } from '../components/NewsletterPopup';
 
 const Index = () => {
   useDocumentTitle(
@@ -18,6 +19,7 @@ const Index = () => {
 
   return (
     <main className="min-h-screen bg-background relative overflow-hidden">
+      <NewsletterPopup />
       <div className="relative z-10">
         <DashboardHeader />
         {/* Add top padding to compensate for fixed header */}

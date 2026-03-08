@@ -9,6 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 import { Scale, Plus, X, Loader2, ExternalLink, Sparkles } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { useActivityLog } from '@/hooks/useActivityLog';
 
 interface ComparisonResult {
   tickers: string[];
@@ -19,6 +20,7 @@ interface ComparisonResult {
 
 export const StockComparison = () => {
   const { toast } = useToast();
+  const { logActivity } = useActivityLog();
   const [tickers, setTickers] = useState<string[]>(['', '']);
   const [isComparing, setIsComparing] = useState(false);
   const [result, setResult] = useState<ComparisonResult | null>(null);
@@ -64,6 +66,7 @@ export const StockComparison = () => {
       if (error) throw error;
 
       setResult(data);
+      logActivity({ activityType: 'comparison', description: `Compared ${validTickers.join(' vs ')}`, data: { tickers: validTickers } as any });
       toast({
         title: 'Comparison Complete',
         description: `Analyzed ${validTickers.join(', ')}`,

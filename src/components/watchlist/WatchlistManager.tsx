@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { Eye, Plus, Trash2, TrendingUp, Search, Star } from 'lucide-react';
+import { useActivityLog } from '@/hooks/useActivityLog';
 
 interface WatchlistItem {
   id: string;
@@ -21,6 +22,7 @@ export const WatchlistManager = () => {
   const [loading, setLoading] = useState(true);
   const [newTicker, setNewTicker] = useState('');
   const [newStockName, setNewStockName] = useState('');
+  const { logActivity } = useActivityLog();
 
   useEffect(() => {
     if (user) {
@@ -69,6 +71,7 @@ export const WatchlistManager = () => {
     setNewTicker('');
     setNewStockName('');
     toast({ title: 'Added!', description: `${data.ticker} added to watchlist` });
+    logActivity({ activityType: 'watchlist_action', description: `Added ${data.ticker} to watchlist`, ticker: data.ticker });
   };
 
   const removeFromWatchlist = async (id: string, ticker: string) => {
@@ -84,6 +87,7 @@ export const WatchlistManager = () => {
 
     setWatchlist(watchlist.filter(w => w.id !== id));
     toast({ title: 'Removed', description: `${ticker} removed from watchlist` });
+    logActivity({ activityType: 'watchlist_action', description: `Removed ${ticker} from watchlist`, ticker });
   };
 
   if (loading) {

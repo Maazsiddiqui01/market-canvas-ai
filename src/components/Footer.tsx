@@ -1,13 +1,44 @@
-import React from 'react';
-import { Mail, Linkedin, AlertTriangle, Heart, TrendingUp, Globe, Shield } from 'lucide-react';
+import React, { useState } from 'react';
+import { Mail, Linkedin, AlertTriangle, Heart, TrendingUp, Globe, Shield, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import Logo from './Logo';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 const Footer = () => {
+  const { toast } = useToast();
+  const [footerEmail, setFooterEmail] = useState('');
+  const [submittingFooter, setSubmittingFooter] = useState(false);
+
+  const handleFooterSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!footerEmail.trim()) return;
+    setSubmittingFooter(true);
+    try {
+      const { error } = await supabase.from('newsletter_subscribers' as any).insert({
+        email: footerEmail.trim(),
+        source: 'footer',
+      });
+      if (error && error.code === '23505') {
+        toast({ title: 'Already subscribed!', description: "You're already on our list." });
+      } else if (error) {
+        throw error;
+      } else {
+        toast({ title: 'Subscribed!', description: 'Welcome to our daily market insights.' });
+      }
+      setFooterEmail('');
+    } catch {
+      toast({ title: 'Error', description: 'Something went wrong.', variant: 'destructive' });
+    } finally {
+      setSubmittingFooter(false);
+    }
+  };
+
   return (
     <footer className="bg-card/50 border-t border-border mt-12">
       <div className="container mx-auto px-4 py-6 md:py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8">
           {/* Creator Info */}
           <div className="text-center md:text-left">
             <div className="flex items-center gap-2 justify-center md:justify-start mb-2">
@@ -37,6 +68,28 @@ const Footer = () => {
                 </a>
               </Button>
             </div>
+          </div>
+
+          {/* Newsletter Signup */}
+          <div className="text-center md:text-left">
+            <h4 className="font-semibold text-foreground mb-2 flex items-center gap-2 justify-center md:justify-start">
+              <Sparkles className="h-4 w-4 text-primary" />
+              Daily Market Insights
+            </h4>
+            <p className="text-sm text-muted-foreground mb-3">Get AI-powered PSX analysis in your inbox.</p>
+            <form onSubmit={handleFooterSubscribe} className="flex gap-2">
+              <Input
+                type="email"
+                placeholder="you@email.com"
+                value={footerEmail}
+                onChange={(e) => setFooterEmail(e.target.value)}
+                required
+                className="flex-1 h-9 text-sm"
+              />
+              <Button type="submit" size="sm" disabled={submittingFooter} className="shrink-0">
+                <Mail className="h-4 w-4" />
+              </Button>
+            </form>
           </div>
 
           {/* Disclaimer */}

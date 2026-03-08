@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { OnboardingChecklist } from '@/components/dashboard/OnboardingChecklist';
 import { 
   BarChart3, 
   Brain, 
@@ -145,6 +146,9 @@ const DashboardHomePage = () => {
   return (
     <DashboardLayout showMarketOverview>
       <div className="space-y-8">
+        {/* Onboarding Checklist for new users */}
+        <OnboardingChecklist />
+
         {/* Quick Stats Row */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {statCards.map((card) => {

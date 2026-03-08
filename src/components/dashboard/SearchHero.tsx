@@ -14,6 +14,7 @@ import { SECTORS, searchStocks, getStocksBySector, type Stock } from '@/data/sto
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { useActivityLog } from '@/hooks/useActivityLog';
 
 interface SearchHeroProps {
   onTickerChange: (ticker: string) => void;
@@ -34,6 +35,7 @@ interface ParsedSections {
 export const SearchHero = ({ onTickerChange, selectedTicker }: SearchHeroProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { logActivity } = useActivityLog();
   
   const [selectedSector, setSelectedSector] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -222,6 +224,7 @@ export const SearchHero = ({ onTickerChange, selectedTicker }: SearchHeroProps) 
     setSearchQuery(stock.ticker);
     setIsDropdownOpen(false);
     setHighlightedIndex(-1);
+    logActivity({ activityType: 'stock_view', description: `Selected ${stock.ticker}`, ticker: stock.ticker });
   };
 
   const handleInputChange = (value: string) => {

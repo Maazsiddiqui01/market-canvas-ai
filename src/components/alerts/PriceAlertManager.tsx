@@ -24,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useActivityLog } from '@/hooks/useActivityLog';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -55,6 +56,7 @@ export const PriceAlertManager = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isCheckingAlerts, setIsCheckingAlerts] = useState(false);
+  const { logActivity } = useActivityLog();
 
   // Form state
   const [newTicker, setNewTicker] = useState('');
@@ -136,6 +138,7 @@ export const PriceAlertManager = () => {
         title: 'Alert Created',
         description: `Price alert set for ${newTicker.toUpperCase()} when price goes ${newAlertType} PKR ${newTargetPrice}`,
       });
+      logActivity({ activityType: 'alert_created', description: `Alert: ${newTicker.toUpperCase()} ${newAlertType} PKR ${newTargetPrice}`, ticker: newTicker.toUpperCase() });
 
       // Reset form
       setNewTicker('');

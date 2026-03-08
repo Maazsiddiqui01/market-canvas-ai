@@ -16,6 +16,7 @@ import {
   Briefcase, Plus, Trash2, TrendingUp, TrendingDown, DollarSign, 
   PieChart, RefreshCw, ChevronDown, ChevronRight, Loader2, Activity
 } from 'lucide-react';
+import { useActivityLog } from '@/hooks/useActivityLog';
 
 interface Portfolio {
   id: string;
@@ -52,6 +53,7 @@ interface StockPrice {
 export const PortfolioManager = () => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { logActivity } = useActivityLog();
   const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
   const [holdings, setHoldings] = useState<Holding[]>([]);
   const [positions, setPositions] = useState<Record<string, Position[]>>({});
@@ -251,6 +253,7 @@ export const PortfolioManager = () => {
 
     fetchHoldings(selectedPortfolio);
     toast({ title: 'Success', description: 'Holding added with all positions!' });
+    logActivity({ activityType: 'portfolio_action', description: `Added holding ${ticker.toUpperCase()}`, ticker: ticker.toUpperCase() });
   };
 
   const addPosition = async (holdingId: string, shares: number, buyPrice: number, buyDate?: string, notes?: string) => {
@@ -313,8 +316,10 @@ export const PortfolioManager = () => {
       return;
     }
 
+    const removed = holdings.find(h => h.id === holdingId);
     setHoldings(holdings.filter(h => h.id !== holdingId));
     toast({ title: 'Success', description: 'Holding removed!' });
+    if (removed) logActivity({ activityType: 'portfolio_action', description: `Removed holding ${removed.ticker}`, ticker: removed.ticker });
   };
 
   const toggleExpanded = (holdingId: string) => {
