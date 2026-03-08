@@ -10,6 +10,9 @@ import Footer from '@/components/Footer';
 import Logo from '@/components/Logo';
 import { Button } from '@/components/ui/button';
 import { Sparkles, RefreshCw } from 'lucide-react';
+import { usePullToRefresh } from '@/hooks/usePullToRefresh';
+import { PullToRefreshIndicator } from '@/components/PullToRefreshIndicator';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -32,6 +35,14 @@ export const DashboardLayout = ({
   const [internalTicker, setInternalTicker] = useState('KSE100');
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const isMobile = useIsMobile();
+
+  const { containerRef, pullDistance, isRefreshing: isPullRefreshing } = usePullToRefresh({
+    onRefresh: async () => {
+      setRefreshTrigger(prev => prev + 1);
+      await new Promise(resolve => setTimeout(resolve, 800));
+    },
+  });
 
   // Use external ticker if provided, otherwise use internal
   const selectedTicker = externalTicker ?? internalTicker;
@@ -103,10 +114,11 @@ export const DashboardLayout = ({
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div ref={containerRef} className="min-h-screen bg-background flex flex-col">
       <DashboardHeader onTickerChange={handleTickerChange} />
       
       <main className="container mx-auto px-4 pt-20 flex-1 pb-20 md:pb-0">
+        {isMobile && <PullToRefreshIndicator pullDistance={pullDistance} isRefreshing={isPullRefreshing} />}
         {/* Welcome Section - lower z-index */}
         <div className="py-3 md:py-6 animate-fade-in relative z-10">
           <div className="flex flex-col items-center text-center mb-4 md:mb-6">
