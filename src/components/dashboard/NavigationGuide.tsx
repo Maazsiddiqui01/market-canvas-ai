@@ -29,6 +29,7 @@ const allSections = [
   { id: 'news', icon: Newspaper, title: 'News', description: 'Market Updates' },
   { id: 'history', icon: History, title: 'History', description: 'Activity Log' },
   { id: 'tools', icon: Settings, title: 'Tools', description: 'Export & Utilities' },
+  { id: 'analytics', icon: PieChart, title: 'Analytics', description: 'Admin Stats' },
 ];
 
 interface NavigationGuideProps {
