@@ -66,6 +66,7 @@ export const StockComparison = () => {
       if (error) throw error;
 
       setResult(data);
+      logActivity({ activityType: 'comparison', description: `Compared ${validTickers.join(' vs ')}`, data: { tickers: validTickers } as any });
       toast({
         title: 'Comparison Complete',
         description: `Analyzed ${validTickers.join(', ')}`,

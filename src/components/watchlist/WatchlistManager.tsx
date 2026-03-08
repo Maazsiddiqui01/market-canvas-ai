@@ -87,6 +87,7 @@ export const WatchlistManager = () => {
 
     setWatchlist(watchlist.filter(w => w.id !== id));
     toast({ title: 'Removed', description: `${ticker} removed from watchlist` });
+    logActivity({ activityType: 'watchlist_action', description: `Removed ${ticker} from watchlist`, ticker });
   };
 
   if (loading) {

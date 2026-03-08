@@ -138,6 +138,7 @@ export const PriceAlertManager = () => {
         title: 'Alert Created',
         description: `Price alert set for ${newTicker.toUpperCase()} when price goes ${newAlertType} PKR ${newTargetPrice}`,
       });
+      logActivity({ activityType: 'alert_created', description: `Alert: ${newTicker.toUpperCase()} ${newAlertType} PKR ${newTargetPrice}`, ticker: newTicker.toUpperCase() });
 
       // Reset form
       setNewTicker('');
