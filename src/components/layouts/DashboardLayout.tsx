@@ -114,10 +114,11 @@ export const DashboardLayout = ({
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div ref={containerRef} className="min-h-screen bg-background flex flex-col">
       <DashboardHeader onTickerChange={handleTickerChange} />
       
       <main className="container mx-auto px-4 pt-20 flex-1 pb-20 md:pb-0">
+        {isMobile && <PullToRefreshIndicator pullDistance={pullDistance} isRefreshing={isPullRefreshing} />}
         {/* Welcome Section - lower z-index */}
         <div className="py-3 md:py-6 animate-fade-in relative z-10">
           <div className="flex flex-col items-center text-center mb-4 md:mb-6">
