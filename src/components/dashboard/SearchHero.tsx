@@ -14,6 +14,7 @@ import { SECTORS, searchStocks, getStocksBySector, type Stock } from '@/data/sto
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { useActivityLog } from '@/hooks/useActivityLog';
 
 interface SearchHeroProps {
   onTickerChange: (ticker: string) => void;
