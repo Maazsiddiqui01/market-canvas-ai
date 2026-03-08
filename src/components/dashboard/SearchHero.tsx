@@ -54,6 +54,19 @@ export const SearchHero = ({ onTickerChange, selectedTicker }: SearchHeroProps) 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // Global Cmd+K / Ctrl+K shortcut to focus search
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        inputRef.current?.focus();
+        setIsDropdownOpen(true);
+      }
+    };
+    document.addEventListener('keydown', handleGlobalKeyDown);
+    return () => document.removeEventListener('keydown', handleGlobalKeyDown);
+  }, []);
+
   const loadingMessages = [
     { text: "Spinning up your news...", icon: Newspaper },
     { text: "Powering your analysis...", icon: Zap },

@@ -6,6 +6,7 @@ import Footer from '../components/Footer';
 import TrustedBy from '../components/landing/TrustedBy';
 import TestimonialSection from '../components/landing/TestimonialSection';
 import CTASection from '../components/landing/CTASection';
+import FeaturesSection from '../components/landing/FeaturesSection';
 import AnimatedCounter from '../components/landing/AnimatedCounter';
 import ScrollReveal from '../components/landing/ScrollReveal';
 
@@ -35,6 +36,9 @@ const Index = () => {
               </div>
             </section>
           </ScrollReveal>
+          
+          {/* Features Section */}
+          <FeaturesSection />
           
           {/* Trusted By Section */}
           <TrustedBy />
