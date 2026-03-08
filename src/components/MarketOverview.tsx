@@ -67,7 +67,7 @@ const MarketOverview = ({ refreshTrigger }: MarketOverviewProps) => {
   };
 
   return (
-    <div className="inline-flex items-center gap-4 px-6 py-3 bg-card/50 backdrop-blur-xl rounded-2xl border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 animate-fade-in">
+    <div className="inline-flex flex-wrap items-center justify-center gap-2 md:gap-4 px-4 md:px-6 py-2 md:py-3 bg-card/50 backdrop-blur-xl rounded-2xl border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 animate-fade-in">
       {/* Live Badge */}
       <Badge variant="secondary" className="flex items-center gap-1.5 bg-green-500/10 text-green-500 border-green-500/20">
         <Activity className="h-3 w-3 animate-pulse" />
@@ -75,23 +75,23 @@ const MarketOverview = ({ refreshTrigger }: MarketOverviewProps) => {
       </Badge>
       
       {/* Index Name */}
-      <span className="text-sm font-medium text-muted-foreground">{kseData.name}</span>
+      <span className="text-xs md:text-sm font-medium text-muted-foreground">{kseData.name}</span>
       
       {/* Value */}
-      <span className="text-xl font-bold text-foreground">{kseData.value}</span>
+      <span className="text-base md:text-xl font-bold text-foreground">{kseData.value}</span>
       
       {/* Change */}
-      <div className={`flex items-center gap-1.5 px-3 py-1 rounded-lg ${
+      <div className={`flex items-center gap-1 md:gap-1.5 px-2 md:px-3 py-1 rounded-lg ${
         kseData.isPositive 
           ? 'bg-green-500/10 text-green-500' 
           : 'bg-red-500/10 text-red-500'
       }`}>
         {kseData.isPositive ? (
-          <TrendingUp className="h-4 w-4" />
+          <TrendingUp className="h-3 w-3 md:h-4 md:w-4" />
         ) : (
-          <TrendingDown className="h-4 w-4" />
+          <TrendingDown className="h-3 w-3 md:h-4 md:w-4" />
         )}
-        <span className="text-sm font-semibold">
+        <span className="text-xs md:text-sm font-semibold">
           {kseData.change} ({kseData.changePercent})
         </span>
       </div>

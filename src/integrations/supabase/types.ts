@@ -419,6 +419,36 @@ export type Database = {
         }
         Relationships: []
       }
+      tool_leads: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          name: string | null
+          source: string
+          source_details: Json | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          name?: string | null
+          source: string
+          source_details?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string | null
+          source?: string
+          source_details?: Json | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_activity_log: {
         Row: {
           activity_data: Json | null
