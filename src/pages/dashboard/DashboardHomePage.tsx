@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { OnboardingChecklist } from '@/components/dashboard/OnboardingChecklist';
 import { 
   BarChart3, 
   Brain, 
