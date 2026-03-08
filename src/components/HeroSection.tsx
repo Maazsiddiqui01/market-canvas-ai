@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, Zap, Target, Shield, ArrowRight, Play } from 'lucide-react';
+import { Sparkles, Zap, Target, Shield, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -73,10 +73,12 @@ const HeroSection = () => {
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
-                <Button variant="outline" size="lg" className="text-lg px-8 py-7 rounded-xl font-semibold group">
-                  <Play className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
-                  Watch Demo
-                </Button>
+                <Link to="/auth">
+                  <Button variant="outline" size="lg" className="text-lg px-8 py-7 rounded-xl font-semibold group">
+                    Learn More
+                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </Link>
               </>
             )}
           </div>

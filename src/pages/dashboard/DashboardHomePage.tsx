@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
@@ -98,6 +99,7 @@ const featureCards = [
 ];
 
 const DashboardHomePage = () => {
+  useDocumentTitle('Dashboard | Market Canvas AI');
   return (
     <DashboardLayout showMarketOverview>
       <div className="space-y-8">

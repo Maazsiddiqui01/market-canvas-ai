@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -72,6 +73,7 @@ const activityLabels: Record<string, string> = {
 };
 
 const HistoryPage = () => {
+  useDocumentTitle('Activity History | Market Canvas AI');
   const { user } = useAuth();
   const { toast } = useToast();
   const [activities, setActivities] = useState<ActivityItem[]>([]);

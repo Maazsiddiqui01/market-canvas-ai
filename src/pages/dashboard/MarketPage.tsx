@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import TradingViewHeatmap from '@/components/TradingViewHeatmap';
 import TechnicalAnalysis from '@/components/TechnicalAnalysis';
@@ -6,6 +7,7 @@ import FinancialAnalysis from '@/components/FinancialAnalysis';
 import TopBottom5 from '@/components/TopBottom5';
 
 const MarketPage = () => {
+  useDocumentTitle('Market Analysis | Market Canvas AI');
   const [selectedTicker, setSelectedTicker] = useState('KSE100');
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 

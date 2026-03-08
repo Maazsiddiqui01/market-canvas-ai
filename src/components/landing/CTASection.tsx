@@ -52,9 +52,11 @@ const CTASection = () => {
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
-                <Button variant="outline" size="lg" className="text-lg px-10 py-7 rounded-xl font-semibold">
-                  Watch Demo
-                </Button>
+                <Link to="/auth">
+                  <Button variant="outline" size="lg" className="text-lg px-10 py-7 rounded-xl font-semibold">
+                    Learn More
+                  </Button>
+                </Link>
               </>
             )}
           </div>
