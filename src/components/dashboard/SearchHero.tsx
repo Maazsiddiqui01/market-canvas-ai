@@ -35,6 +35,7 @@ interface ParsedSections {
 export const SearchHero = ({ onTickerChange, selectedTicker }: SearchHeroProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { logActivity } = useActivityLog();
   
   const [selectedSector, setSelectedSector] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
