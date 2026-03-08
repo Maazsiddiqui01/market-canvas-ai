@@ -9,6 +9,7 @@ import CTASection from '../components/landing/CTASection';
 import FeaturesSection from '../components/landing/FeaturesSection';
 import AnimatedCounter from '../components/landing/AnimatedCounter';
 import ScrollReveal from '../components/landing/ScrollReveal';
+import { NewsletterPopup } from '../components/NewsletterPopup';
 
 const Index = () => {
   useDocumentTitle(
