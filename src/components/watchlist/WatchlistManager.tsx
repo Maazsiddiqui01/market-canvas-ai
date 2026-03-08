@@ -71,6 +71,7 @@ export const WatchlistManager = () => {
     setNewTicker('');
     setNewStockName('');
     toast({ title: 'Added!', description: `${data.ticker} added to watchlist` });
+    logActivity({ activityType: 'watchlist_action', description: `Added ${data.ticker} to watchlist`, ticker: data.ticker });
   };
 
   const removeFromWatchlist = async (id: string, ticker: string) => {
