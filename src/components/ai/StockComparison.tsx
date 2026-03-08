@@ -20,6 +20,7 @@ interface ComparisonResult {
 
 export const StockComparison = () => {
   const { toast } = useToast();
+  const { logActivity } = useActivityLog();
   const [tickers, setTickers] = useState<string[]>(['', '']);
   const [isComparing, setIsComparing] = useState(false);
   const [result, setResult] = useState<ComparisonResult | null>(null);
