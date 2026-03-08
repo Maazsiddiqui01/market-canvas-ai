@@ -7,6 +7,34 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
 const Footer = () => {
+  const { toast } = useToast();
+  const [footerEmail, setFooterEmail] = useState('');
+  const [submittingFooter, setSubmittingFooter] = useState(false);
+
+  const handleFooterSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!footerEmail.trim()) return;
+    setSubmittingFooter(true);
+    try {
+      const { error } = await supabase.from('newsletter_subscribers' as any).insert({
+        email: footerEmail.trim(),
+        source: 'footer',
+      });
+      if (error && error.code === '23505') {
+        toast({ title: 'Already subscribed!', description: "You're already on our list." });
+      } else if (error) {
+        throw error;
+      } else {
+        toast({ title: 'Subscribed!', description: 'Welcome to our daily market insights.' });
+      }
+      setFooterEmail('');
+    } catch {
+      toast({ title: 'Error', description: 'Something went wrong.', variant: 'destructive' });
+    } finally {
+      setSubmittingFooter(false);
+    }
+  };
+
   return (
     <footer className="bg-card/50 border-t border-border mt-12">
       <div className="container mx-auto px-4 py-6 md:py-8">
