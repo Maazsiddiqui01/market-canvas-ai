@@ -41,8 +41,8 @@ const HeroSection = () => {
           </div>
 
           {/* Main headline */}
-          <div className="text-center mb-8 animate-slide-in-bottom">
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-bold mb-8 tracking-tight leading-[1.1]">
+          <div className="text-center mb-6 md:mb-8 animate-slide-in-bottom">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-display font-bold mb-6 md:mb-8 tracking-tight leading-[1.1]">
               <span className="text-foreground">Trade Smarter</span>
               <br />
               <span className="text-foreground">with </span>
@@ -50,7 +50,7 @@ const HeroSection = () => {
                 AI Intelligence
               </span>
             </h1>
-            <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light">
+            <p className="text-base md:text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light px-2">
               Real-time market analysis, predictive insights, and intelligent recommendations 
               powered by advanced AI technology. Make smarter decisions, faster.
             </p>

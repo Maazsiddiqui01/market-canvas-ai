@@ -106,19 +106,19 @@ export const DashboardLayout = ({
     <div className="min-h-screen bg-background flex flex-col">
       <DashboardHeader onTickerChange={handleTickerChange} />
       
-      <main className="container mx-auto px-4 pt-20 flex-1">
+      <main className="container mx-auto px-4 pt-20 flex-1 pb-20 md:pb-0">
         {/* Welcome Section - lower z-index */}
-        <div className="py-6 animate-fade-in relative z-10">
-          <div className="flex flex-col items-center text-center mb-6">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="p-2.5 bg-gradient-to-r from-primary to-accent rounded-xl shadow-lg shadow-primary/20 animate-pulse-glow">
-                <Sparkles className="h-5 w-5 text-primary-foreground" />
+        <div className="py-3 md:py-6 animate-fade-in relative z-10">
+          <div className="flex flex-col items-center text-center mb-4 md:mb-6">
+            <div className="flex items-center gap-2 md:gap-3 mb-2">
+              <div className="p-2 md:p-2.5 bg-gradient-to-r from-primary to-accent rounded-xl shadow-lg shadow-primary/20 animate-pulse-glow">
+                <Sparkles className="h-4 w-4 md:h-5 md:w-5 text-primary-foreground" />
               </div>
-              <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+              <h1 className="text-xl md:text-3xl font-bold text-foreground">
                 Welcome back{user.user_metadata?.full_name ? `, ${user.user_metadata.full_name}` : ''}!
               </h1>
             </div>
-            <p className="text-muted-foreground max-w-lg">
+            <p className="text-muted-foreground max-w-lg text-sm md:text-base hidden md:block">
               Your AI-powered PSX dashboard for portfolio tracking, market analysis, and intelligent insights
             </p>
           </div>

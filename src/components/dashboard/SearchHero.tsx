@@ -645,10 +645,10 @@ export const SearchHero = ({ onTickerChange, selectedTicker }: SearchHeroProps) 
       className="relative w-full max-w-3xl mx-auto animate-fade-in"
     >
       {/* Main Search Container */}
-      <div className="relative flex items-center gap-2 p-2 bg-card/50 backdrop-blur-xl rounded-2xl border border-border/50 shadow-lg shadow-primary/5 hover:shadow-xl hover:shadow-primary/10 transition-all duration-500">
+      <div className="relative flex flex-col md:flex-row md:items-center gap-2 p-2 bg-card/50 backdrop-blur-xl rounded-2xl border border-border/50 shadow-lg shadow-primary/5 hover:shadow-xl hover:shadow-primary/10 transition-all duration-500">
         {/* Sector Filter */}
         <Select value={selectedSector} onValueChange={setSelectedSector}>
-          <SelectTrigger className="w-[140px] border-0 bg-secondary/50 rounded-xl focus:ring-1 focus:ring-primary/50">
+          <SelectTrigger className="w-full md:w-[140px] border-0 bg-secondary/50 rounded-xl focus:ring-1 focus:ring-primary/50">
             <Filter className="h-4 w-4 mr-2 text-muted-foreground" />
             <SelectValue placeholder="All Sectors" />
           </SelectTrigger>
@@ -690,7 +690,7 @@ export const SearchHero = ({ onTickerChange, selectedTicker }: SearchHeroProps) 
         {/* Search Button */}
         <Button 
           onClick={() => handleSearch()}
-          className="h-12 px-6 rounded-xl bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-lg hover:shadow-xl hover:shadow-primary/30 transition-all duration-300"
+          className="h-12 w-full md:w-auto px-6 rounded-xl bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-lg hover:shadow-xl hover:shadow-primary/30 transition-all duration-300"
           disabled={loading || (!selectedStock && !searchQuery.trim())}
         >
           {loading ? (

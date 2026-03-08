@@ -97,15 +97,15 @@ const DashboardMockup = () => {
         </div>
       </div>
 
-      {/* Floating elements */}
-      <div className="absolute -right-4 top-1/4 p-3 bg-card/90 backdrop-blur-sm border border-border/50 rounded-xl shadow-lg animate-float">
+      {/* Floating elements - hidden on small mobile to prevent overflow */}
+      <div className="absolute -right-4 top-1/4 p-3 bg-card/90 backdrop-blur-sm border border-border/50 rounded-xl shadow-lg animate-float hidden sm:block">
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
           <span className="text-xs font-medium text-foreground">MEBL +2.3%</span>
         </div>
       </div>
       
-      <div className="absolute -left-4 bottom-1/3 p-3 bg-card/90 backdrop-blur-sm border border-border/50 rounded-xl shadow-lg animate-float" style={{ animationDelay: '1s' }}>
+      <div className="absolute -left-4 bottom-1/3 p-3 bg-card/90 backdrop-blur-sm border border-border/50 rounded-xl shadow-lg animate-float hidden sm:block" style={{ animationDelay: '1s' }}>
         <div className="flex items-center gap-2">
           <Bell className="h-3 w-3 text-primary" />
           <span className="text-xs font-medium text-foreground">Alert triggered</span>
