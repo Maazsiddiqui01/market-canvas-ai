@@ -51,6 +51,7 @@ export const NavigationGuide = ({ activeTab, onTabChange }: NavigationGuideProps
             return (
               <button
                 key={section.id}
+                aria-label={`Navigate to ${section.title}`}
                 onClick={() => onTabChange(section.id)}
                 className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-all duration-200 min-w-[56px]
                   ${isActive
