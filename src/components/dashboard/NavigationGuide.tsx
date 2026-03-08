@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Home, BarChart3, Brain, Briefcase, Eye, Bell, Newspaper, Settings, History, MoreHorizontal } from 'lucide-react';
+import { Home, BarChart3, Brain, Briefcase, Eye, Bell, Newspaper, Settings, History, MoreHorizontal, PieChart } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 
