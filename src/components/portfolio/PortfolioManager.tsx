@@ -253,6 +253,7 @@ export const PortfolioManager = () => {
 
     fetchHoldings(selectedPortfolio);
     toast({ title: 'Success', description: 'Holding added with all positions!' });
+    logActivity({ activityType: 'portfolio_action', description: `Added holding ${ticker.toUpperCase()}`, ticker: ticker.toUpperCase() });
   };
 
   const addPosition = async (holdingId: string, shares: number, buyPrice: number, buyDate?: string, notes?: string) => {
