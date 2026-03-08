@@ -22,6 +22,7 @@ export const WatchlistManager = () => {
   const [loading, setLoading] = useState(true);
   const [newTicker, setNewTicker] = useState('');
   const [newStockName, setNewStockName] = useState('');
+  const { logActivity } = useActivityLog();
 
   useEffect(() => {
     if (user) {
