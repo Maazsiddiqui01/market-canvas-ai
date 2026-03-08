@@ -16,6 +16,7 @@ import {
   Briefcase, Plus, Trash2, TrendingUp, TrendingDown, DollarSign, 
   PieChart, RefreshCw, ChevronDown, ChevronRight, Loader2, Activity
 } from 'lucide-react';
+import { useActivityLog } from '@/hooks/useActivityLog';
 
 interface Portfolio {
   id: string;
