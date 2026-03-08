@@ -56,6 +56,7 @@ export const PriceAlertManager = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isCheckingAlerts, setIsCheckingAlerts] = useState(false);
+  const { logActivity } = useActivityLog();
 
   // Form state
   const [newTicker, setNewTicker] = useState('');
