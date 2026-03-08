@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Home, BarChart3, Brain, Briefcase, Eye, Bell, Newspaper, Settings, History, MoreHorizontal } from 'lucide-react';
+import { Home, BarChart3, Brain, Briefcase, Eye, Bell, Newspaper, Settings, History, MoreHorizontal, PieChart } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 
@@ -16,6 +16,7 @@ const secondarySections = [
   { id: 'news', icon: Newspaper, title: 'News', description: 'Market Updates' },
   { id: 'history', icon: History, title: 'History', description: 'Activity Log' },
   { id: 'tools', icon: Settings, title: 'Tools', description: 'Export & Utilities' },
+  { id: 'analytics', icon: PieChart, title: 'Analytics', description: 'Admin Stats' },
 ];
 
 const allSections = [
@@ -28,6 +29,7 @@ const allSections = [
   { id: 'news', icon: Newspaper, title: 'News', description: 'Market Updates' },
   { id: 'history', icon: History, title: 'History', description: 'Activity Log' },
   { id: 'tools', icon: Settings, title: 'Tools', description: 'Export & Utilities' },
+  { id: 'analytics', icon: PieChart, title: 'Analytics', description: 'Admin Stats' },
 ];
 
 interface NavigationGuideProps {

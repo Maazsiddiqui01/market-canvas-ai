@@ -74,6 +74,7 @@ export const DashboardLayout = ({
     if (path === '/dashboard/news') return 'news';
     if (path === '/dashboard/history') return 'history';
     if (path === '/dashboard/tools') return 'tools';
+    if (path === '/dashboard/analytics') return 'analytics';
     return 'home';
   };
 
@@ -88,6 +89,7 @@ export const DashboardLayout = ({
       'news': '/dashboard/news',
       'history': '/dashboard/history',
       'tools': '/dashboard/tools',
+      'analytics': '/dashboard/analytics',
     };
     navigate(routes[tab] || '/dashboard');
   };
