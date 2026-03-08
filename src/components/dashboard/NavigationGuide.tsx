@@ -42,6 +42,18 @@ interface NavigationGuideProps {
 export const NavigationGuide = ({ activeTab, onTabChange }: NavigationGuideProps) => {
   const isMobile = useIsMobile();
   const [moreOpen, setMoreOpen] = useState(false);
+  const { user } = useAuth();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+    supabase.rpc('has_role', { _user_id: user.id, _role: 'admin' }).then(({ data }) => {
+      setIsAdmin(!!data);
+    });
+  }, [user]);
+
+  const secondarySections = isAdmin ? [...baseSections, analyticsSection] : baseSections;
+  const allSections = isAdmin ? [...baseAllSections, analyticsSection] : baseAllSections;
 
   const isSecondaryActive = secondarySections.some(s => s.id === activeTab);
 
