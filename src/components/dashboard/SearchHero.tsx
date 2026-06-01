@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { SECTORS, searchStocks, getStocksBySector, type Stock } from '@/data/stockData';
+import { SECTORS, searchStocks, getStocksBySector, getAllStocks, type Stock } from '@/data/stockData';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
@@ -43,6 +43,7 @@ export const SearchHero = ({ onTickerChange, selectedTicker }: SearchHeroProps) 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [suggestions, setSuggestions] = useState<Stock[]>([]);
   const [sectorStocks, setSectorStocks] = useState<Stock[]>([]);
+  const [defaultStocks, setDefaultStocks] = useState<Stock[]>([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const [loadingSectorStocks, setLoadingSectorStocks] = useState(false);
@@ -98,8 +99,23 @@ export const SearchHero = ({ onTickerChange, selectedTicker }: SearchHeroProps) 
     } else if (selectedSector && selectedSector !== 'all' && sectorStocks.length > 0) {
       return sectorStocks;
     }
-    return [];
-  }, [suggestions, sectorStocks, searchQuery, selectedSector]);
+    // No query, no sector — show a default browse list so first-time users
+    // can scroll through popular stocks and pick one.
+    return defaultStocks;
+  }, [suggestions, sectorStocks, defaultStocks, searchQuery, selectedSector]);
+
+  // Load default browse list once (popular/all PSX stocks)
+  useEffect(() => {
+    let cancelled = false;
+    getAllStocks()
+      .then((all) => {
+        if (!cancelled) setDefaultStocks(all.slice(0, 30));
+      })
+      .catch((err) => console.error('Error loading default stocks:', err));
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // Handle clicking outside to close suggestions
   useEffect(() => {
