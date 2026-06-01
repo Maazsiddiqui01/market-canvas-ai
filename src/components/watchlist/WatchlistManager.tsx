@@ -176,6 +176,7 @@ export const WatchlistManager = () => {
                     <Button
                       variant="ghost"
                       size="icon"
+                      aria-label={`Remove ${item.ticker} from watchlist`}
                       onClick={() => removeFromWatchlist(item.id, item.ticker)}
                       className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive"
                     >

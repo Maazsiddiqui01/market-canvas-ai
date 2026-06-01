@@ -248,6 +248,7 @@ export const AISearchWidget = forwardRef<AISearchWidgetRef, AISearchWidgetProps>
                 <Button
                   variant="ghost"
                   size="icon"
+                  aria-label={copied ? "Copied" : "Copy answer to clipboard"}
                   className="h-7 w-7"
                   onClick={copyToClipboard}
                 >

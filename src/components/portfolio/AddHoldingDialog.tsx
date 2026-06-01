@@ -159,6 +159,7 @@ export const AddHoldingDialog = ({ onAdd }: AddHoldingDialogProps) => {
                         type="button"
                         variant="ghost"
                         size="icon"
+                        aria-label="Remove position row"
                         className="h-6 w-6 text-muted-foreground hover:text-destructive"
                         onClick={() => removePositionRow(position.id)}
                       >

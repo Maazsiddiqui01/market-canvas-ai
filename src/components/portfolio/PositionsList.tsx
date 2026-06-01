@@ -73,6 +73,7 @@ export const PositionsList = ({ positions, currentPrice, onDelete }: PositionsLi
               <Button
                 variant="ghost"
                 size="icon"
+                aria-label="Delete position"
                 onClick={() => onDelete(position.id)}
                 className="h-8 w-8 text-muted-foreground hover:text-destructive"
               >

@@ -77,6 +77,7 @@ const DashboardHeader = ({ onTickerChange }: DashboardHeaderProps) => {
                   <Button 
                     variant="ghost" 
                     size="icon" 
+                    aria-label="User menu"
                     className="rounded-full bg-primary/10 hover:bg-primary/20 hover:scale-105 transition-all duration-300"
                   >
                     <User className="h-5 w-5 text-primary" />

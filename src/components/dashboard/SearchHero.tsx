@@ -699,6 +699,7 @@ export const SearchHero = ({ onTickerChange, selectedTicker }: SearchHeroProps) 
             <Button
               variant="ghost"
               size="icon"
+              aria-label="Clear selection"
               onClick={handleClearSelection}
               className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full hover:bg-destructive/20"
             >
