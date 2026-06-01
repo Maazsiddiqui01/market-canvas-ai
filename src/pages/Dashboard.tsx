@@ -62,7 +62,7 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="min-h-dvh flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-4 animate-pulse-glow">
           <div className="p-4 bg-gradient-to-r from-primary to-accent rounded-2xl">
             <TrendingUp className="h-10 w-10 text-primary-foreground" />
@@ -78,7 +78,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-dvh bg-background">
       <DashboardHeader onTickerChange={setSelectedTicker} />
       
       <main className="container mx-auto px-4 pt-20">
