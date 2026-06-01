@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Linkedin, AlertTriangle, Heart, TrendingUp, Globe, Shield, Sparkles } from 'lucide-react';
+import { Mail, Linkedin, Heart, TrendingUp, Globe, Shield, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Logo from './Logo';
