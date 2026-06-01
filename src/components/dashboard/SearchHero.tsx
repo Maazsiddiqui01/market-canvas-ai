@@ -764,13 +764,22 @@ export const SearchHero = ({ onTickerChange, selectedTicker }: SearchHeroProps) 
         </Button>
       </div>
 
-      {/* Dropdown */}
-      {isDropdownOpen && dropdownSuggestions.length > 0 && (
-        <div 
+      {/* Dropdown — rendered in a portal so it overlays everything and is never clipped */}
+      {isDropdownOpen && dropdownSuggestions.length > 0 && dropdownPos && createPortal(
+        <div
           ref={dropdownRef}
-          className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl shadow-2xl shadow-primary/10 overflow-hidden z-[100] animate-fade-in"
+          data-search-hero
+          role="listbox"
+          style={{
+            position: 'fixed',
+            top: dropdownPos.top,
+            left: dropdownPos.left,
+            width: dropdownPos.width,
+            zIndex: 9999,
+          }}
+          className="bg-card border border-border rounded-xl shadow-2xl shadow-primary/10 overflow-hidden animate-fade-in"
         >
-          <div className="max-h-[320px] overflow-y-auto p-2">
+          <div className="max-h-[min(420px,60vh)] overflow-y-auto p-2">
             {loadingSuggestions || loadingSectorStocks ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="h-6 w-6 animate-spin text-primary" />
@@ -780,12 +789,15 @@ export const SearchHero = ({ onTickerChange, selectedTicker }: SearchHeroProps) 
                 <button
                   key={stock.ticker}
                   data-stock-item
+                  role="option"
+                  aria-selected={highlightedIndex === index}
+                  onMouseEnter={() => setHighlightedIndex(index)}
                   onClick={() => handleStockSelect(stock)}
                   className={`
                     w-full flex items-center gap-3 p-3 rounded-lg text-left
                     transition-all duration-200
-                    ${highlightedIndex === index 
-                      ? 'bg-primary/20 text-foreground' 
+                    ${highlightedIndex === index
+                      ? 'bg-primary/20 text-foreground ring-1 ring-primary/40'
                       : 'hover:bg-secondary/50'
                     }
                   `}
@@ -808,7 +820,7 @@ export const SearchHero = ({ onTickerChange, selectedTicker }: SearchHeroProps) 
                       {highlightMatch(stock.name || '', searchQuery)}
                     </p>
                   </div>
-                  <div className="flex-shrink-0 flex items-center gap-1 text-xs text-muted-foreground">
+                  <div className="hidden sm:flex flex-shrink-0 items-center gap-1 text-xs text-muted-foreground">
                     <Building2 className="h-3 w-3" />
                     <span className="max-w-[100px] truncate">{stock.sector}</span>
                   </div>
@@ -816,8 +828,10 @@ export const SearchHero = ({ onTickerChange, selectedTicker }: SearchHeroProps) 
               ))
             )}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
+
 
       {/* Selected Stock Badge */}
       {selectedStock && !loading && !responseData && (
