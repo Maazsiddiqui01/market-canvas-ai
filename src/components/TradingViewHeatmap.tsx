@@ -1,89 +1,64 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useTradingViewTheme } from '@/hooks/useTradingViewTheme';
+import TradingViewAttribution from '@/components/tradingview/TradingViewAttribution';
 
 const TradingViewHeatmap = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMarketOpen, setIsMarketOpen] = useState(false);
-  const [currentTheme, setCurrentTheme] = useState<'dark' | 'light'>('dark');
+  const currentTheme = useTradingViewTheme();
 
   // Check if market is open (9 AM to 5 PM Pakistan time)
-  const checkMarketHours = () => {
-    const now = new Date();
-    const pakistanTime = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Karachi"}));
-    const hour = pakistanTime.getHours();
-    setIsMarketOpen(hour >= 9 && hour < 17);
-  };
-
-  // Track theme changes
   useEffect(() => {
-    const checkTheme = () => {
-      const isDarkMode = document.documentElement.classList.contains('dark');
-      setCurrentTheme(isDarkMode ? 'dark' : 'light');
+    const checkMarketHours = () => {
+      const now = new Date();
+      const pakistanTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Karachi' }));
+      const hour = pakistanTime.getHours();
+      setIsMarketOpen(hour >= 9 && hour < 17);
     };
-
-    checkTheme();
-    
-    // Listen for theme changes
-    const observer = new MutationObserver(checkTheme);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class']
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
     checkMarketHours();
-    const interval = setInterval(checkMarketHours, 60000); // Check every minute
+    const interval = setInterval(checkMarketHours, 60000);
     return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
-    if (containerRef.current) {
-      // Clear previous widget
-      containerRef.current.innerHTML = '';
-    }
+    if (containerRef.current) containerRef.current.innerHTML = '';
 
     const script = document.createElement('script');
     script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-stock-heatmap.js';
     script.async = true;
-    
     script.innerHTML = JSON.stringify({
-      "dataSource": "PSXKSE100",
-      "blockSize": "market_cap_basic",
-      "blockColor": "change",
-      "grouping": "sector",
-      "locale": "en",
-      "symbolUrl": "",
-      "colorTheme": currentTheme,
-      "exchanges": [],
-      "hasTopBar": true,
-      "isDataSetEnabled": true,
-      "isZoomEnabled": true,
-      "hasSymbolTooltip": true,
-      "isMonoSize": true,
-      "width": "100%",
-      "height": "500"
+      dataSource: 'PSXKSE100',
+      blockSize: 'market_cap_basic',
+      blockColor: 'change',
+      grouping: 'sector',
+      locale: 'en',
+      symbolUrl: '',
+      colorTheme: currentTheme,
+      exchanges: [],
+      hasTopBar: true,
+      isDataSetEnabled: true,
+      isZoomEnabled: true,
+      hasSymbolTooltip: true,
+      isMonoSize: true,
+      isTransparent: true,
+      width: '100%',
+      height: '500',
     });
 
-    if (containerRef.current) {
-      containerRef.current.appendChild(script);
-    }
+    const container = containerRef.current;
+    container?.appendChild(script);
 
     return () => {
-      if (containerRef.current && script.parentNode) {
-        script.parentNode.removeChild(script);
-      }
+      if (container) container.innerHTML = '';
     };
-  }, [currentTheme]); // Re-run when theme changes
+  }, [currentTheme]);
 
   return (
     <Card className="glass-subtle border-border/60">
       <CardHeader>
-        <CardTitle className="text-white flex items-center gap-2">
-          {isMarketOpen && <div className="w-2 h-2 bg-up rounded-full animate-pulse"></div>}
+        <CardTitle className="text-foreground flex items-center gap-2">
+          {isMarketOpen && <div className="w-2 h-2 bg-up rounded-full animate-pulse" aria-hidden />}
           Market Heatmap
         </CardTitle>
       </CardHeader>
@@ -91,6 +66,7 @@ const TradingViewHeatmap = () => {
         <div className="tradingview-widget-container h-[500px]" ref={containerRef}>
           <div className="tradingview-widget-container__widget h-full"></div>
         </div>
+        <TradingViewAttribution symbol="PSX-KSE100" />
       </CardContent>
     </Card>
   );

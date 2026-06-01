@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DollarSign } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useTradingViewTheme } from '@/hooks/useTradingViewTheme';
+import TradingViewAttribution from '@/components/tradingview/TradingViewAttribution';
 
 interface FinancialAnalysisProps {
   ticker?: string;
@@ -10,65 +12,37 @@ interface FinancialAnalysisProps {
 const FinancialAnalysis = ({ ticker = 'MEBL' }: FinancialAnalysisProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentTheme, setCurrentTheme] = useState<'dark' | 'light'>('dark');
-
-  // Track theme changes
-  useEffect(() => {
-    const checkTheme = () => {
-      const isDarkMode = document.documentElement.classList.contains('dark');
-      setCurrentTheme(isDarkMode ? 'dark' : 'light');
-    };
-
-    checkTheme();
-    
-    // Listen for theme changes
-    const observer = new MutationObserver(checkTheme);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class']
-    });
-
-    return () => observer.disconnect();
-  }, []);
+  const currentTheme = useTradingViewTheme();
 
   useEffect(() => {
     setIsLoading(true);
-    if (containerRef.current) {
-      // Clear previous widget
-      containerRef.current.innerHTML = '';
-    }
+    if (containerRef.current) containerRef.current.innerHTML = '';
+
+    const tvSymbol = ticker === 'KSE100' ? 'PSX:KSE100' : `PSX:${ticker}`;
 
     const script = document.createElement('script');
     script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-financials.js';
     script.async = true;
-    
-    // Format ticker for TradingView - keep KSE100 as is, add PSX: prefix for others
-    const tvSymbol = ticker === 'KSE100' ? 'PSX:KSE100' : `PSX:${ticker}`;
-    
     script.innerHTML = JSON.stringify({
-      "symbol": tvSymbol,
-      "colorTheme": currentTheme,
-      "displayMode": "regular",
-      "isTransparent": false,
-      "locale": "en",
-      "width": "100%",
-      "height": "800"
+      symbol: tvSymbol,
+      colorTheme: currentTheme,
+      displayMode: 'regular',
+      isTransparent: true,
+      locale: 'en',
+      width: '100%',
+      height: '800',
     });
+    script.onload = () => setTimeout(() => setIsLoading(false), 2000);
 
-    script.onload = () => {
-      setTimeout(() => setIsLoading(false), 2000);
-    };
-
-    if (containerRef.current) {
-      containerRef.current.appendChild(script);
-    }
+    const container = containerRef.current;
+    container?.appendChild(script);
 
     return () => {
-      if (containerRef.current && script.parentNode) {
-        script.parentNode.removeChild(script);
-      }
+      if (container) container.innerHTML = '';
     };
-  }, [ticker, currentTheme]); // Re-run when theme changes
+  }, [ticker, currentTheme]);
+
+  const tvSymbol = ticker === 'KSE100' ? 'PSX-KSE100' : `PSX-${ticker}`;
 
   return (
     <Card className="bg-card border-border transition-all duration-300 hover:shadow-lg hover-scale">
@@ -96,6 +70,7 @@ const FinancialAnalysis = ({ ticker = 'MEBL' }: FinancialAnalysisProps) => {
         <div className="tradingview-widget-container h-[800px]" ref={containerRef}>
           <div className="tradingview-widget-container__widget h-full"></div>
         </div>
+        <TradingViewAttribution symbol={tvSymbol} label={`${ticker} financials on TradingView`} />
       </CardContent>
     </Card>
   );
