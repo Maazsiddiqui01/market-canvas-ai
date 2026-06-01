@@ -1,6 +1,6 @@
-import { useState, useCallback } from 'react';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
+import { useSelectedTicker } from '@/contexts/SelectedTickerContext';
 import { OnboardingChecklist } from '@/components/dashboard/OnboardingChecklist';
 import { AISearchHero } from '@/components/dashboard/AISearchHero';
 import { QuickAccessTiles } from '@/components/dashboard/QuickAccessTiles';
@@ -10,11 +10,7 @@ import TopBottom5 from '@/components/TopBottom5';
 
 const DashboardHomePage = () => {
   useDocumentTitle('Market | Market Canvas AI');
-  const [selectedTicker, setSelectedTicker] = useState('KSE100');
-
-  const handleTickerChange = useCallback((ticker: string) => {
-    setSelectedTicker(ticker);
-  }, []);
+  const { selectedTicker, setSelectedTicker } = useSelectedTicker();
 
   return (
     <DashboardLayout showMarketOverview>
@@ -24,7 +20,7 @@ const DashboardHomePage = () => {
         {/* Hero — n8n stock picker (default) + Ask AI tab */}
         <AISearchHero
           selectedTicker={selectedTicker}
-          onTickerChange={handleTickerChange}
+          onTickerChange={setSelectedTicker}
         />
 
         {/* PSX heatmap */}
