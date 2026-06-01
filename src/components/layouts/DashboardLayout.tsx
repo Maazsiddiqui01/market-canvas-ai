@@ -211,10 +211,9 @@ export const DashboardLayout = ({
         </div>
       </main>
 
-      {/* Footer — hidden on mobile (would sit behind fixed bottom nav) */}
-      <div className="hidden md:block">
-        <Footer />
-      </div>
+      {/* Footer */}
+      <Footer />
+
     </div>
   );
 };
