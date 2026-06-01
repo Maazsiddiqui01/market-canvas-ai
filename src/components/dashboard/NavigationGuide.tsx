@@ -57,8 +57,8 @@ export const NavigationGuide = ({ activeTab, onTabChange }: NavigationGuideProps
 
   if (isMobile) {
     return (
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-xl border-t border-border safe-area-bottom">
-        <div className="flex items-center justify-around px-1 py-1.5">
+      <nav className="sticky top-14 z-30 -mx-4 px-3 py-2 bg-background/90 backdrop-blur-xl hairline-b mb-4">
+        <div className="flex items-center justify-between gap-1.5">
           {primarySections.map((section) => {
             const Icon = section.icon;
             const isActive = activeTab === section.id;
@@ -67,18 +67,15 @@ export const NavigationGuide = ({ activeTab, onTabChange }: NavigationGuideProps
                 key={section.id}
                 aria-label={`Navigate to ${section.title}`}
                 onClick={() => onTabChange(section.id)}
-                className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-all duration-200 min-w-[56px]
+                className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-2 rounded-lg transition-all min-h-[40px]
                   ${isActive
-                    ? 'text-primary'
-                    : 'text-muted-foreground'
+                    ? 'bg-primary/12 text-primary'
+                    : 'text-muted-foreground hover:text-foreground'
                   }
                 `}
               >
-                <Icon className={`h-5 w-5 ${isActive ? 'scale-110' : ''} transition-transform`} />
-                <span className="text-[10px] font-medium">{section.title}</span>
-                {isActive && (
-                  <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-primary rounded-full" />
-                )}
+                <Icon className="h-4 w-4" />
+                <span className="text-xs font-medium">{section.title}</span>
               </button>
             );
           })}
@@ -88,15 +85,12 @@ export const NavigationGuide = ({ activeTab, onTabChange }: NavigationGuideProps
             <SheetTrigger asChild>
               <button
                 aria-label="More navigation options"
-                className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-all duration-200 min-w-[56px] relative
-                  ${isSecondaryActive ? 'text-primary' : 'text-muted-foreground'}
+                className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-2 rounded-lg transition-all min-h-[40px]
+                  ${isSecondaryActive ? 'bg-primary/12 text-primary' : 'text-muted-foreground hover:text-foreground'}
                 `}
               >
-                <MoreHorizontal className="h-5 w-5" />
-                <span className="text-[10px] font-medium">More</span>
-                {isSecondaryActive && (
-                  <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-primary rounded-full" />
-                )}
+                <MoreHorizontal className="h-4 w-4" />
+                <span className="text-xs font-medium">More</span>
               </button>
             </SheetTrigger>
             <SheetContent side="bottom" className="rounded-t-2xl pb-8">
@@ -136,6 +130,7 @@ export const NavigationGuide = ({ activeTab, onTabChange }: NavigationGuideProps
       </nav>
     );
   }
+
 
   // Desktop: grouped glass nav (Markets · My Stuff · Tools)
   const groupMarkets = allSections.filter(s => ['home', 'market', 'ai-search', 'news'].includes(s.id));
