@@ -464,3 +464,14 @@
 .prose-custom a { @apply text-primary hover:text-primary/80 underline; }
 .prose-custom code { @apply bg-secondary px-1.5 py-0.5 rounded text-sm; }
 .prose-custom pre { @apply bg-secondary p-4 rounded-lg overflow-x-auto; }
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+

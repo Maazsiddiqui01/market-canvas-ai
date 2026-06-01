@@ -16,6 +16,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { useActivityLog } from '@/hooks/useActivityLog';
 import { PageHeader } from '@/components/ui/page-header';
 import { CommandPalette } from '@/components/dashboard/CommandPalette';
+import { CommandHint } from '@/components/dashboard/CommandHint';
 
 import type { ReactNode } from 'react';
 
@@ -146,6 +147,7 @@ export const DashboardLayout = ({
   return (
     <div ref={containerRef} className="min-h-screen bg-background flex flex-col">
       <CommandPalette />
+      <CommandHint />
       <DashboardHeader onTickerChange={handleTickerChange} />
 
       
