@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import DashboardHeader from '@/components/DashboardHeader';
-import { NavigationGuide } from '@/components/dashboard/NavigationGuide';
+import { MobileBottomNav } from '@/components/dashboard/NavigationGuide';
 import { Breadcrumb } from '@/components/dashboard/Breadcrumb';
 import { SearchHero } from '@/components/dashboard/SearchHero';
 import MarketOverview from '@/components/MarketOverview';
@@ -148,12 +148,14 @@ export const DashboardLayout = ({
     <div ref={containerRef} className="min-h-dvh bg-background flex flex-col">
       <CommandPalette />
       <CommandHint />
-      <DashboardHeader onTickerChange={handleTickerChange} />
+      <DashboardHeader
+        onTickerChange={handleTickerChange}
+        activeTab={getActiveTab()}
+        onTabChange={handleTabChange}
+      />
 
-      
-      <main className="container mx-auto px-4 pt-20 flex-1 pb-8">
-        {/* Top navigation (sticky) — first thing below header on every page */}
-        <NavigationGuide activeTab={getActiveTab()} onTabChange={handleTabChange} />
+      <main className="container mx-auto px-4 pt-16 md:pt-20 flex-1 pb-24 md:pb-8">
+
 
 
         {isMobile && <PullToRefreshIndicator pullDistance={pullDistance} isRefreshing={isPullRefreshing} />}
