@@ -105,6 +105,7 @@ export const StockSelector = ({ value, onChange, placeholder = "Search stocks...
             type="button"
             variant="ghost" 
             size="icon" 
+            aria-label="Clear selected stock"
             className="h-6 w-6"
             onClick={clearSelection}
             disabled={disabled}
