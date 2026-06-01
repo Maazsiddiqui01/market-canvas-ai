@@ -133,7 +133,7 @@ export const NavigationGuide = ({ activeTab, onTabChange }: NavigationGuideProps
 
 
   // Desktop: grouped glass nav (Markets · My Stuff · Tools)
-  const groupMarkets = allSections.filter(s => ['home', 'market', 'ai-search', 'news'].includes(s.id));
+  const groupMarkets = allSections.filter(s => ['home', 'ai-search', 'news'].includes(s.id));
   const groupMine = allSections.filter(s => ['portfolio', 'watchlist', 'alerts', 'history'].includes(s.id));
   const groupTools = allSections.filter(s => ['tools', 'analytics'].includes(s.id));
 
