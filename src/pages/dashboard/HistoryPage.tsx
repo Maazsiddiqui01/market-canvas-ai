@@ -202,69 +202,67 @@ const HistoryPage = () => {
     </div>
   );
 
+  const headerActions = (
+    <>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={handleRefresh}
+        disabled={isRefreshing}
+        className="gap-2"
+        aria-label="Refresh activity"
+      >
+        <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+        <span className="hidden sm:inline">Refresh</span>
+      </Button>
+      {activities.length > 0 && (
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-2 text-destructive hover:text-destructive hover:bg-destructive/10"
+              disabled={isClearing}
+              aria-label="Clear all activity"
+            >
+              <Trash2 className="h-4 w-4" />
+              <span className="hidden sm:inline">Clear All</span>
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Clear All Activity?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This will permanently delete all your activity history. This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleClearHistory}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                Clear All
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
+    </>
+  );
+
   return (
-    <DashboardLayout>
+    <DashboardLayout
+      pageEyebrow="Your timeline"
+      pageTitle="Activity History"
+      pageSubtitle="Every search, view, and action you've taken on Market Canvas AI."
+      pageIcon={History}
+      pageActions={headerActions}
+    >
       <div className="space-y-6">
-        {/* Header */}
-        <Card className="border-border/50 bg-card/80 backdrop-blur-sm">
-          <CardHeader>
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div>
-                <CardTitle className="flex items-center gap-2">
-                  <History className="h-5 w-5 text-primary" />
-                  Activity History
-                </CardTitle>
-                <CardDescription>
-                  Track all your searches, views, and actions
-                </CardDescription>
-              </div>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleRefresh}
-                  disabled={isRefreshing}
-                  className="gap-2"
-                >
-                  <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-                  Refresh
-                </Button>
-                {activities.length > 0 && (
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="gap-2 text-destructive hover:text-destructive hover:bg-destructive/10"
-                        disabled={isClearing}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                        Clear All
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Clear All Activity?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          This will permanently delete all your activity history. This action cannot be undone.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={handleClearHistory}
-                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                        >
-                          Clear All
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                )}
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
+        {/* Filters */}
+        <Card className="glass-subtle border-0">
+          <CardContent className="pt-6">
             <div className="flex flex-col sm:flex-row gap-3">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -293,6 +291,7 @@ const HistoryPage = () => {
             </div>
           </CardContent>
         </Card>
+
 
         {/* Activity List */}
         <Card className="border-border/50 bg-card/80 backdrop-blur-sm">
