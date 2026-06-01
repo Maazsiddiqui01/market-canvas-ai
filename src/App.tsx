@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { usePageTracking } from "@/hooks/usePageTracking";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { SelectedTickerProvider } from "@/contexts/SelectedTickerContext";
 import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
 import { AnimatePresence } from "framer-motion";
 import React, { Suspense } from "react";
@@ -61,15 +62,17 @@ const AnimatedRoutes = () => {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <PageTracker />
-          <PWAInstallPrompt />
-          <AnimatedRoutes />
-        </BrowserRouter>
-      </TooltipProvider>
+      <SelectedTickerProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <PageTracker />
+            <PWAInstallPrompt />
+            <AnimatedRoutes />
+          </BrowserRouter>
+        </TooltipProvider>
+      </SelectedTickerProvider>
     </AuthProvider>
   </QueryClientProvider>
 );
