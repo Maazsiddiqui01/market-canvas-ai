@@ -135,6 +135,7 @@ export const StockComparison = () => {
                 <Button
                   variant="ghost"
                   size="icon"
+                  aria-label="Remove ticker"
                   onClick={() => removeTicker(index)}
                   className="text-muted-foreground hover:text-destructive"
                 >
