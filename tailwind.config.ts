@@ -73,6 +73,10 @@ export default {
 				down: {
 					DEFAULT: 'hsl(var(--down))',
 					foreground: 'hsl(var(--down-foreground))'
+				},
+				warning: {
+					DEFAULT: 'hsl(var(--warning))',
+					foreground: 'hsl(var(--warning-foreground))'
 				}
 			},
 			borderRadius: {

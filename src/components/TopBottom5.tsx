@@ -89,7 +89,7 @@ const TopBottom5 = ({ refreshTrigger }: TopBottom5Props) => {
                         <div>
                           <p className="font-semibold flex items-center gap-1">
                             {stock.symbol}
-                            {index === 0 && <Award className="h-3 w-3 text-yellow-500" />}
+                            {index === 0 && <Award className="h-3 w-3 text-warning" />}
                           </p>
                           <p className="text-xs text-muted-foreground truncate max-w-[120px]">
                             {stock.name}

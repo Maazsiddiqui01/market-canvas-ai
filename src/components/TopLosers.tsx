@@ -45,20 +45,20 @@ const TopLosers = () => {
   const displayLosers = loading ? fallbackLosers : losers.length > 0 ? losers : fallbackLosers;
 
   return (
-    <Card className="bg-slate-800/50 border-slate-600">
+    <Card className="glass-subtle border-border/60">
       <CardHeader>
         <CardTitle className="text-white flex items-center gap-2">
           <TrendingDown className="h-5 w-5 text-down" />
           Top Losers
-          {loading && <span className="text-sm text-slate-400 ml-2">Loading...</span>}
+          {loading && <span className="text-sm text-muted-foreground ml-2">Loading...</span>}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         {displayLosers.map((stock, index) => (
-          <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-slate-700/30 hover:bg-slate-700/50 transition-colors">
+          <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
             <div>
               <p className="font-semibold text-white">{stock.name}</p>
-              <p className="text-sm text-slate-400 truncate max-w-32">
+              <p className="text-sm text-muted-foreground truncate max-w-32">
                 {loading ? 'Loading...' : stock.name}
               </p>
             </div>

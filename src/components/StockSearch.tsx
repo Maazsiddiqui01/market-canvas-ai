@@ -480,7 +480,7 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
         const lowerSignal = signal.toLowerCase();
         if (lowerSignal.includes('buy')) return 'text-up';
         if (lowerSignal.includes('sell')) return 'text-down';
-        return 'text-yellow-500';
+        return 'text-warning';
       };
 
       const getSignalIcon = (signal: string) => {
@@ -512,7 +512,7 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
 
           {/* News Insights */}
           {sections.newsInsights.length > 0 && (
-            <Card className="bg-blue-500/10 border-blue-500/20">
+            <Card className="bg-primary/10 border-primary/20">
               <CardContent className="p-4">
                 <h4 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
                   🔍 News Insights
@@ -552,7 +552,7 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
 
           {/* Fundamental Analysis */}
           {sections.fundamentalAnalysis && sections.fundamentalAnalysis.length > 0 && (
-            <Card className="bg-amber-500/10 border-amber-500/20">
+            <Card className="bg-warning/10 border-warning/20">
               <CardContent className="p-4">
                 <h4 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
                   💡 Fundamental Analysis
@@ -570,7 +570,7 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
 
           {/* Deep Analysis Links */}
           {(selectedStock?.ticker || searchQuery.trim()) && (
-            <Card className="bg-slate-500/10 border-slate-500/20">
+            <Card className="bg-muted/40 border-border/60">
               <CardContent className="p-4">
                 <h4 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
                   🔗 Deep Analysis Links
@@ -612,7 +612,7 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
 
           {/* Market Overview */}
           {sections.marketOverview.length > 0 && (
-            <Card className="bg-blue-500/10 border-blue-500/20">
+            <Card className="bg-primary/10 border-primary/20">
               <CardContent className="p-4">
                 <h4 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
                   🌍 Market Overview
@@ -630,7 +630,7 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
 
           {/* Expert Recommendation */}
           {sections.recommendation.length > 0 && (
-            <Card className="bg-emerald-500/10 border-emerald-500/20">
+            <Card className="bg-up/10 border-up/20">
               <CardContent className="p-4">
                 <h4 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
                   ✅ Expert Recommendation
@@ -648,7 +648,7 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
 
           {/* News Links */}
           {sections.newsLinks.length > 0 && (
-            <Card className="bg-slate-500/10 border-slate-500/20">
+            <Card className="bg-muted/40 border-border/60">
               <CardContent className="p-4">
                 <h4 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
                   🔗 Relevant News Articles
@@ -949,10 +949,10 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                 <div className="text-down animate-pulse">
                   <Newspaper className="h-8 w-8" />
                 </div>
-                <div className="text-blue-500 animate-pulse" style={{animationDelay: '0.1s'}}>
+                <div className="text-primary animate-pulse" style={{animationDelay: '0.1s'}}>
                   <BarChart3 className="h-8 w-8" />
                 </div>
-                <div className="text-yellow-500 animate-pulse" style={{animationDelay: '0.2s'}}>
+                <div className="text-warning animate-pulse" style={{animationDelay: '0.2s'}}>
                   <Zap className="h-8 w-8" />
                 </div>
               </div>

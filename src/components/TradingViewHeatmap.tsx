@@ -80,7 +80,7 @@ const TradingViewHeatmap = () => {
   }, [currentTheme]); // Re-run when theme changes
 
   return (
-    <Card className="bg-slate-800/50 border-slate-600">
+    <Card className="glass-subtle border-border/60">
       <CardHeader>
         <CardTitle className="text-white flex items-center gap-2">
           {isMarketOpen && <div className="w-2 h-2 bg-up rounded-full animate-pulse"></div>}
