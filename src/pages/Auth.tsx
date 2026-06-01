@@ -10,7 +10,7 @@ import { Mail, Lock, User, Sparkles, ArrowLeft, TrendingUp, Shield, Zap } from '
 import { z } from 'zod';
 import Logo from '@/components/Logo';
 import { Separator } from '@/components/ui/separator';
-import { ThemeToggle } from '@/components/ThemeToggle';
+import ThemeToggle from '@/components/ThemeToggle';
 
 const emailSchema = z.string().email('Please enter a valid email address');
 const passwordSchema = z.string().min(6, 'Password must be at least 6 characters');
