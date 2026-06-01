@@ -82,7 +82,7 @@ export const DashboardLayout = ({
   const getActiveTab = () => {
     const path = location.pathname;
     if (path === '/dashboard') return 'home';
-    if (path === '/dashboard/market') return 'market';
+    
     if (path === '/dashboard/ai-tools') return 'ai-search';
     if (path === '/dashboard/portfolio') return 'portfolio';
     if (path === '/dashboard/watchlist') return 'watchlist';
@@ -97,7 +97,7 @@ export const DashboardLayout = ({
   const handleTabChange = (tab: string) => {
     const routes: Record<string, string> = {
       'home': '/dashboard',
-      'market': '/dashboard/market',
+      
       'ai-search': '/dashboard/ai-tools',
       'portfolio': '/dashboard/portfolio',
       'watchlist': '/dashboard/watchlist',

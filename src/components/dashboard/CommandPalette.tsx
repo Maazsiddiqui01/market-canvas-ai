@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/command';
 import {
   Home,
-  BarChart3,
+  
   Brain,
   Briefcase,
   Eye,
