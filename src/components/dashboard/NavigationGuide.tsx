@@ -7,7 +7,6 @@ import { supabase } from '@/integrations/supabase/client';
 
 const primarySections = [
   { id: 'home', icon: Home, title: 'Home' },
-  { id: 'market', icon: BarChart3, title: 'Market' },
   { id: 'ai-search', icon: Brain, title: 'AI' },
   { id: 'portfolio', icon: Briefcase, title: 'Portfolio' },
 ];
@@ -24,7 +23,6 @@ const analyticsSection = { id: 'analytics', icon: PieChart, title: 'Analytics', 
 
 const baseAllSections = [
   { id: 'home', icon: Home, title: 'Home', description: 'Dashboard Overview' },
-  { id: 'market', icon: BarChart3, title: 'Market', description: 'Heatmaps & Analysis' },
   { id: 'ai-search', icon: Brain, title: 'AI Tools', description: 'AI Stock Research' },
   { id: 'portfolio', icon: Briefcase, title: 'Portfolio', description: 'Track Holdings' },
   { id: 'watchlist', icon: Eye, title: 'Watchlist', description: 'Monitor Stocks' },
