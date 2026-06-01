@@ -190,7 +190,7 @@ export const AISearchWidget = forwardRef<AISearchWidgetRef, AISearchWidgetProps>
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                className="pl-8 h-9 text-sm"
+                className="pl-8 h-10 sm:h-9 text-base sm:text-sm"
               />
             </div>
             <Button 

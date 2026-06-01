@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TrendingUp } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTradingViewTheme } from '@/hooks/useTradingViewTheme';
+import { useIsMobile } from '@/hooks/use-mobile';
 import TradingViewAttribution from '@/components/tradingview/TradingViewAttribution';
 
 interface TechnicalAnalysisProps {
@@ -13,6 +14,8 @@ const TechnicalAnalysis = ({ ticker = 'KSE100' }: TechnicalAnalysisProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
   const currentTheme = useTradingViewTheme();
+  const isMobile = useIsMobile();
+  const widgetHeight = isMobile ? 560 : 800;
 
   useEffect(() => {
     setIsLoading(true);
@@ -31,7 +34,7 @@ const TechnicalAnalysis = ({ ticker = 'KSE100' }: TechnicalAnalysisProps) => {
       interval: '30m',
       disableInterval: false,
       width: '100%',
-      height: '800',
+      height: String(widgetHeight),
       symbol: tvSymbol,
       showIntervalTabs: true,
     });
@@ -43,7 +46,7 @@ const TechnicalAnalysis = ({ ticker = 'KSE100' }: TechnicalAnalysisProps) => {
     return () => {
       if (container) container.innerHTML = '';
     };
-  }, [ticker, currentTheme]);
+  }, [ticker, currentTheme, widgetHeight]);
 
   const tvSymbol = ticker === 'KSE100' ? 'PSX-KSE100' : `PSX-${ticker}`;
 
@@ -67,7 +70,7 @@ const TechnicalAnalysis = ({ ticker = 'KSE100' }: TechnicalAnalysisProps) => {
             </div>
           </div>
         )}
-        <div className="tradingview-widget-container h-[800px]" ref={containerRef}>
+        <div className="tradingview-widget-container" style={{ height: widgetHeight }} ref={containerRef}>
           <div className="tradingview-widget-container__widget h-full"></div>
         </div>
         <TradingViewAttribution symbol={tvSymbol} label={`${ticker} technicals on TradingView`} />

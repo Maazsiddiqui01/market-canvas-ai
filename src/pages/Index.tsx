@@ -18,7 +18,7 @@ const Index = () => {
   );
 
   return (
-    <main className="min-h-screen bg-background relative overflow-hidden">
+    <main className="min-h-dvh bg-background relative overflow-hidden">
       
       <div className="relative z-10">
         <DashboardHeader />
