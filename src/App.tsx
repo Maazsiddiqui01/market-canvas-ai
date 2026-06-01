@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { usePageTracking } from "@/hooks/usePageTracking";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
@@ -42,7 +42,7 @@ const AnimatedRoutes = () => {
         
         {/* Dashboard routes - lazy loaded */}
         <Route path="/dashboard" element={<Suspense fallback={<LoadingScreen />}><DashboardHomePage /></Suspense>} />
-        <Route path="/dashboard/market" element={<Navigate to="/dashboard" replace />} />
+        
         <Route path="/dashboard/ai-tools" element={<Suspense fallback={<LoadingScreen />}><AIToolsPage /></Suspense>} />
         <Route path="/dashboard/portfolio" element={<Suspense fallback={<LoadingScreen />}><PortfolioPage /></Suspense>} />
         <Route path="/dashboard/watchlist" element={<Suspense fallback={<LoadingScreen />}><WatchlistPage /></Suspense>} />
