@@ -25,7 +25,7 @@ const MarketOverview = ({ refreshTrigger }: MarketOverviewProps) => {
   const fetchMarketData = async () => {
     setLoading(true);
     try {
-      const response = await fetch('https://n8n-maaz.duckdns.org/webhook/KSE-100', {
+      const response = await fetch('https://n8n.80.225.213.232.sslip.io/webhook/KSE-100', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

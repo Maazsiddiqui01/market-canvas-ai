@@ -8,7 +8,7 @@ export interface TopBottomStock {
 }
 
 export const fetchTopBottom5 = async (): Promise<TopBottomStock[]> => {
-  const response = await fetch('https://n8n-maaz.duckdns.org/webhook/Top/Bottom5', {
+  const response = await fetch('https://n8n.80.225.213.232.sslip.io/webhook/Top/Bottom5', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

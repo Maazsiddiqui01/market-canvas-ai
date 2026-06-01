@@ -39,7 +39,7 @@ export const fetchPSXNews = async (): Promise<NewsItem[]> => {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout for slower webhook
 
-    const response = await fetch('https://n8n-maaz.duckdns.org/webhook/news-analysis', {
+    const response = await fetch('https://n8n.80.225.213.232.sslip.io/webhook/news-analysis', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
