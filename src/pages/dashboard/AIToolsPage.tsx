@@ -4,6 +4,7 @@ import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { AISearchWidget, AISearchWidgetRef } from '@/components/ai/AISearchWidget';
 import { StockComparison } from '@/components/ai/StockComparison';
 import { RecentSearches } from '@/components/dashboard/RecentSearches';
+import { Brain } from 'lucide-react';
 
 const AIToolsPage = () => {
   useDocumentTitle('AI Tools | Market Canvas AI');
@@ -14,7 +15,12 @@ const AIToolsPage = () => {
   }, []);
 
   return (
-    <DashboardLayout>
+    <DashboardLayout
+      pageEyebrow="Research"
+      pageTitle="AI Tools"
+      pageSubtitle="Ask anything about PSX stocks, compare tickers side-by-side, and revisit recent research."
+      pageIcon={Brain}
+    >
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
           <div className="stagger-1">
