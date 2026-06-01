@@ -1,58 +1,84 @@
-# Finish the Redesign — Visual Masterpiece + UX Clarity
+## What you're asking for
 
-Phases 1–2 (design tokens, header, nav, footer) and partial Phase 5 (Portfolio, History) are done. This plan closes out everything else and adds a dedicated UX-simplification pass so the product feels effortless, not overwhelming.
+1. The TradingView Ticker Tape (the row with OGDC / LUCK / HBL / MCB … and red badges) doesn't render real PSX quotes — kill it.
+2. The current `/dashboard` home (Welcome back banner, KSE-100 pill, stats row, 6 big feature cards, Tools card) feels noisy and buries the actual product.
+3. The product *is* **AI stock search**. It must be the unmistakable centerpiece on the page users land on after sign-in.
+4. Everything else (Portfolio, Watchlist, Alerts, News, History, Tools, Market deep page) should still be reachable, just collapsed so users don't get overwhelmed.
 
-## Guiding principles
+## What I'll build
 
-- One primary action per screen. Everything else recedes.
-- Progressive disclosure: show summary first, details on demand.
-- Consistent page shell: `PageHeader` (title + 1-line subtitle + primary CTA) → content → empty/loading/error states.
-- Glass + hairline borders + aurora background already established — apply uniformly, no raw colors.
-- Motion is subtle: fade-in, 200ms scale on hover, no bouncy distractions.
+### 1. Remove the broken ticker tape
+- Delete `TradingViewTickerTape` usage from `DashboardHomePage`.
+- Delete the component file `src/components/tradingview/TradingViewTickerTape.tsx` (nothing else imports it).
+- Keep the other new TradingView widgets (MiniChart, AdvancedChart, SymbolInfo, MarketQuotes) — they're per-symbol and known-working — but only render the ones we actually use on this page (see §3).
 
-## Phase A — Landing + Auth polish
+### 2. Strip the noisy middle of the home page
+Remove from `DashboardHomePage`:
+- "Welcome back, {name}" hero block + subtitle
+- The standalone KSE-100 live pill (it already lives in the header / market overview strip)
+- The 4 stat cards (Holdings / Watchlist / Active Alerts / AI Searches)
+- The 6-card "Explore" grid
+- The full-width "Tools & Export" card
+- The "Quick tip" toast position is unaffected
 
-1. **Hero** — single H1, single CTA, ticker strip below, remove competing buttons.
-2. **FeaturesSection** — convert to 6-tile bento grid with glass cards + icon + 1-line value prop.
-3. **CTASection** — single glass panel, gradient-tint, one button.
-4. **Auth page** — split-screen on desktop (brand left, form right), single glass card on mobile, inline validation, success → `/dashboard`.
+Keep: `OnboardingChecklist` (only renders for genuinely new users — low noise, high value).
 
-## Phase B — Dashboard home (bento)
+### 3. New home layout — AI search as the hero
 
-5. Rebuild `/dashboard` as a 12-col bento: Search hero (full width) → Watchlist snapshot (6) + Portfolio snapshot (6) → Top movers (4) + News (8) → Alerts (12).
-6. Each tile = glass card, hairline divider, "View all →" link. No tile shows more than 5 rows.
-7. Empty states with friendly illustration + 1 CTA.
+```text
+┌─────────────────────────────────────────────────────────────┐
+│  [eyebrow: PSX • AI-POWERED]                                │
+│  Ask anything about Pakistani stocks                         │
+│  One-line subhead: "Search any PSX ticker or market topic   │
+│  and get an instant AI analysis with citations."             │
+│                                                              │
+│  ┌───────────────────────────────────────────────────────┐  │
+│  │  [Stock | General] tab                                │  │
+│  │  🔍  Type a ticker (OGDC) or a question…    [Search] │  │
+│  │  Try:  OGDC outlook · HBL analysis · Top gainers…    │  │
+│  └───────────────────────────────────────────────────────┘  │
+│  3 tiny "how to use" hints (icon + 1 line each):            │
+│   • Search a ticker → AI summary + financials               │
+│   • Ask a sector question → market-wide insight             │
+│   • Save findings to your watchlist or alerts               │
+└─────────────────────────────────────────────────────────────┘
 
-## Phase C — Remaining dashboard pages
+[TradingView Heatmap — full width, KSE-100]
 
-Apply unified `PageHeader` + glass card system to:
-- Watchlist, Alerts, News, Top/Bottom, AI Search, Market Overview, Stock Detail, Settings, NotFound.
-- Standardize tables: sticky header, zebra hairlines, right-aligned numerics, tabular-nums, color-coded deltas via tokens only.
-- Standardize forms: labels above, helper text muted, inline errors, primary button right.
+[2-col on lg:  Technical Analysis  |  Financial Analysis ]
+  (driven by the last searched ticker, default KSE100)
 
-## Phase D — UX simplification pass
+[Top Gainers / Losers strip]
 
-8. **Navigation** — collapse 10+ nav items into 3 clusters already grouped; add a global ⌘K command palette for power users (search stocks, jump to page, run actions).
-9. **Onboarding** — first-visit dashboard shows a 3-step inline coach-mark (Search → Add to watchlist → Set alert). Dismissible, stored in localStorage.
-10. **Reduce cognitive load** — remove duplicate CTAs, merge redundant widgets, hide advanced filters behind "More filters" disclosure, default sort/limit on every list.
-11. **Feedback** — every async action shows a toast (success/error). Buttons show loading state. Skeletons replace spinners for content areas.
-12. **Mobile** — bottom nav with 5 items max, pull-to-refresh on lists, sheet-based filters, 44px touch targets, `h-dvh` for full-height screens.
+[ ──────────  compact secondary nav  ────────── ]
+[ Portfolio ] [ Watchlist ] [ Alerts ] [ News ] [ History ] [ Tools ]
+   small icon tiles, single row on desktop, 2-col on mobile
+```
 
-## Phase E — Cross-cutting QA
+Mechanics:
+- The AI search hero reuses the existing `AISearchWidget` (no API/payload changes; n8n + Supabase paths untouched). I'll wrap it in a larger hero container with restyled framing and the instruction hints, but the component contract stays.
+- The Heatmap / Technical / Financial / TopBottom5 blocks are lifted directly from `MarketPage` so the home becomes the "market + AI search" surface the user described. `MarketPage` stays in place as the deep view, but the home now satisfies the "market page should be the landing" intent without a forced redirect.
+- The 6 feature cards shrink into a single compact icon-tile row at the bottom — present but visually de-emphasised.
 
-13. Replace any remaining raw color classes with semantic tokens.
-14. `aria-label` on every icon-only button; visible focus rings.
-15. Browser-screenshot every page at 375 / 768 / 1280 in both themes; fix regressions.
-16. Lighthouse pass: lazy-load below-fold widgets, defer heavy charts.
+### 4. Header / top-of-page chrome
+- The existing `DashboardLayout` page header (icon + title + subtitle) for the home is currently absent — keep it absent. The AI search hero IS the header.
+- The "Welcome back, Muhammad" greeting is removed entirely (user called this pane out). The KSE-100 live indicator already shows in the layout's market overview strip, so removing it from the page body avoids duplication.
 
-## Technical notes
+### 5. Files touched
 
-- New primitives: `PageHeader`, `StatCard`, `EmptyState`, `SectionCard`, `CommandPalette` (cmdk).
-- Add `prefers-reduced-motion` guard around all animations.
-- No backend/data changes — pure frontend/presentation.
+- `src/pages/dashboard/DashboardHomePage.tsx` — rewritten around the new layout above.
+- `src/components/dashboard/AISearchHero.tsx` — **new** thin wrapper that places `AISearchWidget` inside the hero shell with eyebrow, headline, subhead, and the 3 instruction hints. No business logic.
+- `src/components/dashboard/QuickAccessTiles.tsx` — **new** compact 6-icon row for Portfolio / Watchlist / Alerts / News / History / Tools.
+- `src/components/tradingview/TradingViewTickerTape.tsx` — **deleted**.
+- Routes (`src/App.tsx`): unchanged. Post-login still lands on `/dashboard`, which is now the AI-search-first home.
 
-## Out of scope
+### 6. Guardrails (must-not-break)
+- AI search payload, n8n webhook usage (ticker-only), and Supabase read/write paths stay byte-identical.
+- All 9 existing smoke tests must continue to pass; no test file edits unless a test imports a deleted symbol (none do).
+- Design tokens only — no hard-coded colors. Works in both dark and light themes.
 
-- Auth logic, webhook payloads, AI prompt content, DB schema.
+### 7. Out of scope for this pass
+- Visual rebrand beyond the home page (you said you're "not a fan of the website design" — happy to do a directions pass next, but this plan only covers the post-login home so we can ship the structural fix first).
+- Touching MarketPage, PortfolioPage, etc. They keep working as the deep views behind the compact tiles.
 
-Approve to start with **Phase A (Landing + Auth)** and roll forward; or tell me to jump to Phase D (UX simplification) first if reducing overwhelm is the higher priority.
+If you want me to also re-skin the whole app aesthetic in this same pass, say the word and I'll branch into a design-directions round before touching code.
