@@ -36,30 +36,26 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-card/50 border-t border-border mt-12">
-      <div className="container mx-auto px-4 py-6 md:py-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8">
-          {/* Creator Info */}
-          <div className="text-center md:text-left">
-            <div className="flex items-center gap-2 justify-center md:justify-start mb-2">
-              <Logo size="sm" />
-            </div>
-            <p className="text-sm text-muted-foreground mb-2">Created by Maaz</p>
-            <p className="text-sm text-muted-foreground mb-4 flex items-center gap-2 justify-center md:justify-start">
-              <Heart className="h-4 w-4 text-primary animate-pulse" />
-              Market Canvas AI - Your intelligent companion for smarter trading decisions
+    <footer className="mt-16 hairline-t bg-background/40 backdrop-blur-sm">
+      <div className="container mx-auto px-4 py-10">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+          {/* Brand */}
+          <div className="md:col-span-4">
+            <Logo size="sm" />
+            <p className="text-sm text-muted-foreground mt-3 max-w-xs">
+              Market Canvas AI — your intelligent companion for smarter PSX trading decisions.
             </p>
-            <div className="flex flex-col sm:flex-row gap-2 justify-center md:justify-start">
-              <Button variant="outline" size="sm" asChild>
+            <div className="flex gap-2 mt-4">
+              <Button variant="outline" size="sm" asChild className="glass-subtle">
                 <a href="mailto:maaz01888@gmail.com" className="flex items-center gap-2">
                   <Mail className="h-4 w-4" />
-                  Get in Touch
+                  Contact
                 </a>
               </Button>
-              <Button variant="outline" size="sm" asChild>
-                <a 
-                  href="https://www.linkedin.com/in/maazsiddiqui01/" 
-                  target="_blank" 
+              <Button variant="outline" size="sm" asChild className="glass-subtle">
+                <a
+                  href="https://www.linkedin.com/in/maazsiddiqui01/"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2"
                 >
@@ -70,13 +66,15 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Newsletter Signup */}
-          <div className="text-center md:text-left">
-            <h4 className="font-semibold text-foreground mb-2 flex items-center gap-2 justify-center md:justify-start">
-              <Sparkles className="h-4 w-4 text-primary" />
+          {/* Newsletter */}
+          <div className="md:col-span-4">
+            <h4 className="eyebrow mb-2 flex items-center gap-2">
+              <Sparkles className="h-3 w-3 text-primary" />
               Daily Market Insights
             </h4>
-            <p className="text-sm text-muted-foreground mb-3">Get AI-powered PSX analysis in your inbox.</p>
+            <p className="text-sm text-muted-foreground mb-3">
+              AI-powered PSX analysis, in your inbox.
+            </p>
             <form onSubmit={handleFooterSubscribe} className="flex gap-2">
               <Input
                 type="email"
@@ -84,7 +82,7 @@ const Footer = () => {
                 value={footerEmail}
                 onChange={(e) => setFooterEmail(e.target.value)}
                 required
-                className="flex-1 h-9 text-sm"
+                className="flex-1 h-9 text-sm glass-subtle"
               />
               <Button type="submit" size="sm" disabled={submittingFooter} className="shrink-0">
                 <Mail className="h-4 w-4" />
@@ -93,53 +91,42 @@ const Footer = () => {
           </div>
 
           {/* Disclaimer */}
-          <div className="text-center md:col-span-2">
-            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 hover:border-yellow-300 dark:hover:border-yellow-700 transition-colors">
-              <div className="flex items-start gap-3">
-                <div className="p-2 rounded-full bg-yellow-100 dark:bg-yellow-900/30">
-                  <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
-                </div>
-                <div className="text-left">
-                  <h4 className="font-semibold text-yellow-800 dark:text-yellow-200 mb-2 flex items-center gap-2">
-                    <Shield className="h-4 w-4" />
-                    Important Disclaimer
-                  </h4>
-                  <p className="text-sm text-yellow-700 dark:text-yellow-300">
-                    The information provided on this platform is for educational and informational purposes only. 
-                    It should not be considered as financial advice or a recommendation to buy or sell any securities. 
-                    <strong className="block mt-2">
-                      Please conduct your own due diligence and consult with a qualified financial advisor before making any investment decisions.
-                    </strong>
-                  </p>
-                </div>
-              </div>
-            </div>
+          <div className="md:col-span-4">
+            <h4 className="eyebrow mb-2 flex items-center gap-2">
+              <Shield className="h-3 w-3 text-muted-foreground" />
+              Disclaimer
+            </h4>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Information here is for educational purposes only and not financial advice.
+              Conduct your own research and consult a qualified advisor before investing.
+            </p>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="border-t border-border mt-8 pt-6 text-center space-y-3">
-          <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-            <Globe className="h-4 w-4 text-primary" />
-            <span>Market data provided by</span>
-            <a 
-              href="https://www.tradingview.com/" 
-              target="_blank" 
+        {/* Bottom bar */}
+        <div className="hairline-t mt-10 pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
+          <p className="flex items-center gap-2">
+            <Heart className="h-3 w-3 text-primary" />
+            © 2026 Market Canvas AI · Built by Maaz
+          </p>
+          <p className="flex items-center gap-2">
+            <Globe className="h-3 w-3" />
+            Market data by{' '}
+            <a
+              href="https://www.tradingview.com/"
+              target="_blank"
               rel="noopener noreferrer"
-              className="text-primary hover:text-primary/80 font-medium transition-colors inline-flex items-center gap-1"
+              className="text-foreground hover:text-primary transition-colors inline-flex items-center gap-1"
             >
               TradingView
               <TrendingUp className="h-3 w-3" />
             </a>
-          </div>
-          <p className="text-sm text-muted-foreground flex items-center justify-center gap-2">
-            <Heart className="h-4 w-4 text-primary" />
-            © 2026 Market Canvas AI. Built with AI-powered innovation for intelligent market analysis.
           </p>
         </div>
       </div>
     </footer>
   );
 };
+
 
 export default Footer;
