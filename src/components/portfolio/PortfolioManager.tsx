@@ -612,6 +612,7 @@ export const PortfolioManager = () => {
                             <Button 
                               variant="ghost" 
                               size="icon"
+                              aria-label="Remove holding"
                               onClick={() => removeHolding(holding.id)}
                               className="h-8 w-8 text-muted-foreground hover:text-destructive"
                             >
