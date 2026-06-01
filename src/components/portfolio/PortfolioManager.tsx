@@ -416,18 +416,18 @@ export const PortfolioManager = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Total P&L</p>
-                <p className={`text-2xl font-bold ${totalPnL >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                <p className={`text-2xl font-bold ${totalPnL >= 0 ? 'text-up' : 'text-down'}`}>
                   {totalPnL >= 0 ? '+' : ''}{totalPnL.toLocaleString()}
                 </p>
-                <p className={`text-xs ${totalPnL >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                <p className={`text-xs ${totalPnL >= 0 ? 'text-up' : 'text-down'}`}>
                   {totalPnL >= 0 ? '+' : ''}{totalPnLPercent.toFixed(2)}%
                 </p>
               </div>
-              <div className={`p-3 rounded-full ${totalPnL >= 0 ? 'bg-green-500/20' : 'bg-red-500/20'}`}>
+              <div className={`p-3 rounded-full ${totalPnL >= 0 ? 'bg-up/20' : 'bg-down/20'}`}>
                 {totalPnL >= 0 ? (
-                  <TrendingUp className={`h-6 w-6 ${totalPnL >= 0 ? 'text-green-500' : 'text-red-500'}`} />
+                  <TrendingUp className={`h-6 w-6 ${totalPnL >= 0 ? 'text-up' : 'text-down'}`} />
                 ) : (
-                  <TrendingDown className="h-6 w-6 text-red-500" />
+                  <TrendingDown className="h-6 w-6 text-down" />
                 )}
               </div>
             </div>
@@ -439,7 +439,7 @@ export const PortfolioManager = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Today's Change</p>
-                <p className={`text-2xl font-bold ${todayChange >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                <p className={`text-2xl font-bold ${todayChange >= 0 ? 'text-up' : 'text-down'}`}>
                   {todayChange >= 0 ? '+' : ''}{todayChange.toLocaleString()}
                 </p>
               </div>
@@ -548,11 +548,11 @@ export const PortfolioManager = () => {
                               )}
                             </Button>
                           </CollapsibleTrigger>
-                          <div className={`p-2 rounded-lg ${pnl !== null && pnl >= 0 ? 'bg-green-500/10' : pnl !== null ? 'bg-red-500/10' : 'bg-secondary'}`}>
+                          <div className={`p-2 rounded-lg ${pnl !== null && pnl >= 0 ? 'bg-up/10' : pnl !== null ? 'bg-down/10' : 'bg-secondary'}`}>
                             {pnl !== null && pnl >= 0 ? (
-                              <TrendingUp className="h-5 w-5 text-green-500" />
+                              <TrendingUp className="h-5 w-5 text-up" />
                             ) : pnl !== null ? (
-                              <TrendingDown className="h-5 w-5 text-red-500" />
+                              <TrendingDown className="h-5 w-5 text-down" />
                             ) : (
                               <Activity className="h-5 w-5 text-muted-foreground" />
                             )}
@@ -570,7 +570,7 @@ export const PortfolioManager = () => {
                               <>
                                 <p className="font-medium">PKR {marketPrice.toLocaleString()}</p>
                                 {priceData && (
-                                  <p className={`text-xs ${priceData.changePercent >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                                  <p className={`text-xs ${priceData.changePercent >= 0 ? 'text-up' : 'text-down'}`}>
                                     {priceData.changePercent >= 0 ? '+' : ''}{priceData.changePercent.toFixed(2)}%
                                   </p>
                                 )}
@@ -591,10 +591,10 @@ export const PortfolioManager = () => {
                             <p className="text-xs text-muted-foreground">P&L</p>
                             {pnl !== null ? (
                               <>
-                                <p className={`font-semibold ${pnl >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                                <p className={`font-semibold ${pnl >= 0 ? 'text-up' : 'text-down'}`}>
                                   {pnl >= 0 ? '+' : ''}PKR {pnl.toLocaleString()}
                                 </p>
-                                <p className={`text-xs ${pnl >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                                <p className={`text-xs ${pnl >= 0 ? 'text-up' : 'text-down'}`}>
                                   {pnlPercent !== null && (pnlPercent >= 0 ? '+' : '')}{pnlPercent?.toFixed(2)}%
                                 </p>
                               </>

@@ -25,7 +25,7 @@ const StockTicker = () => {
           >
             <span className="font-display font-semibold text-foreground">{stock.symbol}</span>
             <span className="text-muted-foreground">${stock.price}</span>
-            <span className={`flex items-center gap-1 text-sm font-medium ${stock.up ? 'text-green-500' : 'text-red-500'}`}>
+            <span className={`flex items-center gap-1 text-sm font-medium ${stock.up ? 'text-up' : 'text-down'}`}>
               {stock.up ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
               {stock.change}
             </span>

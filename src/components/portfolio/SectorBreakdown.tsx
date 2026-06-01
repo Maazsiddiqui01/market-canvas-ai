@@ -203,11 +203,11 @@ export const SectorBreakdown = ({ holdings, stockSectors }: SectorBreakdownProps
                     <td className="text-right py-2 px-2">{sector.holdings}</td>
                     <td className="text-right py-2 px-2">PKR {sector.value.toLocaleString()}</td>
                     <td className="text-right py-2 px-2">{sector.percentage.toFixed(1)}%</td>
-                    <td className={`text-right py-2 px-2 ${sector.pnl >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                    <td className={`text-right py-2 px-2 ${sector.pnl >= 0 ? 'text-up' : 'text-down'}`}>
                       {sector.pnl >= 0 ? '+' : ''}{sector.pnl.toLocaleString()}
                     </td>
                     <td className="text-right py-2 px-2">
-                      <span className={`inline-flex items-center gap-1 ${sector.pnlPercent >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                      <span className={`inline-flex items-center gap-1 ${sector.pnlPercent >= 0 ? 'text-up' : 'text-down'}`}>
                         {sector.pnlPercent >= 0 ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
                         {sector.pnlPercent >= 0 ? '+' : ''}{sector.pnlPercent.toFixed(2)}%
                       </span>

@@ -302,13 +302,13 @@ export const PriceAlertManager = () => {
                         <SelectContent>
                           <SelectItem value="above">
                             <div className="flex items-center gap-2">
-                              <TrendingUp className="h-4 w-4 text-green-500" />
+                              <TrendingUp className="h-4 w-4 text-up" />
                               Goes Above
                             </div>
                           </SelectItem>
                           <SelectItem value="below">
                             <div className="flex items-center gap-2">
-                              <TrendingDown className="h-4 w-4 text-red-500" />
+                              <TrendingDown className="h-4 w-4 text-down" />
                               Goes Below
                             </div>
                           </SelectItem>
@@ -365,9 +365,9 @@ export const PriceAlertManager = () => {
                   {alert.is_triggered ? (
                     <BellRing className="h-5 w-5 text-primary animate-pulse" />
                   ) : alert.alert_type === 'above' ? (
-                    <TrendingUp className="h-5 w-5 text-green-500" />
+                    <TrendingUp className="h-5 w-5 text-up" />
                   ) : (
-                    <TrendingDown className="h-5 w-5 text-red-500" />
+                    <TrendingDown className="h-5 w-5 text-down" />
                   )}
                 </div>
                 <div className="flex-1 min-w-0">

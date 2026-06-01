@@ -45,8 +45,8 @@ const PortfolioWidget = () => {
               PKR {portfolioData.totalValue}
             </p>
             <div className="flex items-center mt-2 gap-1">
-              <TrendingUp className="h-4 w-4 text-success" />
-              <span className="text-success text-sm font-medium tabular-nums">
+              <TrendingUp className="h-4 w-4 text-up" />
+              <span className="text-up text-sm font-medium tabular-nums">
                 {portfolioData.todayChange} ({portfolioData.todayChangePercent})
               </span>
             </div>
@@ -77,7 +77,7 @@ const PortfolioWidget = () => {
                 </div>
                 <div className="text-right tabular-nums">
                   <p className="text-foreground text-sm font-medium">PKR {holding.value}</p>
-                  <p className="text-success text-xs font-medium">{holding.change}</p>
+                  <p className="text-up text-xs font-medium">{holding.change}</p>
                 </div>
               </div>
             ))}

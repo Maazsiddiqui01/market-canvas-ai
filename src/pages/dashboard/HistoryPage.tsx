@@ -54,7 +54,7 @@ const activityIcons: Record<string, React.ReactNode> = {
 
 const activityColors: Record<string, string> = {
   ai_search: 'bg-primary/20 text-primary',
-  stock_view: 'bg-green-500/20 text-green-500',
+  stock_view: 'bg-up/20 text-up',
   portfolio_action: 'bg-blue-500/20 text-blue-500',
   alert_created: 'bg-yellow-500/20 text-yellow-500',
   watchlist_action: 'bg-purple-500/20 text-purple-500',

@@ -478,8 +478,8 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
       
       const getSignalColor = (signal: string) => {
         const lowerSignal = signal.toLowerCase();
-        if (lowerSignal.includes('buy')) return 'text-green-500';
-        if (lowerSignal.includes('sell')) return 'text-red-500';
+        if (lowerSignal.includes('buy')) return 'text-up';
+        if (lowerSignal.includes('sell')) return 'text-down';
         return 'text-yellow-500';
       };
 
@@ -946,7 +946,7 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
             <CardContent className="p-8">
               {/* Loading Icons */}
               <div className="flex justify-center gap-4 mb-6">
-                <div className="text-red-500 animate-pulse">
+                <div className="text-down animate-pulse">
                   <Newspaper className="h-8 w-8" />
                 </div>
                 <div className="text-blue-500 animate-pulse" style={{animationDelay: '0.1s'}}>

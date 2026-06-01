@@ -69,7 +69,7 @@ const MarketOverview = ({ refreshTrigger }: MarketOverviewProps) => {
   return (
     <div className="inline-flex flex-wrap items-center justify-center gap-2 md:gap-4 px-4 md:px-6 py-2 md:py-3 bg-card/50 backdrop-blur-xl rounded-2xl border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 animate-fade-in">
       {/* Live Badge */}
-      <Badge variant="secondary" className="flex items-center gap-1.5 bg-green-500/10 text-green-500 border-green-500/20">
+      <Badge variant="secondary" className="flex items-center gap-1.5 bg-up/10 text-up border-up/20">
         <Activity className="h-3 w-3 animate-pulse" />
         Live
       </Badge>
@@ -83,8 +83,8 @@ const MarketOverview = ({ refreshTrigger }: MarketOverviewProps) => {
       {/* Change */}
       <div className={`flex items-center gap-1 md:gap-1.5 px-2 md:px-3 py-1 rounded-lg ${
         kseData.isPositive 
-          ? 'bg-green-500/10 text-green-500' 
-          : 'bg-red-500/10 text-red-500'
+          ? 'bg-up/10 text-up' 
+          : 'bg-down/10 text-down'
       }`}>
         {kseData.isPositive ? (
           <TrendingUp className="h-3 w-3 md:h-4 md:w-4" />
