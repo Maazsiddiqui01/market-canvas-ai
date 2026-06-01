@@ -20,14 +20,17 @@ export const AISearchHero = ({ selectedTicker, onTickerChange }: AISearchHeroPro
   return (
     <section
       aria-labelledby="ai-search-hero-title"
-      className="relative overflow-hidden rounded-2xl md:rounded-3xl border border-border/60 glass-subtle p-4 sm:p-6 md:p-10"
+      className="relative rounded-2xl md:rounded-3xl border border-border/60 glass-subtle p-4 sm:p-6 md:p-10"
       style={{ background: 'var(--gradient-brand-tint)' }}
     >
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full blur-3xl opacity-40"
-        style={{ background: 'var(--gradient-primary, hsl(var(--primary) / 0.4))' }}
-      />
+      <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl md:rounded-3xl">
+        <div
+          aria-hidden="true"
+          className="absolute -top-24 -right-24 h-72 w-72 rounded-full blur-3xl opacity-40"
+          style={{ background: 'var(--gradient-primary, hsl(var(--primary) / 0.4))' }}
+        />
+      </div>
+
 
       <div className="relative max-w-3xl mx-auto text-center space-y-2 sm:space-y-3">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 ring-1 ring-primary/30 text-primary text-[10px] sm:text-xs font-medium tracking-wider uppercase">
