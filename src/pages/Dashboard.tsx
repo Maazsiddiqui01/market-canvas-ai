@@ -116,6 +116,7 @@ const Dashboard = () => {
               disabled={isRefreshing}
               variant="outline"
               size="icon"
+              aria-label="Refresh dashboard"
               className="h-10 w-10 rounded-xl hover:bg-primary/10 hover:border-primary/50 transition-all"
             >
               <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
