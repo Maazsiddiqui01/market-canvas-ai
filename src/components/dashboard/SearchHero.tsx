@@ -486,7 +486,7 @@ export const SearchHero = ({ onTickerChange, selectedTicker }: SearchHeroProps) 
     const lowerSignal = signal.toLowerCase();
     if (lowerSignal.includes('buy')) return 'text-up';
     if (lowerSignal.includes('sell')) return 'text-down';
-    return 'text-yellow-500';
+    return 'text-warning';
   };
 
   const renderFormattedData = (data: any) => {
