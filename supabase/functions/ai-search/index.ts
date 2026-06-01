@@ -6,7 +6,6 @@ const corsHeaders = {
 };
 
 serve(async (req) => {
-  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -32,60 +31,67 @@ serve(async (req) => {
 
     console.log('AI Search query:', query, 'type:', type);
 
-    // Get today's date for context
+    // Date context (always use the live server date — never hardcode)
     const today = new Date();
-    const todayStr = today.toLocaleDateString('en-US', { 
-      weekday: 'long', 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
+    const todayStr = today.toLocaleDateString('en-US', {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
     });
+    const todayISO = today.toISOString().slice(0, 10);
 
-    // Build the prompt based on type
+    // Only accept sources from the last 30 days
+    const cutoff = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+    const cutoffMMDDYYYY = `${String(cutoff.getMonth() + 1).padStart(2, '0')}/${String(cutoff.getDate()).padStart(2, '0')}/${cutoff.getFullYear()}`;
+
+    const freshnessRules = `CRITICAL FRESHNESS RULES — these override everything else:
+- Today is ${todayStr} (${todayISO}). Always use this as "now".
+- Cite ONLY data published within the last 7 days. If nothing fresh exists for a specific data point, say "no fresh data available" instead of falling back to old numbers.
+- NEVER quote prices, P/E, book value, dividend, or volume figures that are older than 7 days without an explicit "as of <date>" warning on that exact line.
+- Reject and do NOT cite: annual reports older than the last fiscal year, news older than 30 days, Wikipedia, archived/cached pages.
+- If sources disagree, prefer PSX official data (psx.com.pk, psx data portal) over third-party aggregators.
+- If you cannot verify a number against a source dated within the last 7 days, omit the number entirely.
+- At the END of your answer, add a line: "Data freshness: <most recent source date>".`;
+
     let systemPrompt: string;
     let searchDomainFilter: string[] | undefined;
-    
-    const dateContext = `IMPORTANT: Today's date is ${todayStr}. You MUST prioritize the most recent information available. 
-In financial markets, even a single day can bring significant changes. Always search for and cite the LATEST available data first.
-If information from today (${todayStr}) is not available, try yesterday, then the day before, and so on.
-NEVER cite information that is more than a few days old unless absolutely necessary, and if you do, explicitly warn the user that the data may be outdated.`;
 
     if (type === 'stock') {
-      systemPrompt = `You are a financial analyst specializing in the Pakistan Stock Exchange (PSX). 
-${dateContext}
+      systemPrompt = `You are a Pakistan Stock Exchange (PSX) equity analyst.
+${freshnessRules}
 
-Provide accurate, CURRENT information about PSX stocks, market trends, and financial analysis.
-Be concise but thorough. Include specific data when available.
-Focus on: stock performance, company fundamentals, sector trends, and market sentiment.
-Always include the date of the data you're citing. If citing data older than today, clearly indicate "as of [date]".`;
-      searchDomainFilter = ['psx.com.pk', 'investing.com', 'bloomberg.com', 'reuters.com'];
+For any stock query, structure the answer as:
+1. Live snapshot — last traded price, day change %, volume (each with "as of <date/time>")
+2. Recent action — what moved in the last 5 trading sessions
+3. Fundamentals — only the latest reported quarter/year, with the period clearly labeled
+4. Risks & catalysts — based on news from the last 30 days only
+
+Be concise. Use bullet points. Do not pad with generic descriptions of the company.`;
+      searchDomainFilter = ['psx.com.pk', 'dps.psx.com.pk', 'sarmaaya.pk', 'mettisglobal.news', 'businessrecorder.com', 'brecorder.com', 'dawn.com', 'tribune.com.pk', 'investing.com'];
     } else if (type === 'general') {
-      systemPrompt = `You are an expert financial analyst and market researcher specializing in the Pakistan Stock Exchange (PSX) and Pakistani economy.
-${dateContext}
+      systemPrompt = `You are a Pakistan markets analyst (PSX, macro, sectors).
+${freshnessRules}
 
-Provide comprehensive, well-researched answers to questions about:
-- Sector analysis and outlook (banking, cement, oil & gas, textiles, etc.)
-- Market trends and sentiment
-- Economic indicators affecting PSX
-- Investment strategies for Pakistani markets
-- Company comparisons and recommendations
-- Dividend stocks and value investing in PSX
-Be thorough but organized. Use bullet points for clarity. Cite specific data when available.
-Focus on actionable insights for investors. Always include dates for all data points.`;
-      // For general queries, search more broadly
-      searchDomainFilter = undefined;
+Cover sectors, macro indicators, KSE-100 sentiment, regulatory news, and investment ideas — but only with data from the last 7-30 days. Use bullet points and label every number with its date.`;
+      searchDomainFilter = ['psx.com.pk', 'dps.psx.com.pk', 'sbp.org.pk', 'sarmaaya.pk', 'mettisglobal.news', 'businessrecorder.com', 'brecorder.com', 'dawn.com', 'tribune.com.pk', 'investing.com', 'bloomberg.com', 'reuters.com'];
     } else {
-      systemPrompt = `You are a helpful financial assistant. ${dateContext} Provide accurate and helpful information with dates for all data.`;
-      searchDomainFilter = ['psx.com.pk', 'investing.com', 'bloomberg.com', 'reuters.com'];
+      systemPrompt = `You are a helpful PSX financial assistant. ${freshnessRules}`;
+      searchDomainFilter = ['psx.com.pk', 'dps.psx.com.pk', 'sarmaaya.pk', 'mettisglobal.news', 'businessrecorder.com', 'dawn.com', 'investing.com'];
     }
 
     const requestBody: any = {
-      model: 'sonar',
+      // sonar-pro gives stronger reasoning + better citation grounding than sonar
+      model: 'sonar-pro',
       messages: [
         { role: 'system', content: systemPrompt },
-        { role: 'user', content: `${query}\n\n(Note: Today is ${todayStr}. Please provide the most recent information available.)` }
+        {
+          role: 'user',
+          content: `${query}\n\n(Today is ${todayStr}. Only cite sources published on or after ${cutoffMMDDYYYY}. Refuse to use stale numbers.)`,
+        },
       ],
-      search_recency_filter: 'day',
+      // Strict recency: last day; PSX trading days mean we still get the freshest available
+      search_recency_filter: 'week',
+      search_after_date_filter: cutoffMMDDYYYY,
+      web_search_options: { search_context_size: 'high' },
+      temperature: 0.2,
     };
 
     if (searchDomainFilter) {
@@ -112,9 +118,8 @@ Focus on actionable insights for investors. Always include dates for all data po
     }
 
     const answer = data.choices?.[0]?.message?.content || 'No results found.';
-    const citations = data.citations || [];
+    const citations = data.citations || data.search_results?.map((s: any) => s.url) || [];
 
-    // Extract ticker from query if present
     const tickerMatch = query.toUpperCase().match(/([A-Z]{2,6})/);
     const ticker = tickerMatch ? tickerMatch[1] : null;
 
@@ -126,6 +131,7 @@ Focus on actionable insights for investors. Always include dates for all data po
         citations,
         ticker,
         model: data.model,
+        generatedAt: today.toISOString(),
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
