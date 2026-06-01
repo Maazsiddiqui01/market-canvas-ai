@@ -4,6 +4,7 @@ import { Eye, Plus, TrendingUp, TrendingDown, Activity, Star } from 'lucide-reac
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
+import TradingViewMiniChart from '@/components/tradingview/TradingViewMiniChart';
 
 const WatchlistWidget = () => {
   const watchlist = [
@@ -66,6 +67,13 @@ const WatchlistWidget = () => {
                     Stock
                   </p>
                 </div>
+              </div>
+              <div className="hidden sm:block w-24 h-10 opacity-90">
+                <TradingViewMiniChart
+                  symbol={`PSX:${stock.symbol}`}
+                  height={40}
+                  dateRange="1M"
+                />
               </div>
               <div className="text-right tabular-nums">
                 <p className="font-semibold text-foreground">PKR {stock.price}</p>
