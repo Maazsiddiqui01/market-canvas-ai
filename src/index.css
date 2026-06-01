@@ -481,3 +481,11 @@
   }
 }
 
+
+/* iOS safe-area utilities (notch / home-indicator) */
+.safe-area-bottom {
+  padding-bottom: max(env(safe-area-inset-bottom), 0.5rem);
+}
+.safe-area-top {
+  padding-top: max(env(safe-area-inset-top), 0px);
+}
