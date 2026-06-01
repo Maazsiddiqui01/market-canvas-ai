@@ -540,7 +540,7 @@ export const PortfolioManager = () => {
                       <div className="flex items-center justify-between p-4 hover:bg-secondary/80 transition-colors">
                         <div className="flex items-center gap-4">
                           <CollapsibleTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <Button variant="ghost" size="icon" aria-label={isExpanded ? "Collapse" : "Expand"} className="h-8 w-8">
                               {isExpanded ? (
                                 <ChevronDown className="h-4 w-4" />
                               ) : (
