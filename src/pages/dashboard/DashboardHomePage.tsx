@@ -29,7 +29,6 @@ const featureCards = [
     description: 'Live heatmaps, technical & financial analysis, top gainers and losers',
     icon: BarChart3,
     href: '/dashboard/market',
-    gradient: 'from-orange-500 to-red-500',
     stats: [
       { label: 'Heatmap', icon: Activity },
       { label: 'Technical', icon: TrendingUp },
@@ -42,7 +41,6 @@ const featureCards = [
     description: 'AI-powered stock research, market queries, and stock comparison',
     icon: Brain,
     href: '/dashboard/ai-tools',
-    gradient: 'from-purple-500 to-pink-500',
     stats: [
       { label: 'AI Search', icon: Zap },
       { label: 'Compare', icon: BarChart3 },
@@ -55,7 +53,6 @@ const featureCards = [
     description: 'Track your holdings, P&L, sector breakdown, and performance history',
     icon: Briefcase,
     href: '/dashboard/portfolio',
-    gradient: 'from-green-500 to-emerald-500',
     stats: [
       { label: 'Holdings', icon: Briefcase },
       { label: 'P&L', icon: TrendingUp },
@@ -68,7 +65,6 @@ const featureCards = [
     description: 'Monitor your saved stocks with live prices and quick actions',
     icon: Eye,
     href: '/dashboard/watchlist',
-    gradient: 'from-blue-500 to-cyan-500',
     stats: [
       { label: 'Stocks', icon: Eye },
       { label: 'Live', icon: Activity },
@@ -81,7 +77,6 @@ const featureCards = [
     description: 'Set price notifications for target levels on your favorite stocks',
     icon: Bell,
     href: '/dashboard/alerts',
-    gradient: 'from-yellow-500 to-orange-500',
     stats: [
       { label: 'Active', icon: Bell },
       { label: 'Triggered', icon: Zap },
@@ -94,7 +89,6 @@ const featureCards = [
     description: 'Latest market news from PSX sources and financial publications',
     icon: Newspaper,
     href: '/dashboard/news',
-    gradient: 'from-indigo-500 to-purple-500',
     stats: [
       { label: 'Latest', icon: Newspaper },
       { label: 'Sources', icon: Activity },
