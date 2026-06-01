@@ -7,6 +7,20 @@ import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { OnboardingChecklist } from '@/components/dashboard/OnboardingChecklist';
+import TradingViewTickerTape from '@/components/tradingview/TradingViewTickerTape';
+
+const PSX_TICKER_TAPE = [
+  { proName: 'PSX:OGDC', title: 'OGDC' },
+  { proName: 'PSX:LUCK', title: 'LUCK' },
+  { proName: 'PSX:HBL', title: 'HBL' },
+  { proName: 'PSX:MCB', title: 'MCB' },
+  { proName: 'PSX:ENGRO', title: 'ENGRO' },
+  { proName: 'PSX:PPL', title: 'PPL' },
+  { proName: 'PSX:FFC', title: 'FFC' },
+  { proName: 'PSX:UBL', title: 'UBL' },
+  { proName: 'PSX:MEBL', title: 'MEBL' },
+  { proName: 'PSX:HUBC', title: 'HUBC' },
+];
 import { 
   BarChart3, 
   Brain, 
@@ -140,6 +154,11 @@ const DashboardHomePage = () => {
   return (
     <DashboardLayout showMarketOverview>
       <div className="space-y-8">
+        {/* PSX Ticker Tape */}
+        <div className="glass-subtle rounded-2xl overflow-hidden">
+          <TradingViewTickerTape symbols={PSX_TICKER_TAPE} displayMode="adaptive" />
+        </div>
+
         {/* Onboarding Checklist for new users */}
         <OnboardingChecklist />
 
