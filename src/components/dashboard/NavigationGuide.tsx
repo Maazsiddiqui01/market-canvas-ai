@@ -139,38 +139,48 @@ export const NavigationGuide = ({ activeTab, onTabChange }: NavigationGuideProps
     );
   }
 
-  // Desktop: keep original horizontal nav
+  // Desktop: grouped glass nav (Markets · My Stuff · Tools)
+  const groupMarkets = allSections.filter(s => ['home', 'market', 'ai-search', 'news'].includes(s.id));
+  const groupMine = allSections.filter(s => ['portfolio', 'watchlist', 'alerts', 'history'].includes(s.id));
+  const groupTools = allSections.filter(s => ['tools', 'analytics'].includes(s.id));
+
+  const renderGroup = (items: typeof allSections) => (
+    <div className="flex items-center gap-0.5">
+      {items.map((section) => {
+        const Icon = section.icon;
+        const isActive = activeTab === section.id;
+        return (
+          <button
+            key={section.id}
+            aria-label={`Navigate to ${section.title}`}
+            onClick={() => onTabChange(section.id)}
+            className={`
+              relative flex items-center gap-2 px-3 py-2 rounded-lg
+              transition-all duration-200 whitespace-nowrap
+              ${isActive
+                ? 'bg-primary/12 text-primary shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.25)]'
+                : 'text-muted-foreground hover:text-foreground hover:bg-foreground/5'
+              }
+            `}
+          >
+            <Icon className={`h-4 w-4 transition-transform ${isActive ? 'scale-110' : ''}`} />
+            <span className="font-medium text-xs">{section.title}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+
   return (
-    <nav className="sticky top-16 z-30 -mx-4 px-4 py-3 mb-6 bg-background/80 backdrop-blur-xl border-b border-border/50">
-      <div className="flex items-center justify-center gap-1 overflow-x-auto scrollbar-hide">
-        {allSections.map((section, index) => {
-          const Icon = section.icon;
-          const isActive = activeTab === section.id;
-          
-          return (
-            <button
-              key={section.id}
-              aria-label={`Navigate to ${section.title}`}
-              onClick={() => onTabChange(section.id)}
-              style={{ animationDelay: `${index * 50}ms` }}
-              className={`
-                relative flex flex-col items-center gap-1 px-4 py-2 rounded-xl
-                transition-all duration-300 min-w-[70px] animate-fade-in
-                ${isActive 
-                  ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30 scale-105' 
-                  : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
-                }
-              `}
-            >
-              <Icon className={`h-5 w-5 transition-transform duration-300 ${isActive ? 'scale-110' : ''}`} />
-              <span className="font-medium text-xs whitespace-nowrap">{section.title}</span>
-              {isActive && (
-                <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-primary rounded-full" />
-              )}
-            </button>
-          );
-        })}
+    <nav className="sticky top-16 z-20 -mx-4 px-4 py-3 mb-6">
+      <div className="mx-auto flex w-fit items-center gap-2 glass rounded-2xl px-2 py-1.5">
+        {renderGroup(groupMarkets)}
+        <span className="h-5 w-px bg-foreground/10" />
+        {renderGroup(groupMine)}
+        {groupTools.length > 0 && <span className="h-5 w-px bg-foreground/10" />}
+        {renderGroup(groupTools)}
       </div>
     </nav>
   );
 };
+
