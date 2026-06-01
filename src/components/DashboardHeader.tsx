@@ -38,9 +38,9 @@ const DashboardHeader = ({ onTickerChange }: DashboardHeaderProps) => {
 
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-      isScrolled 
-        ? 'bg-background/80 backdrop-blur-xl border-b border-border/50 shadow-lg shadow-primary/5 py-2' 
-        : 'bg-gradient-to-b from-background to-transparent py-4'
+      isScrolled
+        ? 'glass-strong hairline-b py-2'
+        : 'bg-background/40 backdrop-blur-md hairline-b py-3'
     }`}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
@@ -50,6 +50,7 @@ const DashboardHeader = ({ onTickerChange }: DashboardHeaderProps) => {
               <Logo size={isScrolled ? 'sm' : 'md'} />
             </div>
           </Link>
+
           
           {/* Right side: Theme + Auth */}
           <div className="flex items-center gap-2">

@@ -134,48 +134,52 @@ export const DashboardLayout = ({
       
       <main className="container mx-auto px-4 pt-20 flex-1 pb-20 md:pb-0">
         {isMobile && <PullToRefreshIndicator pullDistance={pullDistance} isRefreshing={isPullRefreshing} />}
-        {/* Welcome Section - lower z-index */}
-        <div className="py-3 md:py-6 animate-fade-in relative z-10">
-          <div className="flex flex-col items-center text-center mb-4 md:mb-6">
-            <div className="flex items-center gap-2 md:gap-3 mb-2">
-              <div className="p-2 md:p-2.5 bg-gradient-to-r from-primary to-accent rounded-xl shadow-lg shadow-primary/20 animate-pulse-glow">
-                <Sparkles className="h-4 w-4 md:h-5 md:w-5 text-primary-foreground" />
+
+        {/* Welcome Section — only on dashboard home */}
+        {isHomePage && (
+          <div className="py-4 md:py-6 animate-fade-in">
+            <div className="flex flex-col items-center text-center mb-4 md:mb-6">
+              <div className="flex items-center gap-2 md:gap-3 mb-2">
+                <div className="p-2 md:p-2.5 bg-gradient-to-r from-primary to-accent rounded-xl shadow-lg shadow-primary/20 animate-pulse-glow">
+                  <Sparkles className="h-4 w-4 md:h-5 md:w-5 text-primary-foreground" />
+                </div>
+                <h1 className="text-2xl md:text-4xl font-display font-bold tracking-tight text-foreground">
+                  Welcome back{user.user_metadata?.full_name ? `, ${user.user_metadata.full_name.split(' ')[0]}` : ''}
+                </h1>
               </div>
-              <h1 className="text-xl md:text-3xl font-bold text-foreground">
-                Welcome back{user.user_metadata?.full_name ? `, ${user.user_metadata.full_name}` : ''}!
-              </h1>
+              <p className="text-muted-foreground max-w-lg text-sm md:text-base hidden md:block">
+                Your AI-powered PSX dashboard for portfolio tracking, market analysis, and intelligent insights
+              </p>
             </div>
-            <p className="text-muted-foreground max-w-lg text-sm md:text-base hidden md:block">
-              Your AI-powered PSX dashboard for portfolio tracking, market analysis, and intelligent insights
-            </p>
           </div>
+        )}
 
-          {/* Search Hero Section - higher z-index for dropdown */}
-          {showSearch && (
-            <div className="mb-6 relative z-50">
-              <SearchHero 
-                onTickerChange={handleTickerChange} 
-                selectedTicker={selectedTicker} 
-              />
-            </div>
-          )}
+        {/* Search Hero — z-40 so its dropdown sits above the z-20 nav */}
+        {showSearch && (
+          <div className="mb-6 relative z-40">
+            <SearchHero
+              onTickerChange={handleTickerChange}
+              selectedTicker={selectedTicker}
+            />
+          </div>
+        )}
 
-          {/* Market Overview - Only on pages that need it */}
-          {showMarketOverview && (
-            <div className="flex items-center justify-center gap-4 mb-2">
-              <MarketOverview refreshTrigger={refreshTrigger} />
-              <Button 
-                onClick={handleRefreshAll}
-                disabled={isRefreshing}
-                variant="outline"
-                size="icon"
-                className="h-10 w-10 rounded-xl hover:bg-primary/10 hover:border-primary/50 transition-all"
-              >
-                <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-              </Button>
-            </div>
-          )}
-        </div>
+        {/* Market Overview pill */}
+        {showMarketOverview && (
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <MarketOverview refreshTrigger={refreshTrigger} />
+            <Button
+              onClick={handleRefreshAll}
+              disabled={isRefreshing}
+              variant="outline"
+              size="icon"
+              className="h-10 w-10 rounded-xl glass-subtle hover:bg-primary/10 hover:border-primary/50 transition-all"
+            >
+              <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+            </Button>
+          </div>
+        )}
+
 
         {/* Navigation Guide - Sticky but lower z-index than search dropdown */}
         <NavigationGuide activeTab={getActiveTab()} onTabChange={handleTabChange} />
