@@ -5,11 +5,12 @@ import TradingViewHeatmap from '@/components/TradingViewHeatmap';
 import TechnicalAnalysis from '@/components/TechnicalAnalysis';
 import FinancialAnalysis from '@/components/FinancialAnalysis';
 import TopBottom5 from '@/components/TopBottom5';
+import { BarChart3 } from 'lucide-react';
 
 const MarketPage = () => {
   useDocumentTitle('Market Analysis | Market Canvas AI');
   const [selectedTicker, setSelectedTicker] = useState('KSE100');
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [refreshTrigger] = useState(0);
 
   const handleTickerChange = useCallback((ticker: string) => {
     setSelectedTicker(ticker);
@@ -21,14 +22,15 @@ const MarketPage = () => {
       showMarketOverview 
       onTickerChange={handleTickerChange}
       selectedTicker={selectedTicker}
+      pageEyebrow="PSX Market"
+      pageTitle="Market Analysis"
+      pageSubtitle="Live heatmaps, technical signals, and fundamentals for every listed PSX ticker."
+      pageIcon={BarChart3}
     >
       <div className="space-y-6">
-        {/* Heatmap */}
         <div className="stagger-1">
           <TradingViewHeatmap />
         </div>
-
-        {/* Technical and Financial Analysis */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="stagger-2">
             <TechnicalAnalysis ticker={selectedTicker} />
@@ -37,8 +39,6 @@ const MarketPage = () => {
             <FinancialAnalysis ticker={selectedTicker} />
           </div>
         </div>
-
-        {/* Top/Bottom 5 */}
         <div className="stagger-4">
           <TopBottom5 refreshTrigger={refreshTrigger} />
         </div>
