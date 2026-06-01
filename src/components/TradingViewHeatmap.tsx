@@ -1,12 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTradingViewTheme } from '@/hooks/useTradingViewTheme';
+import { useIsMobile } from '@/hooks/use-mobile';
 import TradingViewAttribution from '@/components/tradingview/TradingViewAttribution';
 
 const TradingViewHeatmap = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMarketOpen, setIsMarketOpen] = useState(false);
   const currentTheme = useTradingViewTheme();
+  const isMobile = useIsMobile();
+  const widgetHeight = isMobile ? 380 : 500;
 
   // Check if market is open (9 AM to 5 PM Pakistan time)
   useEffect(() => {
@@ -43,7 +46,7 @@ const TradingViewHeatmap = () => {
       isMonoSize: true,
       isTransparent: true,
       width: '100%',
-      height: '500',
+      height: String(widgetHeight),
     });
 
     const container = containerRef.current;
@@ -52,7 +55,7 @@ const TradingViewHeatmap = () => {
     return () => {
       if (container) container.innerHTML = '';
     };
-  }, [currentTheme]);
+  }, [currentTheme, widgetHeight]);
 
   return (
     <Card className="glass-subtle border-border/60">
@@ -63,7 +66,7 @@ const TradingViewHeatmap = () => {
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0">
-        <div className="tradingview-widget-container h-[500px]" ref={containerRef}>
+        <div className="tradingview-widget-container" style={{ height: widgetHeight }} ref={containerRef}>
           <div className="tradingview-widget-container__widget h-full"></div>
         </div>
         <TradingViewAttribution symbol="PSX-KSE100" />
