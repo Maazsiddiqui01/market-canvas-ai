@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback, useLayoutEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Search, Filter, X, Building2, Loader2, TrendingUp, Newspaper, Zap, BarChart3, Activity, Brain, Database, ExternalLink, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -56,6 +57,28 @@ export const SearchHero = ({ onTickerChange, selectedTicker }: SearchHeroProps) 
   
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const anchorRef = useRef<HTMLDivElement>(null);
+  const [dropdownPos, setDropdownPos] = useState<{ top: number; left: number; width: number } | null>(null);
+
+  const updateDropdownPos = useCallback(() => {
+    const el = anchorRef.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    setDropdownPos({ top: r.bottom + 8, left: r.left, width: r.width });
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!isDropdownOpen) return;
+    updateDropdownPos();
+    const onScroll = () => updateDropdownPos();
+    window.addEventListener('scroll', onScroll, true);
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll, true);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, [isDropdownOpen, updateDropdownPos]);
+
 
   // Global Cmd+K / Ctrl+K shortcut to focus search
   useEffect(() => {
@@ -681,7 +704,7 @@ export const SearchHero = ({ onTickerChange, selectedTicker }: SearchHeroProps) 
       className="relative w-full max-w-3xl mx-auto animate-fade-in"
     >
       {/* Main Search Container */}
-      <div className="relative flex flex-col md:flex-row md:items-center gap-2 p-2 bg-card/50 backdrop-blur-xl rounded-2xl border border-border/50 shadow-lg shadow-primary/5 hover:shadow-xl hover:shadow-primary/10 transition-all duration-500">
+      <div ref={anchorRef} className="relative flex flex-col md:flex-row md:items-center gap-2 p-2 bg-card/50 backdrop-blur-xl rounded-2xl border border-border/50 shadow-lg shadow-primary/5 hover:shadow-xl hover:shadow-primary/10 transition-all duration-500">
         {/* Sector Filter */}
         <Select value={selectedSector} onValueChange={setSelectedSector}>
           <SelectTrigger className="w-full md:w-[140px] border-0 bg-secondary/50 rounded-xl focus:ring-1 focus:ring-primary/50">
@@ -741,13 +764,22 @@ export const SearchHero = ({ onTickerChange, selectedTicker }: SearchHeroProps) 
         </Button>
       </div>
 
-      {/* Dropdown */}
-      {isDropdownOpen && dropdownSuggestions.length > 0 && (
-        <div 
+      {/* Dropdown — rendered in a portal so it overlays everything and is never clipped */}
+      {isDropdownOpen && dropdownSuggestions.length > 0 && dropdownPos && createPortal(
+        <div
           ref={dropdownRef}
-          className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl shadow-2xl shadow-primary/10 overflow-hidden z-[100] animate-fade-in"
+          data-search-hero
+          role="listbox"
+          style={{
+            position: 'fixed',
+            top: dropdownPos.top,
+            left: dropdownPos.left,
+            width: dropdownPos.width,
+            zIndex: 9999,
+          }}
+          className="bg-card border border-border rounded-xl shadow-2xl shadow-primary/10 overflow-hidden animate-fade-in"
         >
-          <div className="max-h-[320px] overflow-y-auto p-2">
+          <div className="max-h-[min(420px,60vh)] overflow-y-auto p-2">
             {loadingSuggestions || loadingSectorStocks ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="h-6 w-6 animate-spin text-primary" />
@@ -757,12 +789,15 @@ export const SearchHero = ({ onTickerChange, selectedTicker }: SearchHeroProps) 
                 <button
                   key={stock.ticker}
                   data-stock-item
+                  role="option"
+                  aria-selected={highlightedIndex === index}
+                  onMouseEnter={() => setHighlightedIndex(index)}
                   onClick={() => handleStockSelect(stock)}
                   className={`
                     w-full flex items-center gap-3 p-3 rounded-lg text-left
                     transition-all duration-200
-                    ${highlightedIndex === index 
-                      ? 'bg-primary/20 text-foreground' 
+                    ${highlightedIndex === index
+                      ? 'bg-primary/20 text-foreground ring-1 ring-primary/40'
                       : 'hover:bg-secondary/50'
                     }
                   `}
@@ -785,7 +820,7 @@ export const SearchHero = ({ onTickerChange, selectedTicker }: SearchHeroProps) 
                       {highlightMatch(stock.name || '', searchQuery)}
                     </p>
                   </div>
-                  <div className="flex-shrink-0 flex items-center gap-1 text-xs text-muted-foreground">
+                  <div className="hidden sm:flex flex-shrink-0 items-center gap-1 text-xs text-muted-foreground">
                     <Building2 className="h-3 w-3" />
                     <span className="max-w-[100px] truncate">{stock.sector}</span>
                   </div>
@@ -793,8 +828,10 @@ export const SearchHero = ({ onTickerChange, selectedTicker }: SearchHeroProps) 
               ))
             )}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
+
 
       {/* Selected Stock Badge */}
       {selectedStock && !loading && !responseData && (
