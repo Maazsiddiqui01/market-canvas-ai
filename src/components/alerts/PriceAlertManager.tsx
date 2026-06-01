@@ -253,6 +253,7 @@ export const PriceAlertManager = () => {
             <Button
               variant="outline"
               size="icon"
+              aria-label="Check alerts against current prices"
               onClick={handleCheckAlerts}
               disabled={isCheckingAlerts}
               title="Check alerts against current prices"
