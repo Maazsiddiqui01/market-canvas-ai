@@ -25,7 +25,7 @@ import { supabase } from '@/integrations/supabase/client';
 
 const routes = [
   { label: 'Dashboard Home', path: '/dashboard', icon: Home, group: 'Navigate' },
-  { label: 'Market Analysis', path: '/dashboard/market', icon: BarChart3, group: 'Navigate' },
+  { label: 'Market Analysis', path: '/dashboard', icon: BarChart3, group: 'Navigate' },
   { label: 'AI Tools', path: '/dashboard/ai-tools', icon: Brain, group: 'Navigate' },
   { label: 'Portfolio', path: '/dashboard/portfolio', icon: Briefcase, group: 'Navigate' },
   { label: 'Watchlist', path: '/dashboard/watchlist', icon: Eye, group: 'Navigate' },
