@@ -192,6 +192,8 @@
     --up-foreground: 0 0% 98%;
     --down: 0 84% 60%;
     --down-foreground: 0 0% 98%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 10%;
 
     --glass-bg: 0 0% 8%;
     --glass-bg-alpha: 0.55;
