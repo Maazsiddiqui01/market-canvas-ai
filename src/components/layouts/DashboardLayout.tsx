@@ -190,11 +190,9 @@ export const DashboardLayout = ({
         )}
 
 
-        {/* Navigation Guide - Sticky but lower z-index than search dropdown */}
-        <NavigationGuide activeTab={getActiveTab()} onTabChange={handleTabChange} />
-
         {/* Breadcrumb */}
         <Breadcrumb />
+
 
         {/* Page Header */}
         {pageTitle && (
