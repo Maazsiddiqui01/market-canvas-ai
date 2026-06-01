@@ -1,119 +1,58 @@
-## World-Class UI/UX Audit & Redesign Plan
+# Finish the Redesign — Visual Masterpiece + UX Clarity
 
-Goal: bring every page (landing, auth, dashboard, 404) to a world-class investment-product bar — glassmorphism, consistent spacing/typography, polished motion, perfect mobile.
+Phases 1–2 (design tokens, header, nav, footer) and partial Phase 5 (Portfolio, History) are done. This plan closes out everything else and adds a dedicated UX-simplification pass so the product feels effortless, not overwhelming.
 
----
+## Guiding principles
 
-### QA Matrix (applied to every page)
+- One primary action per screen. Everything else recedes.
+- Progressive disclosure: show summary first, details on demand.
+- Consistent page shell: `PageHeader` (title + 1-line subtitle + primary CTA) → content → empty/loading/error states.
+- Glass + hairline borders + aurora background already established — apply uniformly, no raw colors.
+- Motion is subtle: fade-in, 200ms scale on hover, no bouncy distractions.
 
-Each page is graded against:
+## Phase A — Landing + Auth polish
 
-1. **Visual hierarchy** — clear H1/H2/H3, scannable, one primary CTA per view
-2. **Spacing & rhythm** — 8px grid, consistent section padding, breathing room
-3. **Typography** — semantic tokens, no orphan font-sizes, proper line-height
-4. **Color & theme** — only design tokens, dark + light parity, no raw hex/tailwind colors
-5. **Glassmorphism & depth** — layered surfaces, subtle borders, backdrop-blur, soft shadows
-6. **Motion** — entrance fade/slide, hover micro-interactions, page transitions, reduced-motion respected
-7. **Responsiveness** — mobile (375), tablet (768), desktop (1280+); no horizontal scroll
-8. **Touch targets** — ≥44×44, bottom-nav clearance on mobile
-9. **Accessibility** — alt text, aria-labels on icon buttons, focus rings, contrast AA
-10. **Empty / loading / error states** — skeletons, friendly empties, retry on errors
-11. **Consistency** — same header, card, button, badge patterns across pages
-12. **Performance** — lazy images, no layout shift, code-split routes
+1. **Hero** — single H1, single CTA, ticker strip below, remove competing buttons.
+2. **FeaturesSection** — convert to 6-tile bento grid with glass cards + icon + 1-line value prop.
+3. **CTASection** — single glass panel, gradient-tint, one button.
+4. **Auth page** — split-screen on desktop (brand left, form right), single glass card on mobile, inline validation, success → `/dashboard`.
 
----
+## Phase B — Dashboard home (bento)
 
-### Phase 1 — Design System Foundation
+5. Rebuild `/dashboard` as a 12-col bento: Search hero (full width) → Watchlist snapshot (6) + Portfolio snapshot (6) → Top movers (4) + News (8) → Alerts (12).
+6. Each tile = glass card, hairline divider, "View all →" link. No tile shows more than 5 rows.
+7. Empty states with friendly illustration + 1 CTA.
 
-Refine `index.css` + `tailwind.config.ts`:
+## Phase C — Remaining dashboard pages
 
-- Add glass surface tokens: `--glass-bg`, `--glass-border`, `--glass-shadow`, `--glass-blur` (dark + light)
-- Add elevation scale: `--elevation-1..4` shadows
-- Add gradient tokens: `--gradient-hero`, `--gradient-card`, `--gradient-accent`
-- Standard section paddings: `section-y`, `container-x`
-- New shadcn variants: `Card` (glass, elevated, flat), `Button` (premium, glass), `Badge` (status colors)
-- Unified `PageHeader`, `SectionHeader`, `StatCard`, `EmptyState`, `LoadingState`, `ErrorState` primitives in `src/components/ui/`
+Apply unified `PageHeader` + glass card system to:
+- Watchlist, Alerts, News, Top/Bottom, AI Search, Market Overview, Stock Detail, Settings, NotFound.
+- Standardize tables: sticky header, zebra hairlines, right-aligned numerics, tabular-nums, color-coded deltas via tokens only.
+- Standardize forms: labels above, helper text muted, inline errors, primary button right.
 
----
+## Phase D — UX simplification pass
 
-### Phase 2 — Landing Page (`/`)
+8. **Navigation** — collapse 10+ nav items into 3 clusters already grouped; add a global ⌘K command palette for power users (search stocks, jump to page, run actions).
+9. **Onboarding** — first-visit dashboard shows a 3-step inline coach-mark (Search → Add to watchlist → Set alert). Dismissible, stored in localStorage.
+10. **Reduce cognitive load** — remove duplicate CTAs, merge redundant widgets, hide advanced filters behind "More filters" disclosure, default sort/limit on every list.
+11. **Feedback** — every async action shows a toast (success/error). Buttons show loading state. Skeletons replace spinners for content areas.
+12. **Mobile** — bottom nav with 5 items max, pull-to-refresh on lists, sheet-based filters, 44px touch targets, `h-dvh` for full-height screens.
 
-`Index.tsx`, `HeroSection`, `landing/*`, `MarketOverview`, `Footer`:
+## Phase E — Cross-cutting QA
 
-- Tighten hero: stronger H1, single primary CTA, refined particle/data-flow background, glass stat chips
-- Redesign Features section into a bento grid with glass cards + icon gradients
-- Trusted-by + testimonials: marquee polish, consistent card heights
-- Pricing/CTA section: glass pricing-style call-to-action
-- Footer: column alignment, inline newsletter polish, social icons with proper aria-labels
-- Mobile: hero copy scaling, CTA stacking, remove any horizontal overflow
+13. Replace any remaining raw color classes with semantic tokens.
+14. `aria-label` on every icon-only button; visible focus rings.
+15. Browser-screenshot every page at 375 / 768 / 1280 in both themes; fix regressions.
+16. Lighthouse pass: lazy-load below-fold widgets, defer heavy charts.
 
----
+## Technical notes
 
-### Phase 3 — Auth Page (`/auth`)
+- New primitives: `PageHeader`, `StatCard`, `EmptyState`, `SectionCard`, `CommandPalette` (cmdk).
+- Add `prefers-reduced-motion` guard around all animations.
+- No backend/data changes — pure frontend/presentation.
 
-`Auth.tsx`:
+## Out of scope
 
-- Split-screen on desktop: left = brand panel with gradient + ticker visual; right = form
-- Single-column glass card on mobile
-- Tabs (Sign in / Sign up) with smooth indicator
-- Inline validation, loading states on submit, success toast → `/dashboard`
-- Social proof line + footer link back to landing
-- Logo + theme toggle in corner, consistent with app shell
+- Auth logic, webhook payloads, AI prompt content, DB schema.
 
----
-
-### Phase 4 — Dashboard Shell
-
-`Dashboard.tsx`, `DashboardHeader`, `NavigationGuide`, `layouts/*`, bottom nav:
-
-- Unified app shell: sticky glass header (logo, search, theme, profile), desktop sidebar OR top nav (pick one — recommend top nav since current pattern), mobile bottom nav with active indicator pill
-- Consistent page wrapper with `PageHeader` (title, subtitle, actions) on every page
-- Page transitions via existing `PageTransition`
-
----
-
-### Phase 5 — Dashboard Pages (one pass per page, same QA matrix)
-
-For each: redesign hero/header, convert cards to glass system, fix spacing, add empty/loading/error states, verify mobile.
-
-- **DashboardHomePage** — stat cards row, search hero, recent activity, onboarding checklist (kept but restyled)
-- **MarketPage** — KSE-100 hero stat, gainers/losers/heatmap in unified grid
-- **AIToolsPage** — search hero + result card, comparison tool styled as side-by-side glass panels, markdown rendering polish
-- **PortfolioPage** — summary stat strip (value, P&L, day change), holdings table → responsive card list on mobile, add-holding sheet
-- **WatchlistPage** — list with inline sparkline, swipe-to-delete on mobile
-- **AlertsPage** — active vs triggered tabs, alert cards with status badges
-- **NewsPage** — magazine-style: featured + grid, source chips, filter bar
-- **HistoryPage** — timeline grouped by day, filter by type
-- **ToolsPage** — bento grid of tools with icon + description
-- **AdminAnalyticsPage** — KPI cards row, chart cards, recent activity table (admin-only gate kept)
-
----
-
-### Phase 6 — Auxiliary
-
-- **NotFound** — center glass card, brand orbs, primary CTA back to dashboard
-- **LoadingScreen** — refined spinner with logo pulse
-- **NewsletterPopup / PWAInstallPrompt** — confirm removed/disabled per prior request; remove leftover triggers if present
-- **Toasts** — glass styling, status colors, top-right desktop / top-center mobile
-
----
-
-### Phase 7 — Cross-cutting Polish
-
-- Replace any raw color usage with tokens (sweep `text-white|bg-black|text-gray-*`)
-- Icon-only buttons: add `aria-label`
-- Replace `h-screen` with `h-dvh` for mobile
-- Verify focus-visible rings on all interactive elements
-- Run accessibility + design QA pass with browser screenshots at 375 / 768 / 1280
-
----
-
-### Phase 8 — QA Verification
-
-For each page: capture screenshots at mobile + desktop, both themes, walk the QA matrix, list pass/fail, fix regressions. Final summary report back to you.
-
----
-
-### Delivery
-
-Phases shipped sequentially (1→8). After each phase I post a short verification note with screenshots so you can sign off before I move on. No backend/data changes — purely frontend, presentation, and design-system work.
+Approve to start with **Phase A (Landing + Auth)** and roll forward; or tell me to jump to Phase D (UX simplification) first if reducing overwhelm is the higher priority.
