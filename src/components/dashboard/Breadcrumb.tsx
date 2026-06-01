@@ -3,7 +3,7 @@ import { ChevronRight, Home } from 'lucide-react';
 
 const routeLabels: Record<string, string> = {
   '/dashboard': 'Home',
-  '/dashboard/market': 'Market',
+  
   '/dashboard/ai-tools': 'AI Tools',
   '/dashboard/portfolio': 'Portfolio',
   '/dashboard/watchlist': 'Watchlist',

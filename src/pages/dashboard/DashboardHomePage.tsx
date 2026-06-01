@@ -1,3 +1,4 @@
+import { useState, useCallback } from 'react';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { OnboardingChecklist } from '@/components/dashboard/OnboardingChecklist';
@@ -8,25 +9,32 @@ import TradingViewHeatmap from '@/components/TradingViewHeatmap';
 import TopBottom5 from '@/components/TopBottom5';
 
 const DashboardHomePage = () => {
-  useDocumentTitle('Dashboard | Market Canvas AI');
+  useDocumentTitle('Market | Market Canvas AI');
+  const [selectedTicker, setSelectedTicker] = useState('KSE100');
+
+  const handleTickerChange = useCallback((ticker: string) => {
+    setSelectedTicker(ticker);
+  }, []);
 
   return (
     <DashboardLayout showMarketOverview>
       <div className="space-y-6 md:space-y-8">
-        {/* Onboarding for new users only */}
         <OnboardingChecklist />
 
-        {/* Hero — AI search is the centerpiece */}
-        <AISearchHero />
+        {/* Hero — n8n stock picker (default) + Ask AI tab */}
+        <AISearchHero
+          selectedTicker={selectedTicker}
+          onTickerChange={handleTickerChange}
+        />
 
-        {/* Market context: TradingView heatmap */}
+        {/* PSX heatmap */}
         <section aria-label="PSX market heatmap" className="stagger-2">
           <TradingViewHeatmap />
         </section>
 
-        {/* Technical + Financial — tabs on mobile, side-by-side on desktop */}
+        {/* Technical + Financial for selected ticker */}
         <section aria-label="Technical and financial analysis" className="stagger-3">
-          <MobileAnalysisTabs ticker="KSE100" />
+          <MobileAnalysisTabs ticker={selectedTicker} />
         </section>
 
         {/* Top movers */}
@@ -44,4 +52,3 @@ const DashboardHomePage = () => {
 };
 
 export default DashboardHomePage;
-
