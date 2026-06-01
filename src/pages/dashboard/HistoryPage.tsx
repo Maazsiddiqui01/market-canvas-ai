@@ -55,10 +55,10 @@ const activityIcons: Record<string, React.ReactNode> = {
 const activityColors: Record<string, string> = {
   ai_search: 'bg-primary/20 text-primary',
   stock_view: 'bg-up/20 text-up',
-  portfolio_action: 'bg-blue-500/20 text-blue-500',
-  alert_created: 'bg-yellow-500/20 text-yellow-500',
-  watchlist_action: 'bg-purple-500/20 text-purple-500',
-  comparison: 'bg-orange-500/20 text-orange-500',
+  portfolio_action: 'bg-primary/15 text-primary',
+  alert_created: 'bg-accent/40 text-accent-foreground',
+  watchlist_action: 'bg-secondary/40 text-secondary-foreground',
+  comparison: 'bg-muted/60 text-foreground',
   page_view: 'bg-muted text-muted-foreground',
 };
 
