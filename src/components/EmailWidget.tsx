@@ -39,6 +39,7 @@ const EmailWidget = () => {
               <Button
                 variant="ghost"
                 size="sm"
+                aria-label="Close contact panel"
                 onClick={() => setIsOpen(false)}
                 className="h-8 w-8 p-0 hover:bg-destructive/10"
               >
