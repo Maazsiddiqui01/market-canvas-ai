@@ -174,6 +174,7 @@ export const RecentSearches = ({ showAll = false, onSearchClick }: RecentSearche
             <Button
               variant="ghost"
               size="icon"
+              aria-label="Refresh recent searches"
               className="h-8 w-8"
               onClick={handleRefresh}
               disabled={isRefreshing}
