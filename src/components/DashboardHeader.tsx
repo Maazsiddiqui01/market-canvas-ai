@@ -6,6 +6,7 @@ import ThemeToggle from './ThemeToggle';
 import Logo from './Logo';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { DesktopNavPill } from '@/components/dashboard/NavigationGuide';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,9 +17,11 @@ import {
 
 interface DashboardHeaderProps {
   onTickerChange?: (ticker: string) => void;
+  activeTab?: string;
+  onTabChange?: (tab: string) => void;
 }
 
-const DashboardHeader = ({ onTickerChange }: DashboardHeaderProps) => {
+const DashboardHeader = ({ activeTab, onTabChange }: DashboardHeaderProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
@@ -38,28 +41,34 @@ const DashboardHeader = ({ onTickerChange }: DashboardHeaderProps) => {
   };
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
       isScrolled
-        ? 'glass-strong hairline-b py-2'
-        : 'bg-background/40 backdrop-blur-md hairline-b py-3'
+        ? 'glass-strong hairline-b py-1.5'
+        : 'bg-background/40 backdrop-blur-md hairline-b py-2.5'
     }`}>
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-4">
           {/* Logo */}
-          <Link to="/" className="flex items-center group">
-            <div className={`transition-all duration-500 ${isScrolled ? 'scale-90' : 'scale-100'}`}>
-              <Logo size={isScrolled ? 'sm' : 'md'} />
+          <Link to="/" className="flex items-center group shrink-0">
+            <div className={`transition-all duration-300 ${isScrolled ? 'scale-90' : 'scale-100'}`}>
+              <Logo size="sm" />
             </div>
           </Link>
 
-          
+          {/* Desktop inline nav */}
+          {user && activeTab && onTabChange && (
+            <div className="hidden md:flex flex-1 justify-center min-w-0">
+              <DesktopNavPill activeTab={activeTab} onTabChange={onTabChange} />
+            </div>
+          )}
+
           {/* Right side: ⌘K + Theme + Auth */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             {user && (
               <button
                 onClick={() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }))}
                 aria-label="Open command palette"
-                className="hidden md:inline-flex items-center gap-2 px-3 py-1.5 rounded-lg glass-subtle text-xs text-muted-foreground hover:text-foreground transition-colors"
+                className="hidden lg:inline-flex items-center gap-2 px-3 py-1.5 rounded-lg glass-subtle text-xs text-muted-foreground hover:text-foreground transition-colors"
               >
                 <Search className="h-3.5 w-3.5" />
                 <span>Search…</span>
@@ -69,7 +78,6 @@ const DashboardHeader = ({ onTickerChange }: DashboardHeaderProps) => {
               </button>
             )}
             <ThemeToggle />
-
 
             {user ? (
               <DropdownMenu>
