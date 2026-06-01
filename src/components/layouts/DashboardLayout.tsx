@@ -37,6 +37,11 @@ export const DashboardLayout = ({
   showMarketOverview = false,
   onTickerChange: externalTickerChange,
   selectedTicker: externalTicker,
+  pageTitle,
+  pageSubtitle,
+  pageIcon,
+  pageEyebrow,
+  pageActions,
 }: DashboardLayoutProps) => {
   const navigate = useNavigate();
   const location = useLocation();
