@@ -216,6 +216,9 @@ export const DashboardLayout = ({
       {/* Footer */}
       <Footer />
 
+      {/* Mobile bottom tab bar (native-app feel) */}
+      <MobileBottomNav activeTab={getActiveTab()} onTabChange={handleTabChange} />
     </div>
+
   );
 };
