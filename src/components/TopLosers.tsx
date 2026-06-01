@@ -47,7 +47,7 @@ const TopLosers = () => {
   return (
     <Card className="glass-subtle border-border/60">
       <CardHeader>
-        <CardTitle className="text-white flex items-center gap-2">
+        <CardTitle className="text-foreground flex items-center gap-2">
           <TrendingDown className="h-5 w-5 text-down" />
           Top Losers
           {loading && <span className="text-sm text-muted-foreground ml-2">Loading...</span>}
@@ -57,13 +57,13 @@ const TopLosers = () => {
         {displayLosers.map((stock, index) => (
           <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
             <div>
-              <p className="font-semibold text-white">{stock.name}</p>
+              <p className="font-semibold text-foreground">{stock.name}</p>
               <p className="text-sm text-muted-foreground truncate max-w-32">
                 {loading ? 'Loading...' : stock.name}
               </p>
             </div>
             <div className="text-right">
-              <p className="font-semibold text-white">PKR {formatNumber(stock.close)}</p>
+              <p className="font-semibold text-foreground">PKR {formatNumber(stock.close)}</p>
               <p className="text-sm text-down font-medium">{stock.change.toFixed(2)}%</p>
             </div>
           </div>
