@@ -36,7 +36,7 @@ const CTASection = () => {
             Join thousands of traders who are already using AI-powered insights to make smarter investment decisions.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="flex items-center justify-center">
             {user ? (
               <Link to="/dashboard">
                 <Button size="lg" className="text-lg px-10 py-7 rounded-xl group font-semibold shadow-lg shadow-primary/25">
@@ -45,21 +45,15 @@ const CTASection = () => {
                 </Button>
               </Link>
             ) : (
-              <>
-                <Link to="/auth">
-                  <Button size="lg" className="text-lg px-10 py-7 rounded-xl group font-semibold shadow-lg shadow-primary/25">
-                    Get Started Free
-                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </Link>
-                <Link to="/auth">
-                  <Button variant="outline" size="lg" className="text-lg px-10 py-7 rounded-xl font-semibold">
-                    Learn More
-                  </Button>
-                </Link>
-              </>
+              <Link to="/auth">
+                <Button size="lg" className="text-lg px-10 py-7 rounded-xl group font-semibold shadow-lg shadow-primary/25">
+                  Get Started Free
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
             )}
           </div>
+
 
           <p className="text-sm text-muted-foreground mt-6">
             No credit card required • Free forever for basic features
