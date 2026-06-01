@@ -9,11 +9,13 @@ import MarketOverview from '@/components/MarketOverview';
 import Footer from '@/components/Footer';
 import Logo from '@/components/Logo';
 import { Button } from '@/components/ui/button';
-import { Sparkles, RefreshCw } from 'lucide-react';
+import { Sparkles, RefreshCw, LucideIcon } from 'lucide-react';
 import { usePullToRefresh } from '@/hooks/usePullToRefresh';
 import { PullToRefreshIndicator } from '@/components/PullToRefreshIndicator';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useActivityLog } from '@/hooks/useActivityLog';
+import { PageHeader } from '@/components/ui/page-header';
+import type { ReactNode } from 'react';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -21,6 +23,12 @@ interface DashboardLayoutProps {
   showMarketOverview?: boolean;
   onTickerChange?: (ticker: string) => void;
   selectedTicker?: string;
+  /** Page header props — when provided, a unified header is rendered above content */
+  pageTitle?: string;
+  pageSubtitle?: string;
+  pageIcon?: LucideIcon;
+  pageEyebrow?: string;
+  pageActions?: ReactNode;
 }
 
 export const DashboardLayout = ({ 
