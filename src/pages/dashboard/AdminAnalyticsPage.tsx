@@ -192,7 +192,7 @@ const AdminAnalyticsPage = () => {
 
   const statCards = [
     { label: 'Page Views (30d)', value: totalPageViews, icon: Eye, color: 'text-blue-500', bg: 'bg-blue-500/10' },
-    { label: 'Unique Sessions', value: uniqueSessions, icon: Users, color: 'text-green-500', bg: 'bg-green-500/10' },
+    { label: 'Unique Sessions', value: uniqueSessions, icon: Users, color: 'text-up', bg: 'bg-up/10' },
     { label: 'User Activities', value: totalActivities, icon: Activity, color: 'text-purple-500', bg: 'bg-purple-500/10' },
     { label: 'Newsletter Subs', value: totalSubscribers, icon: Newspaper, color: 'text-orange-500', bg: 'bg-orange-500/10' },
   ];

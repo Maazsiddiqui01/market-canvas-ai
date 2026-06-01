@@ -61,11 +61,11 @@ const TopBottom5 = ({ refreshTrigger }: TopBottom5Props) => {
         <Card className="bg-card/50 border-border backdrop-blur-sm hover:bg-card/80 transition-all duration-300">
           <CardHeader>
             <CardTitle className="text-foreground flex items-center gap-2">
-              <div className="p-2 rounded-lg bg-green-500/10">
-                <TrendingUp className="h-5 w-5 text-green-500" />
+              <div className="p-2 rounded-lg bg-up/10">
+                <TrendingUp className="h-5 w-5 text-up" />
               </div>
               Top 5 Gainers
-              <Award className="h-4 w-4 text-green-500 ml-auto" />
+              <Award className="h-4 w-4 text-up ml-auto" />
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -80,11 +80,11 @@ const TopBottom5 = ({ refreshTrigger }: TopBottom5Props) => {
               </TableHeader>
               <TableBody>
                 {top5.map((stock, index) => (
-                  <TableRow key={index} className="hover:bg-green-500/5 transition-colors">
+                  <TableRow key={index} className="hover:bg-up/5 transition-colors">
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <div className="p-1.5 rounded-full bg-green-500/10">
-                          <TrendingUp className="h-3 w-3 text-green-500" />
+                        <div className="p-1.5 rounded-full bg-up/10">
+                          <TrendingUp className="h-3 w-3 text-up" />
                         </div>
                         <div>
                           <p className="font-semibold flex items-center gap-1">
@@ -101,7 +101,7 @@ const TopBottom5 = ({ refreshTrigger }: TopBottom5Props) => {
                       PKR {formatNumber(stock.close)}
                     </TableCell>
                     <TableCell>
-                      <Badge variant="outline" className="border-green-500/30 bg-green-500/10 text-green-500 font-medium">
+                      <Badge variant="outline" className="border-up/30 bg-up/10 text-up font-medium">
                         +{stock.change_percent}
                       </Badge>
                     </TableCell>
@@ -122,8 +122,8 @@ const TopBottom5 = ({ refreshTrigger }: TopBottom5Props) => {
         <Card className="bg-card/50 border-border backdrop-blur-sm hover:bg-card/80 transition-all duration-300">
           <CardHeader>
             <CardTitle className="text-foreground flex items-center gap-2">
-              <div className="p-2 rounded-lg bg-red-500/10">
-                <TrendingDown className="h-5 w-5 text-red-500" />
+              <div className="p-2 rounded-lg bg-down/10">
+                <TrendingDown className="h-5 w-5 text-down" />
               </div>
               Bottom 5 Losers
             </CardTitle>
@@ -140,11 +140,11 @@ const TopBottom5 = ({ refreshTrigger }: TopBottom5Props) => {
               </TableHeader>
               <TableBody>
                 {bottom5.map((stock, index) => (
-                  <TableRow key={index} className="hover:bg-red-500/5 transition-colors">
+                  <TableRow key={index} className="hover:bg-down/5 transition-colors">
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <div className="p-1.5 rounded-full bg-red-500/10">
-                          <TrendingDown className="h-3 w-3 text-red-500" />
+                        <div className="p-1.5 rounded-full bg-down/10">
+                          <TrendingDown className="h-3 w-3 text-down" />
                         </div>
                         <div>
                           <p className="font-semibold">{stock.symbol}</p>
@@ -158,7 +158,7 @@ const TopBottom5 = ({ refreshTrigger }: TopBottom5Props) => {
                       PKR {formatNumber(stock.close)}
                     </TableCell>
                     <TableCell>
-                      <Badge variant="outline" className="border-red-500/30 bg-red-500/10 text-red-500 font-medium">
+                      <Badge variant="outline" className="border-down/30 bg-down/10 text-down font-medium">
                         {stock.change_percent}
                       </Badge>
                     </TableCell>

@@ -83,7 +83,7 @@ const TradingViewHeatmap = () => {
     <Card className="bg-slate-800/50 border-slate-600">
       <CardHeader>
         <CardTitle className="text-white flex items-center gap-2">
-          {isMarketOpen && <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>}
+          {isMarketOpen && <div className="w-2 h-2 bg-up rounded-full animate-pulse"></div>}
           Market Heatmap
         </CardTitle>
       </CardHeader>

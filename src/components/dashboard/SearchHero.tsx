@@ -484,8 +484,8 @@ export const SearchHero = ({ onTickerChange, selectedTicker }: SearchHeroProps) 
 
   const getSignalColor = (signal: string) => {
     const lowerSignal = signal.toLowerCase();
-    if (lowerSignal.includes('buy')) return 'text-green-500';
-    if (lowerSignal.includes('sell')) return 'text-red-500';
+    if (lowerSignal.includes('buy')) return 'text-up';
+    if (lowerSignal.includes('sell')) return 'text-down';
     return 'text-yellow-500';
   };
 

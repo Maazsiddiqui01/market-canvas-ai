@@ -48,7 +48,7 @@ const TopGainers = () => {
     <Card className="bg-slate-800/50 border-slate-600">
       <CardHeader>
         <CardTitle className="text-white flex items-center gap-2">
-          <TrendingUp className="h-5 w-5 text-green-500" />
+          <TrendingUp className="h-5 w-5 text-up" />
           Top Gainers
           {loading && <span className="text-sm text-slate-400 ml-2">Loading...</span>}
         </CardTitle>
@@ -64,7 +64,7 @@ const TopGainers = () => {
             </div>
             <div className="text-right">
               <p className="font-semibold text-white">PKR {formatNumber(stock.close)}</p>
-              <p className="text-sm text-green-500 font-medium">+{stock.change.toFixed(2)}%</p>
+              <p className="text-sm text-up font-medium">+{stock.change.toFixed(2)}%</p>
             </div>
           </div>
         ))}

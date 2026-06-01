@@ -192,7 +192,7 @@ export const PortfolioHistoryChart = ({
                       return (
                         <div>
                           <div>{data.fullDate}</div>
-                          <div className={data.pnl >= 0 ? 'text-green-500' : 'text-red-500'}>
+                          <div className={data.pnl >= 0 ? 'text-up' : 'text-down'}>
                             P&L: {data.pnl >= 0 ? '+' : ''}{data.pnl.toLocaleString()} ({data.pnlPercent.toFixed(2)}%)
                           </div>
                         </div>
@@ -235,7 +235,7 @@ export const PortfolioHistoryChart = ({
                 const change = chartData[chartData.length - 1].value - chartData[0].value;
                 const changePercent = (change / chartData[0].value) * 100;
                 return (
-                  <p className={`font-medium ${change >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                  <p className={`font-medium ${change >= 0 ? 'text-up' : 'text-down'}`}>
                     {change >= 0 ? '+' : ''}{changePercent.toFixed(2)}%
                   </p>
                 );

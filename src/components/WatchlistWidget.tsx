@@ -41,8 +41,8 @@ const WatchlistWidget = () => {
       </CardHeader>
       <CardContent className="space-y-2">
         {watchlist.map((stock, index) => {
-          const deltaClass = stock.isPositive ? 'text-success' : 'text-destructive';
-          const tintClass = stock.isPositive ? 'bg-success/10' : 'bg-destructive/10';
+          const deltaClass = stock.isPositive ? 'text-up' : 'text-destructive';
+          const tintClass = stock.isPositive ? 'bg-up/10' : 'bg-destructive/10';
           return (
             <div
               key={index}

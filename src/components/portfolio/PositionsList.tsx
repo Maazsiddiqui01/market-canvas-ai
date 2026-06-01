@@ -63,7 +63,7 @@ export const PositionsList = ({ positions, currentPrice, onDelete }: PositionsLi
               <div className="text-right">
                 <p className="text-muted-foreground">Cost: PKR {positionCost.toLocaleString()}</p>
                 {pnl !== null ? (
-                  <p className={`text-xs font-medium ${pnl >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                  <p className={`text-xs font-medium ${pnl >= 0 ? 'text-up' : 'text-down'}`}>
                     P&L: {pnl >= 0 ? '+' : ''}PKR {pnl.toLocaleString()} ({pnlPercent?.toFixed(2)}%)
                   </p>
                 ) : (
