@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { useSelectedTicker } from '@/contexts/SelectedTickerContext';
 import DashboardHeader from '@/components/DashboardHeader';
 import { MobileBottomNav } from '@/components/dashboard/NavigationGuide';
 import { Breadcrumb } from '@/components/dashboard/Breadcrumb';
@@ -49,7 +50,7 @@ export const DashboardLayout = ({
   const navigate = useNavigate();
   const location = useLocation();
   const { user, loading } = useAuth();
-  const [internalTicker, setInternalTicker] = useState('KSE100');
+  const { selectedTicker: contextTicker, setSelectedTicker } = useSelectedTicker();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const isMobile = useIsMobile();
@@ -73,8 +74,8 @@ export const DashboardLayout = ({
     },
   });
 
-  // Use external ticker if provided, otherwise use internal
-  const selectedTicker = externalTicker ?? internalTicker;
+  // Use external ticker if provided, otherwise use shared context ticker (persists across routes)
+  const selectedTicker = externalTicker ?? contextTicker;
 
   const isHomePage = location.pathname === '/dashboard';
 
@@ -119,9 +120,9 @@ export const DashboardLayout = ({
   }, []);
 
   const handleTickerChange = useCallback((ticker: string) => {
-    setInternalTicker(ticker);
+    setSelectedTicker(ticker);
     externalTickerChange?.(ticker);
-  }, [externalTickerChange]);
+  }, [externalTickerChange, setSelectedTicker]);
 
   useEffect(() => {
     if (!loading && !user) {
