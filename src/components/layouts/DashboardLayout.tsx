@@ -15,6 +15,8 @@ import { PullToRefreshIndicator } from '@/components/PullToRefreshIndicator';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useActivityLog } from '@/hooks/useActivityLog';
 import { PageHeader } from '@/components/ui/page-header';
+import { CommandPalette } from '@/components/dashboard/CommandPalette';
+
 import type { ReactNode } from 'react';
 
 interface DashboardLayoutProps {
@@ -143,7 +145,9 @@ export const DashboardLayout = ({
 
   return (
     <div ref={containerRef} className="min-h-screen bg-background flex flex-col">
+      <CommandPalette />
       <DashboardHeader onTickerChange={handleTickerChange} />
+
       
       <main className="container mx-auto px-4 pt-20 flex-1 pb-20 md:pb-0">
         {isMobile && <PullToRefreshIndicator pullDistance={pullDistance} isRefreshing={isPullRefreshing} />}
