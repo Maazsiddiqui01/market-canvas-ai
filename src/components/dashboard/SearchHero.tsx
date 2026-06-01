@@ -57,6 +57,28 @@ export const SearchHero = ({ onTickerChange, selectedTicker }: SearchHeroProps) 
   
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const anchorRef = useRef<HTMLDivElement>(null);
+  const [dropdownPos, setDropdownPos] = useState<{ top: number; left: number; width: number } | null>(null);
+
+  const updateDropdownPos = useCallback(() => {
+    const el = anchorRef.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    setDropdownPos({ top: r.bottom + 8, left: r.left, width: r.width });
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!isDropdownOpen) return;
+    updateDropdownPos();
+    const onScroll = () => updateDropdownPos();
+    window.addEventListener('scroll', onScroll, true);
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll, true);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, [isDropdownOpen, updateDropdownPos]);
+
 
   // Global Cmd+K / Ctrl+K shortcut to focus search
   useEffect(() => {
