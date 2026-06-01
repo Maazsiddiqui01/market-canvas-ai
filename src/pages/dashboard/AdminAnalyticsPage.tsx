@@ -172,11 +172,15 @@ const AdminAnalyticsPage = () => {
 
   if (!isAdmin && !loading) {
     return (
-      <DashboardLayout>
+      <DashboardLayout
+        pageEyebrow="Admin"
+        pageTitle="Analytics Dashboard"
+        pageIcon={BarChart3}
+      >
         <PageTransition>
-          <div className="flex flex-col items-center justify-center py-24 text-center">
+          <div className="glass-subtle rounded-2xl flex flex-col items-center justify-center py-24 text-center">
             <Shield className="h-16 w-16 text-muted-foreground mb-4" />
-            <h2 className="text-2xl font-bold text-foreground mb-2">Admin Access Required</h2>
+            <h2 className="text-2xl font-display font-bold text-foreground mb-2">Admin Access Required</h2>
             <p className="text-muted-foreground max-w-md">
               This page is only accessible to administrators. Contact an admin to get access.
             </p>
@@ -193,26 +197,23 @@ const AdminAnalyticsPage = () => {
     { label: 'Newsletter Subs', value: totalSubscribers, icon: Newspaper, color: 'text-orange-500', bg: 'bg-orange-500/10' },
   ];
 
+  const headerActions = (
+    <Button variant="outline" size="sm" onClick={handleRefresh} disabled={refreshing} aria-label="Refresh analytics">
+      <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
+      Refresh
+    </Button>
+  );
+
   return (
-    <DashboardLayout>
+    <DashboardLayout
+      pageEyebrow="Admin"
+      pageTitle="Analytics Dashboard"
+      pageSubtitle="Overview of site traffic, user activity, and engagement across Market Canvas AI."
+      pageIcon={BarChart3}
+      pageActions={headerActions}
+    >
       <PageTransition>
         <div className="space-y-6">
-          {/* Header */}
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
-                <BarChart3 className="h-6 w-6 text-primary" />
-                Analytics Dashboard
-              </h2>
-              <p className="text-muted-foreground text-sm mt-1">
-                Overview of site traffic, user activity, and engagement
-              </p>
-            </div>
-            <Button variant="outline" size="sm" onClick={handleRefresh} disabled={refreshing}>
-              <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
-              Refresh
-            </Button>
-          </div>
 
           {/* Stat Cards */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
