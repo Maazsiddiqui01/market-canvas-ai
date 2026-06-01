@@ -1,8 +1,9 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TrendingUp } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useTradingViewTheme } from '@/hooks/useTradingViewTheme';
+import TradingViewAttribution from '@/components/tradingview/TradingViewAttribution';
 
 interface TechnicalAnalysisProps {
   ticker?: string;
@@ -11,68 +12,40 @@ interface TechnicalAnalysisProps {
 const TechnicalAnalysis = ({ ticker = 'KSE100' }: TechnicalAnalysisProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentTheme, setCurrentTheme] = useState<'dark' | 'light'>('dark');
-
-  // Track theme changes
-  useEffect(() => {
-    const checkTheme = () => {
-      const isDarkMode = document.documentElement.classList.contains('dark');
-      setCurrentTheme(isDarkMode ? 'dark' : 'light');
-    };
-
-    checkTheme();
-    
-    // Listen for theme changes
-    const observer = new MutationObserver(checkTheme);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class']
-    });
-
-    return () => observer.disconnect();
-  }, []);
+  const currentTheme = useTradingViewTheme();
 
   useEffect(() => {
     setIsLoading(true);
-    if (containerRef.current) {
-      // Clear previous widget
-      containerRef.current.innerHTML = '';
-    }
+    if (containerRef.current) containerRef.current.innerHTML = '';
+
+    const tvSymbol = ticker === 'KSE100' ? 'PSX:KSE100' : `PSX:${ticker}`;
 
     const script = document.createElement('script');
     script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js';
     script.async = true;
-    
-    // Format ticker for TradingView
-    const tvSymbol = ticker === 'KSE100' ? 'PSX:KSE100' : `PSX:${ticker}`;
-    
     script.innerHTML = JSON.stringify({
-      "colorTheme": currentTheme,
-      "displayMode": "multiple",
-      "isTransparent": false,
-      "locale": "en",
-      "interval": "30m",
-      "disableInterval": false,
-      "width": "100%",
-      "height": "800",
-      "symbol": tvSymbol,
-      "showIntervalTabs": true
+      colorTheme: currentTheme,
+      displayMode: 'multiple',
+      isTransparent: true,
+      locale: 'en',
+      interval: '30m',
+      disableInterval: false,
+      width: '100%',
+      height: '800',
+      symbol: tvSymbol,
+      showIntervalTabs: true,
     });
+    script.onload = () => setTimeout(() => setIsLoading(false), 2000);
 
-    script.onload = () => {
-      setTimeout(() => setIsLoading(false), 2000);
-    };
-
-    if (containerRef.current) {
-      containerRef.current.appendChild(script);
-    }
+    const container = containerRef.current;
+    container?.appendChild(script);
 
     return () => {
-      if (containerRef.current && script.parentNode) {
-        script.parentNode.removeChild(script);
-      }
+      if (container) container.innerHTML = '';
     };
-  }, [ticker, currentTheme]); // Re-run when theme changes
+  }, [ticker, currentTheme]);
+
+  const tvSymbol = ticker === 'KSE100' ? 'PSX-KSE100' : `PSX-${ticker}`;
 
   return (
     <Card className="bg-card border-border transition-all duration-300 hover:shadow-lg hover-scale">
@@ -97,6 +70,7 @@ const TechnicalAnalysis = ({ ticker = 'KSE100' }: TechnicalAnalysisProps) => {
         <div className="tradingview-widget-container h-[800px]" ref={containerRef}>
           <div className="tradingview-widget-container__widget h-full"></div>
         </div>
+        <TradingViewAttribution symbol={tvSymbol} label={`${ticker} technicals on TradingView`} />
       </CardContent>
     </Card>
   );
