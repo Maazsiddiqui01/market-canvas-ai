@@ -151,7 +151,11 @@ export const DashboardLayout = ({
       <DashboardHeader onTickerChange={handleTickerChange} />
 
       
-      <main className="container mx-auto px-4 pt-20 flex-1 pb-24 md:pb-0">
+      <main className="container mx-auto px-4 pt-20 flex-1 pb-8">
+        {/* Top navigation (sticky) — first thing below header on every page */}
+        <NavigationGuide activeTab={getActiveTab()} onTabChange={handleTabChange} />
+
+
         {isMobile && <PullToRefreshIndicator pullDistance={pullDistance} isRefreshing={isPullRefreshing} />}
 
         {/* Search Hero — z-40 so its dropdown sits above the z-20 nav */}
@@ -186,11 +190,9 @@ export const DashboardLayout = ({
         )}
 
 
-        {/* Navigation Guide - Sticky but lower z-index than search dropdown */}
-        <NavigationGuide activeTab={getActiveTab()} onTabChange={handleTabChange} />
-
         {/* Breadcrumb */}
         <Breadcrumb />
+
 
         {/* Page Header */}
         {pageTitle && (
@@ -209,10 +211,9 @@ export const DashboardLayout = ({
         </div>
       </main>
 
-      {/* Footer — hidden on mobile (would sit behind fixed bottom nav) */}
-      <div className="hidden md:block">
-        <Footer />
-      </div>
+      {/* Footer */}
+      <Footer />
+
     </div>
   );
 };
