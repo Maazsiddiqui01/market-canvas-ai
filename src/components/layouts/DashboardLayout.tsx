@@ -200,6 +200,17 @@ export const DashboardLayout = ({
         {/* Breadcrumb */}
         <Breadcrumb />
 
+        {/* Page Header */}
+        {pageTitle && (
+          <PageHeader
+            title={pageTitle}
+            subtitle={pageSubtitle}
+            icon={pageIcon}
+            eyebrow={pageEyebrow}
+            actions={pageActions}
+          />
+        )}
+
         {/* Page Content */}
         <div className="pb-8 animate-fade-in">
           {children}
