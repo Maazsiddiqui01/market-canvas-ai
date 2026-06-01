@@ -192,6 +192,7 @@ export const DashboardLayout = ({
               disabled={isRefreshing}
               variant="outline"
               size="icon"
+              aria-label="Refresh page"
               className="h-10 w-10 rounded-xl glass-subtle hover:bg-primary/10 hover:border-primary/50 transition-all"
             >
               <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
