@@ -704,7 +704,7 @@ export const SearchHero = ({ onTickerChange, selectedTicker }: SearchHeroProps) 
       className="relative w-full max-w-3xl mx-auto animate-fade-in"
     >
       {/* Main Search Container */}
-      <div className="relative flex flex-col md:flex-row md:items-center gap-2 p-2 bg-card/50 backdrop-blur-xl rounded-2xl border border-border/50 shadow-lg shadow-primary/5 hover:shadow-xl hover:shadow-primary/10 transition-all duration-500">
+      <div ref={anchorRef} className="relative flex flex-col md:flex-row md:items-center gap-2 p-2 bg-card/50 backdrop-blur-xl rounded-2xl border border-border/50 shadow-lg shadow-primary/5 hover:shadow-xl hover:shadow-primary/10 transition-all duration-500">
         {/* Sector Filter */}
         <Select value={selectedSector} onValueChange={setSelectedSector}>
           <SelectTrigger className="w-full md:w-[140px] border-0 bg-secondary/50 rounded-xl focus:ring-1 focus:ring-primary/50">
