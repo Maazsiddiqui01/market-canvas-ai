@@ -131,7 +131,7 @@ export const DashboardLayout = ({
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="min-h-dvh flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-4 animate-pulse-glow">
           <Logo size="lg" />
           <p className="text-muted-foreground">Loading...</p>
@@ -145,33 +145,14 @@ export const DashboardLayout = ({
   }
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-background flex flex-col">
+    <div ref={containerRef} className="min-h-dvh bg-background flex flex-col">
       <CommandPalette />
       <CommandHint />
       <DashboardHeader onTickerChange={handleTickerChange} />
 
       
-      <main className="container mx-auto px-4 pt-20 flex-1 pb-20 md:pb-0">
+      <main className="container mx-auto px-4 pt-20 flex-1 pb-24 md:pb-0">
         {isMobile && <PullToRefreshIndicator pullDistance={pullDistance} isRefreshing={isPullRefreshing} />}
-
-        {/* Welcome Section — only on dashboard home */}
-        {isHomePage && (
-          <div className="py-4 md:py-6 animate-fade-in">
-            <div className="flex flex-col items-center text-center mb-4 md:mb-6">
-              <div className="flex items-center gap-2 md:gap-3 mb-2">
-                <div className="p-2 md:p-2.5 bg-gradient-to-r from-primary to-accent rounded-xl shadow-lg shadow-primary/20 animate-pulse-glow">
-                  <Sparkles className="h-4 w-4 md:h-5 md:w-5 text-primary-foreground" />
-                </div>
-                <h1 className="text-2xl md:text-4xl font-display font-bold tracking-tight text-foreground">
-                  Welcome back{user.user_metadata?.full_name ? `, ${user.user_metadata.full_name.split(' ')[0]}` : ''}
-                </h1>
-              </div>
-              <p className="text-muted-foreground max-w-lg text-sm md:text-base hidden md:block">
-                Your AI-powered PSX dashboard for portfolio tracking, market analysis, and intelligent insights
-              </p>
-            </div>
-          </div>
-        )}
 
         {/* Search Hero — z-40 so its dropdown sits above the z-20 nav */}
         {showSearch && (
@@ -183,9 +164,13 @@ export const DashboardLayout = ({
           </div>
         )}
 
-        {/* Market Overview pill */}
+        {/* Market Overview pill — hide on mobile home (already in header, saves vertical space) */}
         {showMarketOverview && (
-          <div className="flex items-center justify-center gap-3 mb-4">
+          <div
+            className={`items-center justify-center gap-3 mb-4 ${
+              isHomePage ? 'hidden md:flex' : 'flex'
+            }`}
+          >
             <MarketOverview refreshTrigger={refreshTrigger} />
             <Button
               onClick={handleRefreshAll}
@@ -193,7 +178,7 @@ export const DashboardLayout = ({
               variant="outline"
               size="icon"
               aria-label="Refresh page"
-              className="h-10 w-10 rounded-xl glass-subtle hover:bg-primary/10 hover:border-primary/50 transition-all"
+              className="h-11 w-11 md:h-10 md:w-10 rounded-xl glass-subtle hover:bg-primary/10 hover:border-primary/50 transition-all"
             >
               <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
             </Button>
@@ -224,7 +209,10 @@ export const DashboardLayout = ({
         </div>
       </main>
 
-      <Footer />
+      {/* Footer — hidden on mobile (would sit behind fixed bottom nav) */}
+      <div className="hidden md:block">
+        <Footer />
+      </div>
     </div>
   );
 };
