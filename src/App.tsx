@@ -15,7 +15,7 @@ import NotFound from "./pages/NotFound";
 
 // Lazy-loaded dashboard pages
 const DashboardHomePage = React.lazy(() => import("./pages/dashboard/DashboardHomePage"));
-const MarketPage = React.lazy(() => import("./pages/dashboard/MarketPage"));
+
 const AIToolsPage = React.lazy(() => import("./pages/dashboard/AIToolsPage"));
 const PortfolioPage = React.lazy(() => import("./pages/dashboard/PortfolioPage"));
 const WatchlistPage = React.lazy(() => import("./pages/dashboard/WatchlistPage"));
