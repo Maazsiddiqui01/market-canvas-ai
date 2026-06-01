@@ -385,13 +385,14 @@ export const SearchHero = ({ onTickerChange, selectedTicker }: SearchHeroProps) 
       sections.stockPrices.push(titleMatch[1].replace(/<[^>]*>/g, ''));
     }
 
+    // Support both legacy (A. <strong>📈 ...) and new (📈 ...) heading formats
     const sectionPatterns = [
-      { name: 'stockPrices', pattern: /A\.\s*<strong>📈\s*Market Snapshot<\/strong>(.*?)(?=B\.|$)/s },
-      { name: 'newsInsights', pattern: /B\.\s*<strong>🔍\s*News Insights<\/strong>(.*?)(?=C\.|$)/s },
-      { name: 'technicalAnalysis', pattern: /C\.\s*<strong>📊\s*Technical Analysis<\/strong>(.*?)(?=D\.|$)/s },
-      { name: 'fundamentalAnalysis', pattern: /D\.\s*<strong>💡\s*Fundamental Analysis<\/strong>(.*?)(?=E\.|$)/s },
-      { name: 'recommendation', pattern: /E\.\s*<strong>✅\s*Recommendation<\/strong>(.*?)(?=F\.|$)/s },
-      { name: 'newsLinks', pattern: /F\.\s*<strong>🔗\s*Relevant Links<\/strong>(.*?)$/s }
+      { name: 'stockPrices', pattern: /(?:[A-F]\.\s*<strong>)?📈\s*(?:<strong>)?Market Snapshot(?:<\/strong>)?(.*?)(?=(?:[A-F]\.\s*<strong>)?(?:🔍|📊|💡|✅|🔗)|$)/s },
+      { name: 'newsInsights', pattern: /(?:[A-F]\.\s*<strong>)?🔍\s*(?:<strong>)?News Insights(?:<\/strong>)?(.*?)(?=(?:[A-F]\.\s*<strong>)?(?:📊|💡|✅|🔗)|$)/s },
+      { name: 'technicalAnalysis', pattern: /(?:[A-F]\.\s*<strong>)?📊\s*(?:<strong>)?Technical Analysis(?:<\/strong>)?(.*?)(?=(?:[A-F]\.\s*<strong>)?(?:💡|✅|🔗)|$)/s },
+      { name: 'fundamentalAnalysis', pattern: /(?:[A-F]\.\s*<strong>)?💡\s*(?:<strong>)?Fundamental Analysis(?:<\/strong>)?(.*?)(?=(?:[A-F]\.\s*<strong>)?(?:✅|🔗)|$)/s },
+      { name: 'recommendation', pattern: /(?:[A-F]\.\s*<strong>)?✅\s*(?:<strong>)?Recommendation(?:<\/strong>)?(.*?)(?=(?:[A-F]\.\s*<strong>)?🔗|$)/s },
+      { name: 'newsLinks', pattern: /(?:[A-F]\.\s*<strong>)?🔗\s*(?:<strong>)?Relevant Links(?:<\/strong>)?(.*?)$/s }
     ];
 
     sectionPatterns.forEach(({ name, pattern }) => {
@@ -464,11 +465,14 @@ export const SearchHero = ({ onTickerChange, selectedTicker }: SearchHeroProps) 
       }
     });
 
-    const conclusionMatch = htmlString.match(/F\.\s*<strong>🔗\s*Relevant Links<\/strong>.*?<br><br>(.*?)$/s);
+    const conclusionMatch = htmlString.match(/(?:[A-F]\.\s*<strong>)?🔗\s*(?:<strong>)?Relevant Links(?:<\/strong>)?.*?<br><br>(.*?)$/s);
     if (conclusionMatch) {
-      const conclusionText = conclusionMatch[1]
+      // Find the last paragraph after the links list
+      const afterLinks = conclusionMatch[1].split(/<\/a>\s*<br>/).pop() || '';
+      const conclusionText = afterLinks
         .replace(/<[^>]*>/g, '')
         .replace(/\s+/g, ' ')
+        .replace(/^-+/, '')
         .trim();
       if (conclusionText && conclusionText.length > 20) {
         sections.conclusion = conclusionText;
