@@ -42,7 +42,7 @@ const AnimatedRoutes = () => {
         
         {/* Dashboard routes - lazy loaded */}
         <Route path="/dashboard" element={<Suspense fallback={<LoadingScreen />}><DashboardHomePage /></Suspense>} />
-        <Route path="/dashboard/market" element={<Suspense fallback={<LoadingScreen />}><MarketPage /></Suspense>} />
+        <Route path="/dashboard/market" element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard/ai-tools" element={<Suspense fallback={<LoadingScreen />}><AIToolsPage /></Suspense>} />
         <Route path="/dashboard/portfolio" element={<Suspense fallback={<LoadingScreen />}><PortfolioPage /></Suspense>} />
         <Route path="/dashboard/watchlist" element={<Suspense fallback={<LoadingScreen />}><WatchlistPage /></Suspense>} />
