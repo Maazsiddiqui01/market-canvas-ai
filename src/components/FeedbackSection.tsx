@@ -17,7 +17,7 @@ const FeedbackSection = () => {
     setIsSubmitting(true);
     
     try {
-      const response = await fetch('https://n8n-maaz.duckdns.org/webhook/Get-Feedback', {
+      const response = await fetch('https://n8n.80.225.213.232.sslip.io/webhook/Get-Feedback', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

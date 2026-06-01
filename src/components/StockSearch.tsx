@@ -304,8 +304,8 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
 
       // Use KSE-100 specific webhook for KSE100 ticker
       const webhookUrl = ticker.toUpperCase() === 'KSE100' 
-        ? 'https://n8n-maaz.duckdns.org/webhook/KSE-100'
-        : 'https://n8n-maaz.duckdns.org/webhook/a1524f8c-3162-4c9d-b58c-b59cc01b0973';
+        ? 'https://n8n.80.225.213.232.sslip.io/webhook/KSE-100'
+        : 'https://n8n.80.225.213.232.sslip.io/webhook/a1524f8c-3162-4c9d-b58c-b59cc01b0973';
       
       const response = await fetch(webhookUrl, {
         method: 'POST',
