@@ -67,7 +67,11 @@ const AdminAnalyticsPage = () => {
   const checkAdmin = useCallback(async () => {
     if (!user) return;
     const { data } = await supabase.rpc('has_role', { _user_id: user.id, _role: 'admin' });
-    setIsAdmin(!!data);
+    const admin = !!data;
+    setIsAdmin(admin);
+    // Non-admins must stop "loading" so the access-denied screen renders.
+    // (fetchAnalytics early-returns for them, so it would otherwise leave loading=true forever.)
+    if (!admin) setLoading(false);
   }, [user]);
 
   const fetchAnalytics = useCallback(async () => {

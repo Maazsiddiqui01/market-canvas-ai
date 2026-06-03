@@ -11,8 +11,7 @@ import { PositionsList } from './PositionsList';
 import { PortfolioCharts } from './PortfolioCharts';
 import { PortfolioHistoryChart } from './PortfolioHistoryChart';
 import { SectorBreakdown } from './SectorBreakdown';
-import { getStockByTicker } from '@/data/stockData';
-import { 
+import {
   Briefcase, Plus, Trash2, TrendingUp, TrendingDown, DollarSign, 
   PieChart, RefreshCw, ChevronDown, ChevronRight, Loader2, Activity
 } from 'lucide-react';
@@ -144,13 +143,21 @@ export const PortfolioManager = () => {
   };
 
   const fetchSectorInfo = async () => {
-    const sectors: Record<string, string> = {};
-    for (const h of holdings) {
-      const stock = await getStockByTicker(h.ticker);
-      if (stock?.sector) {
-        sectors[h.ticker] = stock.sector;
-      }
+    const tickers = [...new Set(holdings.map(h => h.ticker))];
+    if (tickers.length === 0) return;
+    // Single batched lookup instead of one query per holding (was an N+1).
+    const { data, error } = await supabase
+      .from('Stocks' as any)
+      .select('symbol, sector')
+      .in('symbol', tickers);
+    if (error) {
+      console.error('Error fetching sectors:', error);
+      return;
     }
+    const sectors: Record<string, string> = {};
+    ((data as any[]) ?? []).forEach((s) => {
+      if (s?.sector) sectors[s.symbol] = s.sector;
+    });
     setStockSectors(sectors);
   };
 
@@ -176,17 +183,27 @@ export const PortfolioManager = () => {
     }
   }, [holdings]);
 
-  // Fetch prices on initial load and auto-refresh every 30 seconds
+  // Fetch prices on initial load and auto-refresh every 30 seconds.
+  // Pause polling while the tab is hidden and refresh when it becomes visible
+  // again — avoids hammering the upstream price webhook from backgrounded tabs.
   useEffect(() => {
     if (holdings.length === 0) return;
 
     fetchPrices();
 
     const intervalId = setInterval(() => {
-      fetchPrices();
+      if (document.visibilityState === 'visible') fetchPrices();
     }, 30000);
 
-    return () => clearInterval(intervalId);
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') fetchPrices();
+    };
+    document.addEventListener('visibilitychange', onVisible);
+
+    return () => {
+      clearInterval(intervalId);
+      document.removeEventListener('visibilitychange', onVisible);
+    };
   }, [holdings, fetchPrices]);
 
   const createPortfolio = async () => {
@@ -275,6 +292,10 @@ export const PortfolioManager = () => {
     const holding = holdings.find(h => h.id === holdingId);
     if (holding) {
       const newTotalShares = holding.shares + shares;
+      if (newTotalShares <= 0) {
+        toast({ title: 'Invalid', description: 'Total share count must be greater than zero.', variant: 'destructive' });
+        return;
+      }
       const currentCost = holding.shares * (holding.avg_buy_price || 0);
       const newCost = shares * buyPrice;
       const newAvgPrice = (currentCost + newCost) / newTotalShares;

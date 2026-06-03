@@ -59,11 +59,17 @@ export const StockComparison = () => {
     setResult(null);
 
     try {
-      const { data, error } = await supabase.functions.invoke('compare-stocks', {
-        body: { tickers: validTickers }
-      });
+      const { data, error } = await Promise.race([
+        supabase.functions.invoke('compare-stocks', { body: { tickers: validTickers } }),
+        new Promise<{ data: any; error: Error }>((resolve) =>
+          setTimeout(() => resolve({ data: null, error: new Error('The comparison timed out. Please try again.') }), 45000)
+        ),
+      ]);
 
       if (error) throw error;
+      if (!data || !data.comparison) {
+        throw new Error(data?.error || 'No comparison returned.');
+      }
 
       setResult(data);
       logActivity({ activityType: 'comparison', description: `Compared ${validTickers.join(' vs ')}`, data: { tickers: validTickers } as any });

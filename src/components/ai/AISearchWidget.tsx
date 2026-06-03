@@ -84,15 +84,22 @@ export const AISearchWidget = forwardRef<AISearchWidgetRef, AISearchWidgetProps>
           }
         }
 
-        // Call AI search edge function
-        const { data, error } = await supabase.functions.invoke('ai-search', {
-          body: { query: searchQuery, type },
-        });
+        // Call AI search edge function, with a client-side timeout so a hung
+        // backend surfaces an error instead of an infinite skeleton.
+        const { data, error } = await Promise.race([
+          supabase.functions.invoke('ai-search', { body: { query: searchQuery, type } }),
+          new Promise<{ data: any; error: Error }>((resolve) =>
+            setTimeout(() => resolve({ data: null, error: new Error('The search timed out. Please try again.') }), 45000)
+          ),
+        ]);
 
         if (error) throw error;
+        if (!data || (!data.answer && !data.content)) {
+          throw new Error(data?.error || 'No results returned.');
+        }
 
         setResult({
-          answer: data.answer || data.content || 'No results found.',
+          answer: data.answer || data.content,
           citations: data.citations || [],
           ticker: data.ticker,
         });

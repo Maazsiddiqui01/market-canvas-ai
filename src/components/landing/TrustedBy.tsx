@@ -15,7 +15,7 @@ const TrustedBy = () => {
     <ScrollReveal>
       <div className="py-12 border-y border-border/30 bg-card/50 dark:bg-transparent">
         <p className="text-center text-sm text-muted-foreground mb-8 uppercase tracking-widest font-medium">
-          Trusted by traders at leading institutions
+          Covering Pakistan's leading listed companies
         </p>
         <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16">
           {companies.map((company) => (

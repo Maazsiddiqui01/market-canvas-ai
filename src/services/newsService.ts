@@ -57,10 +57,15 @@ export const fetchPSXNews = async (): Promise<NewsItem[]> => {
     }
 
     const newsData = await response.json();
-    
+
+    // n8n may return a bare array, or wrap it as { data: [...] } / { items: [...] }.
+    const items: any[] = Array.isArray(newsData)
+      ? newsData
+      : (newsData?.data ?? newsData?.items ?? []);
+
     // Parse and format the response to match NewsItem interface
     // Return all news items for search and filtering
-    const formattedNews: NewsItem[] = newsData.map((item: any) => ({
+    const formattedNews: NewsItem[] = items.map((item: any) => ({
       title: item.title || item.headline || 'Market Update',
       time: item.time || item.publishedAt || 'Recently',
       source: item.source || item.publisher || 'Market News',

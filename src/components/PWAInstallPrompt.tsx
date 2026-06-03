@@ -94,7 +94,7 @@ export const PWAInstallPrompt = () => {
                 </Button>
               </div>
             </div>
-            <button onClick={handleDismiss} className="text-muted-foreground hover:text-foreground transition-colors shrink-0">
+            <button onClick={handleDismiss} aria-label="Dismiss install prompt" className="text-muted-foreground hover:text-foreground transition-colors shrink-0">
               <X className="h-4 w-4" />
             </button>
           </div>
