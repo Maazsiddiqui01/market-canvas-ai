@@ -4,7 +4,6 @@ import DashboardHeader from '../components/DashboardHeader';
 import HeroSection from '../components/HeroSection';
 import Footer from '../components/Footer';
 import TrustedBy from '../components/landing/TrustedBy';
-import TestimonialSection from '../components/landing/TestimonialSection';
 import CTASection from '../components/landing/CTASection';
 import FeaturesSection from '../components/landing/FeaturesSection';
 import AnimatedCounter from '../components/landing/AnimatedCounter';
@@ -31,9 +30,9 @@ const Index = () => {
           <ScrollReveal>
             <section className="py-16 px-4 border-y border-border/30 bg-card/50 dark:bg-card/20">
               <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
-                <AnimatedCounter end={10000} suffix="+" label="Active Traders" />
-                <AnimatedCounter end={500} suffix="+" label="PSX Stocks" />
-                <AnimatedCounter end={99} suffix=".9%" label="Uptime" />
+                <AnimatedCounter end={450} suffix="+" label="PSX Stocks Covered" />
+                <AnimatedCounter end={2} suffix="" label="Markets (PSX + US)" />
+                <AnimatedCounter end={100} suffix="%" label="Sharia-Screened" />
                 <AnimatedCounter end={24} suffix="/7" label="AI Monitoring" />
               </div>
             </section>
@@ -44,9 +43,6 @@ const Index = () => {
           
           {/* Trusted By Section */}
           <TrustedBy />
-          
-          {/* Testimonials */}
-          <TestimonialSection />
           
           {/* CTA Section */}
           <CTASection />

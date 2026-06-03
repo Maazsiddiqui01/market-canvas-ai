@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Home, Brain, Briefcase, Eye, Bell, Newspaper, Settings, History, MoreHorizontal, PieChart } from 'lucide-react';
+import { Home, Brain, Briefcase, Eye, Bell, Newspaper, Settings, History, MoreHorizontal, PieChart, Sparkles } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { useAuth } from '@/contexts/AuthContext';
@@ -10,6 +10,7 @@ const analyticsSection = { id: 'analytics', icon: PieChart, title: 'Analytics', 
 const baseAllSections = [
   { id: 'home', icon: Home, title: 'Home', description: 'Dashboard Overview' },
   { id: 'ai-search', icon: Brain, title: 'AI Tools', description: 'AI Stock Research' },
+  { id: 'recommendations', icon: Sparkles, title: 'Picks', description: "Today's Picks" },
   { id: 'portfolio', icon: Briefcase, title: 'Portfolio', description: 'Track Holdings' },
   { id: 'watchlist', icon: Eye, title: 'Watchlist', description: 'Monitor Stocks' },
   { id: 'alerts', icon: Bell, title: 'Alerts', description: 'Price Notifications' },
@@ -38,7 +39,7 @@ function useAllSections() {
 /** Desktop inline pill nav, intended to live inside the top header. */
 export const DesktopNavPill = ({ activeTab, onTabChange }: NavigationGuideProps) => {
   const allSections = useAllSections();
-  const groupMarkets = allSections.filter(s => ['home', 'ai-search', 'news'].includes(s.id));
+  const groupMarkets = allSections.filter(s => ['home', 'ai-search', 'recommendations', 'news'].includes(s.id));
   const groupMine = allSections.filter(s => ['portfolio', 'watchlist', 'alerts', 'history'].includes(s.id));
   const groupTools = allSections.filter(s => ['tools', 'analytics'].includes(s.id));
 

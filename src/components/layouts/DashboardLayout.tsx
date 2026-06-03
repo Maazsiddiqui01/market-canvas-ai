@@ -85,6 +85,7 @@ export const DashboardLayout = ({
     if (path === '/dashboard') return 'home';
     
     if (path === '/dashboard/ai-tools') return 'ai-search';
+    if (path === '/dashboard/recommendations') return 'recommendations';
     if (path === '/dashboard/portfolio') return 'portfolio';
     if (path === '/dashboard/watchlist') return 'watchlist';
     if (path === '/dashboard/alerts') return 'alerts';
@@ -100,6 +101,7 @@ export const DashboardLayout = ({
       'home': '/dashboard',
       
       'ai-search': '/dashboard/ai-tools',
+      'recommendations': '/dashboard/recommendations',
       'portfolio': '/dashboard/portfolio',
       'watchlist': '/dashboard/watchlist',
       'alerts': '/dashboard/alerts',

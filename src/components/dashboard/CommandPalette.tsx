@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/command';
 import {
   Home,
-  
+  Sparkles,
   Brain,
   Briefcase,
   Eye,
@@ -26,6 +26,7 @@ import { supabase } from '@/integrations/supabase/client';
 const routes = [
   { label: 'Market & AI Search', path: '/dashboard', icon: Home, group: 'Navigate' },
   { label: 'AI Tools', path: '/dashboard/ai-tools', icon: Brain, group: 'Navigate' },
+  { label: "Today's Picks", path: '/dashboard/recommendations', icon: Sparkles, group: 'Navigate' },
   { label: 'Portfolio', path: '/dashboard/portfolio', icon: Briefcase, group: 'Navigate' },
   { label: 'Watchlist', path: '/dashboard/watchlist', icon: Eye, group: 'Navigate' },
   { label: 'Price Alerts', path: '/dashboard/alerts', icon: Bell, group: 'Navigate' },
@@ -62,12 +63,18 @@ export const CommandPalette = () => {
       return;
     }
     const handle = setTimeout(async () => {
-      const { data } = await supabase
-        .from('stocks' as any)
-        .select('ticker, company')
-        .or(`ticker.ilike.%${query}%,company.ilike.%${query}%`)
+      // Live table is `Stocks` (capital S) with columns symbol/name — not `stocks`/ticker/company.
+      const { data, error } = await supabase
+        .from('Stocks' as any)
+        .select('symbol, name')
+        .or(`symbol.ilike.%${query}%,name.ilike.%${query}%`)
         .limit(6);
-      setStocks((data as any) ?? []);
+      if (error) {
+        console.error('CommandPalette stock search failed:', error);
+        setStocks([]);
+        return;
+      }
+      setStocks(((data as any[]) ?? []).map((s) => ({ ticker: s.symbol, company: s.name })));
     }, 150);
     return () => clearTimeout(handle);
   }, [query]);

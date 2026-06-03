@@ -30,17 +30,16 @@ export const useActivityLog = () => {
   }: LogActivityParams) => {
     if (!user) return;
 
-    try {
-      await supabase.from('user_activity_log').insert([{
-        user_id: user.id,
-        activity_type: activityType,
-        description,
-        ticker: ticker || null,
-        activity_data: data ?? {},
-      }]);
-    } catch (error) {
-      console.error('Failed to log activity:', error);
-    }
+    // supabase-js resolves with { error } rather than throwing, so a try/catch
+    // here is dead code — check the returned error explicitly.
+    const { error } = await supabase.from('user_activity_log').insert([{
+      user_id: user.id,
+      activity_type: activityType,
+      description,
+      ticker: ticker || null,
+      activity_data: data ?? {},
+    }]);
+    if (error) console.error('Failed to log activity:', error);
   }, [user]);
 
   return { logActivity };

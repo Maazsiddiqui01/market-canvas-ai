@@ -27,7 +27,11 @@ const HistoryPage = React.lazy(() => import("./pages/dashboard/HistoryPage"));
 const AdminAnalyticsPage = React.lazy(() => import("./pages/dashboard/AdminAnalyticsPage"));
 const RecommendationsPage = React.lazy(() => import("./pages/dashboard/RecommendationsPage"));
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: { staleTime: 60_000, retry: 1, refetchOnWindowFocus: false },
+  },
+});
 
 const PageTracker = () => {
   usePageTracking();
