@@ -6,89 +6,83 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+const json = (body: unknown, status = 200) =>
+  new Response(JSON.stringify(body), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+
 serve(async (req) => {
-  // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { user_id, webhook_url } = await req.json();
-    
-    console.log('Checking alerts for user:', user_id);
+    // --- Auth: identify the caller from their JWT. Never trust a body `user_id`
+    //     (doing so was an IDOR — any UUID could read another user's alerts). ---
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) return json({ error: 'Unauthorized' }, 401);
 
-    // Initialize Supabase client
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    const authClient = createClient(
+      Deno.env.get('SUPABASE_URL')!,
+      Deno.env.get('SUPABASE_ANON_KEY')!,
+      { global: { headers: { Authorization: authHeader } } },
+    );
+    const { data: { user }, error: authError } = await authClient.auth.getUser();
+    if (authError || !user) return json({ error: 'Unauthorized' }, 401);
+    const userId = user.id;
 
-    // Fetch active (non-triggered) alerts for the user
+    // Service-role client for the actual work (RLS-bypassing, but now strictly scoped
+    // to the JWT-derived userId).
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL')!,
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
+    );
+
     const { data: alerts, error: alertsError } = await supabase
       .from('price_alerts')
       .select('*')
-      .eq('user_id', user_id)
+      .eq('user_id', userId)
       .eq('is_triggered', false);
 
-    if (alertsError) {
-      console.error('Error fetching alerts:', alertsError);
-      throw alertsError;
-    }
+    if (alertsError) throw alertsError;
 
     if (!alerts || alerts.length === 0) {
-      console.log('No active alerts found');
-      return new Response(JSON.stringify({ 
-        message: 'No active alerts to check',
-        checked: 0 
-      }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      return json({ message: 'No active alerts to check', checked: 0 });
     }
 
-    console.log(`Found ${alerts.length} active alerts`);
-
-    // If webhook URL is provided, call n8n to check prices
-    if (webhook_url) {
-      console.log('Calling n8n webhook:', webhook_url);
-      
-      const tickers = [...new Set(alerts.map(a => a.ticker))];
-      
-      const webhookResponse = await fetch(webhook_url, {
+    // The n8n price-check webhook URL comes from server config ONLY — never from the
+    // request body (a client-supplied fetch target is an SSRF vector).
+    const webhookUrl = Deno.env.get('N8N_ALERT_WEBHOOK');
+    if (webhookUrl) {
+      const tickers = [...new Set(alerts.map((a) => a.ticker))];
+      const webhookResponse = await fetch(webhookUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           tickers,
-          alerts: alerts.map(a => ({
+          alerts: alerts.map((a) => ({
             id: a.id,
             ticker: a.ticker,
             target_price: a.target_price,
-            alert_type: a.alert_type
-          }))
-        })
+            alert_type: a.alert_type,
+          })),
+        }),
       });
 
       if (webhookResponse.ok) {
         const webhookData = await webhookResponse.json();
-        console.log('n8n webhook response:', webhookData);
-
-        // If n8n returns triggered alerts, update them
-        if (webhookData.triggered_alerts && Array.isArray(webhookData.triggered_alerts)) {
+        if (Array.isArray(webhookData.triggered_alerts) && webhookData.triggered_alerts.length > 0) {
           for (const alertId of webhookData.triggered_alerts) {
+            // Re-scope every update to this user so a rogue webhook response can't
+            // flip arbitrary users' alerts.
             await supabase
               .from('price_alerts')
-              .update({ 
-                is_triggered: true, 
-                triggered_at: new Date().toISOString(),
-                n8n_notified: true
-              })
-              .eq('id', alertId);
+              .update({ is_triggered: true, triggered_at: new Date().toISOString(), n8n_notified: true })
+              .eq('id', alertId)
+              .eq('user_id', userId);
           }
-          
-          return new Response(JSON.stringify({ 
+          return json({
             message: `${webhookData.triggered_alerts.length} alerts triggered!`,
             triggered: webhookData.triggered_alerts.length,
-            checked: alerts.length
-          }), {
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            checked: alerts.length,
           });
         }
       } else {
@@ -96,19 +90,13 @@ serve(async (req) => {
       }
     }
 
-    return new Response(JSON.stringify({ 
-      message: `Checked ${alerts.length} alerts. Configure n8n webhook for price checking.`,
+    return json({
+      message: `Checked ${alerts.length} alerts.`,
       checked: alerts.length,
-      alerts: alerts.map(a => ({ ticker: a.ticker, target: a.target_price, type: a.alert_type }))
-    }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      alerts: alerts.map((a) => ({ ticker: a.ticker, target: a.target_price, type: a.alert_type })),
     });
-
   } catch (error) {
     console.error('Error in check-alerts:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    return json({ error: error instanceof Error ? error.message : 'Unknown error' }, 500);
   }
 });
