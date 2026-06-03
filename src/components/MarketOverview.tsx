@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { TrendingUp, TrendingDown, Activity } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { TrendingUp, TrendingDown, Activity, RefreshCw } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 interface KSEData {
@@ -8,41 +8,37 @@ interface KSEData {
   kse100_change_absolute: string;
 }
 
-interface MarketData {
-  kse100_close?: string;
-  kse100_change_percent?: string;
-  kse100_change_absolute?: string;
-}
-
 interface MarketOverviewProps {
   refreshTrigger?: number;
 }
 
+const WRAP =
+  'inline-flex flex-wrap items-center justify-center gap-2 md:gap-4 px-4 md:px-6 py-2 md:py-3 bg-card/50 backdrop-blur-xl rounded-2xl border border-border/50 shadow-lg transition-all duration-300 animate-fade-in';
+
 const MarketOverview = ({ refreshTrigger }: MarketOverviewProps) => {
-  const [marketData, setMarketData] = useState<MarketData>({});
-  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<KSEData | null>(null);
+  const [status, setStatus] = useState<'loading' | 'live' | 'error'>('loading');
 
   const fetchMarketData = async () => {
-    setLoading(true);
+    setStatus('loading');
     try {
       const response = await fetch('https://n8n.80.225.213.232.sslip.io/webhook/KSE-100', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ticker: 'KSE100',
-          timestamp: new Date().toISOString()
-        })
+        body: JSON.stringify({ ticker: 'KSE100', timestamp: new Date().toISOString() }),
       });
-      if (response.ok) {
-        const data: KSEData[] = await response.json();
-        if (data && data.length > 0) {
-          setMarketData(data[0]);
-        }
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const json = await response.json();
+      const row: KSEData | undefined = Array.isArray(json) ? json[0] : undefined;
+      if (row && row.kse100_close) {
+        setData(row);
+        setStatus('live');
+      } else {
+        throw new Error('empty payload');
       }
     } catch (error) {
       console.error('Failed to fetch market data:', error);
-    } finally {
-      setLoading(false);
+      setStatus('error');
     }
   };
 
@@ -50,49 +46,48 @@ const MarketOverview = ({ refreshTrigger }: MarketOverviewProps) => {
     fetchMarketData();
   }, [refreshTrigger]);
 
-  const isPositiveChange = (value: string) => {
-    return !value.startsWith('-');
-  };
+  // Never show invented numbers: render explicit loading / unavailable states instead.
+  if (status !== 'live' || !data) {
+    return (
+      <div className={WRAP}>
+        <span className="text-xs md:text-sm font-medium text-muted-foreground">KSE-100</span>
+        {status === 'error' ? (
+          <button
+            onClick={fetchMarketData}
+            className="flex items-center gap-1 text-xs md:text-sm text-primary hover:underline"
+          >
+            <RefreshCw className="h-3 w-3" /> data unavailable — retry
+          </button>
+        ) : (
+          <span className="text-xs md:text-sm text-muted-foreground animate-pulse">Loading…</span>
+        )}
+      </div>
+    );
+  }
 
-  const kseData = {
-    name: 'KSE-100',
-    value: marketData.kse100_close || '79,843.25',
-    change: marketData.kse100_change_absolute 
-      ? `${isPositiveChange(marketData.kse100_change_absolute) ? '+' : ''}${marketData.kse100_change_absolute}` 
-      : '+423.67',
-    changePercent: marketData.kse100_change_percent 
-      ? `${isPositiveChange(marketData.kse100_change_percent) ? '+' : ''}${marketData.kse100_change_percent}` 
-      : '+0.53%',
-    isPositive: marketData.kse100_change_absolute ? isPositiveChange(marketData.kse100_change_absolute) : true
-  };
+  const isPositive = !data.kse100_change_absolute.startsWith('-');
+  const sign = isPositive ? '+' : '';
 
   return (
-    <div className="inline-flex flex-wrap items-center justify-center gap-2 md:gap-4 px-4 md:px-6 py-2 md:py-3 bg-card/50 backdrop-blur-xl rounded-2xl border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 animate-fade-in">
-      {/* Live Badge */}
+    <div className={WRAP}>
       <Badge variant="secondary" className="flex items-center gap-1.5 bg-up/10 text-up border-up/20">
         <Activity className="h-3 w-3 animate-pulse" />
         Live
       </Badge>
-      
-      {/* Index Name */}
-      <span className="text-xs md:text-sm font-medium text-muted-foreground">{kseData.name}</span>
-      
-      {/* Value */}
-      <span className="text-base md:text-xl font-bold text-foreground">{kseData.value}</span>
-      
-      {/* Change */}
-      <div className={`flex items-center gap-1 md:gap-1.5 px-2 md:px-3 py-1 rounded-lg ${
-        kseData.isPositive 
-          ? 'bg-up/10 text-up' 
-          : 'bg-down/10 text-down'
-      }`}>
-        {kseData.isPositive ? (
+      <span className="text-xs md:text-sm font-medium text-muted-foreground">KSE-100</span>
+      <span className="text-base md:text-xl font-bold text-foreground">{data.kse100_close}</span>
+      <div
+        className={`flex items-center gap-1 md:gap-1.5 px-2 md:px-3 py-1 rounded-lg ${
+          isPositive ? 'bg-up/10 text-up' : 'bg-down/10 text-down'
+        }`}
+      >
+        {isPositive ? (
           <TrendingUp className="h-3 w-3 md:h-4 md:w-4" />
         ) : (
           <TrendingDown className="h-3 w-3 md:h-4 md:w-4" />
         )}
         <span className="text-xs md:text-sm font-semibold">
-          {kseData.change} ({kseData.changePercent})
+          {sign}{data.kse100_change_absolute} ({sign}{data.kse100_change_percent})
         </span>
       </div>
     </div>

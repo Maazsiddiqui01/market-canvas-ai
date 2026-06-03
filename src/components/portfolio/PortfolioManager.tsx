@@ -91,6 +91,7 @@ export const PortfolioManager = () => {
 
     if (error) {
       console.error('Error fetching portfolios:', error);
+      setLoading(false);
       return;
     }
 
