@@ -724,7 +724,7 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                 Filter by Sector
               </label>
               <Select value={selectedSector} onValueChange={setSelectedSector}>
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="w-full" aria-label="Filter by sector">
                   <SelectValue placeholder="All sectors" />
                 </SelectTrigger>
                 <SelectContent className="bg-popover border-border max-h-60 overflow-y-auto z-[9999]">
@@ -740,14 +740,20 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
 
             {/* Stock Search */}
             <div className="space-y-2 relative" data-search-container>
-              <label className="text-sm font-medium text-foreground flex items-center gap-2">
+              <label htmlFor="stock-search-input" className="text-sm font-medium text-foreground flex items-center gap-2">
                 <Search className="h-4 w-4" />
                 Search by Ticker or Company Name
               </label>
               <div className="relative">
                 <Input
                   ref={inputRef}
+                  id="stock-search-input"
                   type="text"
+                  role="combobox"
+                  aria-expanded={isDropdownOpen}
+                  aria-controls="stock-search-listbox"
+                  aria-autocomplete="list"
+                  aria-activedescendant={highlightedIndex >= 0 ? `stock-option-${highlightedIndex}` : undefined}
                   placeholder="Type ticker (e.g., AGTL) or company name..."
                   value={searchQuery}
                   onChange={(e) => handleInputChange(e.target.value)}
@@ -766,9 +772,12 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
 
                 {/* Suggestions Dropdown */}
                 {isDropdownOpen && (searchQuery.trim() || (!searchQuery.trim() && selectedSector !== 'all')) && (
-                  <div 
+                  <div
                     ref={dropdownRef}
                     data-suggestions-dropdown
+                    id="stock-search-listbox"
+                    role="listbox"
+                    aria-label="Stock search results"
                     className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-lg shadow-2xl z-[9999] max-h-[400px] overflow-y-auto scroll-smooth"
                     style={{ backgroundColor: 'hsl(var(--card))' }}
                   >
@@ -808,9 +817,12 @@ const StockSearch = ({ onTickerChange }: StockSearchProps) => {
                           <div
                             key={`stock-${stock.ticker}-${index}`}
                             data-stock-item
+                            id={`stock-option-${index}`}
+                            role="option"
+                            aria-selected={highlightedIndex === index}
                             className={`px-3 py-2.5 cursor-pointer border-b border-border/20 last:border-b-0 select-none transition-colors
-                              ${highlightedIndex === index 
-                                ? 'bg-primary/10' 
+                              ${highlightedIndex === index
+                                ? 'bg-primary/10'
                                 : 'hover:bg-muted/30'
                               }`}
                             onMouseDown={(e) => {

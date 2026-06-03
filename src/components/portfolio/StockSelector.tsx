@@ -101,16 +101,16 @@ export const StockSelector = ({ value, onChange, placeholder = "Search stocks...
               <p className="text-xs text-primary/70">{value.sector}</p>
             )}
           </div>
-          <Button 
+          <Button
             type="button"
-            variant="ghost" 
-            size="icon" 
+            variant="ghost"
+            size="icon"
             aria-label="Clear selected stock"
-            className="h-6 w-6"
+            className="h-9 w-9"
             onClick={clearSelection}
             disabled={disabled}
           >
-            <X className="h-3 w-3" />
+            <X className="h-4 w-4" />
           </Button>
         </div>
       ) : (
