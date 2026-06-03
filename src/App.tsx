@@ -25,6 +25,7 @@ const NewsPage = React.lazy(() => import("./pages/dashboard/NewsPage"));
 const ToolsPage = React.lazy(() => import("./pages/dashboard/ToolsPage"));
 const HistoryPage = React.lazy(() => import("./pages/dashboard/HistoryPage"));
 const AdminAnalyticsPage = React.lazy(() => import("./pages/dashboard/AdminAnalyticsPage"));
+const RecommendationsPage = React.lazy(() => import("./pages/dashboard/RecommendationsPage"));
 
 const queryClient = new QueryClient();
 
@@ -40,19 +41,20 @@ const AnimatedRoutes = () => {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Index />} />
         <Route path="/auth" element={<Auth />} />
-        
+
         {/* Dashboard routes - lazy loaded */}
         <Route path="/dashboard" element={<Suspense fallback={<LoadingScreen />}><DashboardHomePage /></Suspense>} />
-        
+
         <Route path="/dashboard/ai-tools" element={<Suspense fallback={<LoadingScreen />}><AIToolsPage /></Suspense>} />
         <Route path="/dashboard/portfolio" element={<Suspense fallback={<LoadingScreen />}><PortfolioPage /></Suspense>} />
         <Route path="/dashboard/watchlist" element={<Suspense fallback={<LoadingScreen />}><WatchlistPage /></Suspense>} />
         <Route path="/dashboard/alerts" element={<Suspense fallback={<LoadingScreen />}><AlertsPage /></Suspense>} />
         <Route path="/dashboard/news" element={<Suspense fallback={<LoadingScreen />}><NewsPage /></Suspense>} />
+        <Route path="/dashboard/recommendations" element={<Suspense fallback={<LoadingScreen />}><RecommendationsPage /></Suspense>} />
         <Route path="/dashboard/tools" element={<Suspense fallback={<LoadingScreen />}><ToolsPage /></Suspense>} />
         <Route path="/dashboard/history" element={<Suspense fallback={<LoadingScreen />}><HistoryPage /></Suspense>} />
         <Route path="/dashboard/analytics" element={<Suspense fallback={<LoadingScreen />}><AdminAnalyticsPage /></Suspense>} />
-        
+
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>

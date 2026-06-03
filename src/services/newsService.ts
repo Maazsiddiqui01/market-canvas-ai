@@ -69,10 +69,8 @@ export const fetchPSXNews = async (): Promise<NewsItem[]> => {
       description: item.content || item.title || item.headline || 'News Update'
     }));
 
-    // Shuffle array to mix sources instead of grouping by source
-    const shuffledNews = formattedNews.sort(() => Math.random() - 0.5);
-
-    return shuffledNews;
+    // Preserve source order (newest-first as returned by the feed); no random shuffle.
+    return formattedNews;
   } catch (error) {
     console.warn('News webhook unavailable, using fallback data:', error instanceof Error ? error.message : 'Unknown error');
     
@@ -120,7 +118,6 @@ export const fetchPSXNews = async (): Promise<NewsItem[]> => {
       }
     ];
 
-    // Shuffle mock data as well
-    return mockNews.sort(() => Math.random() - 0.5);
+    return mockNews;
   }
 };

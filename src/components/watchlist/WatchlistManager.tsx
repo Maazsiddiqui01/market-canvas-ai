@@ -38,6 +38,7 @@ export const WatchlistManager = () => {
 
     if (error) {
       console.error('Error fetching watchlist:', error);
+      setLoading(false);
       return;
     }
 
