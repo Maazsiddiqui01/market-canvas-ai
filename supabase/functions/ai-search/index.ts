@@ -83,6 +83,7 @@ For any stock query, structure the answer as:
 2. Recent action — what moved in the last 5 trading sessions
 3. Fundamentals — only the latest reported quarter/year, with the period clearly labeled
 4. Risks & catalysts — based on news from the last 30 days only
+5. Sharia view — likely compliance status (compliant / non-compliant / doubtful) from the company's sector + the standard screens (interest-bearing debt, non-permissible income). Label it a heuristic, not a fatwa.
 
 Be concise. Use bullet points. Do not pad with generic descriptions of the company.`;
       searchDomainFilter = ['psx.com.pk', 'dps.psx.com.pk', 'sarmaaya.pk', 'mettisglobal.news', 'businessrecorder.com', 'brecorder.com', 'dawn.com', 'tribune.com.pk', 'investing.com'];

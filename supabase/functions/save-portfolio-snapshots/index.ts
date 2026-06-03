@@ -33,6 +33,24 @@ serve(async (req) => {
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const webhookUrl = Deno.env.get('N8N_STOCK_PRICE_WEBHOOK');
 
+    // --- Auth: this batch job is redundant with the client-side snapshot upsert
+    //     (PortfolioHistoryChart), so it's safe to lock. Allow only the service-role
+    //     key (a cron) or a signed-in user; reject anonymous/anon-key callers so it
+    //     can't be used to force RLS-bypassing writes. ---
+    const authHeader = req.headers.get('Authorization') ?? '';
+    let authorized = authHeader === `Bearer ${supabaseServiceKey}`;
+    if (!authorized) {
+      const { data: { user } } = await createClient(
+        supabaseUrl,
+        Deno.env.get('SUPABASE_ANON_KEY')!,
+        { global: { headers: { Authorization: authHeader } } },
+      ).auth.getUser();
+      authorized = !!user;
+    }
+    if (!authorized) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // Get all portfolios
