@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -11,7 +12,26 @@ serve(async (req) => {
   }
 
   try {
-    const { query, type } = await req.json();
+    // --- Auth: require a signed-in user (was open -> unbounded Perplexity spend +
+    //     prompt-injection on the owner's key). ---
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    const authClient = createClient(
+      Deno.env.get('SUPABASE_URL')!,
+      Deno.env.get('SUPABASE_ANON_KEY')!,
+      { global: { headers: { Authorization: authHeader } } },
+    );
+    const { data: { user }, error: authError } = await authClient.auth.getUser();
+    if (authError || !user) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+
+    const body = await req.json();
+    const type = body?.type;
+    // Clamp length to bound token cost and shrink the prompt-injection surface.
+    const query = String(body?.query ?? '').slice(0, 500);
     const PERPLEXITY_API_KEY = Deno.env.get('PERPLEXITY_API_KEY');
 
     if (!PERPLEXITY_API_KEY) {
