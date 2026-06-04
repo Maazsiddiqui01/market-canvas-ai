@@ -351,7 +351,7 @@ export function RecommendationsFeed() {
   const [recs, setRecs] = useState<Rec[] | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [sig, setSig] = useState<'all' | 'buy' | 'hold' | 'sell'>('all');
-  const [days, setDays] = useState<'all' | '7' | '30'>('all');
+  const [days, setDays] = useState<'today' | '7' | '30' | 'all'>('today');
 
   useEffect(() => {
     let active = true;
