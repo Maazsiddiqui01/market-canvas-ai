@@ -391,7 +391,13 @@ export function RecommendationsFeed() {
   const filterGroups = (items: Group[]) =>
     items.filter(({ latest }) => {
       if (sig !== 'all' && SIGNAL_GROUP[latest.signal] !== sig) return false;
-      if (days !== 'all' && new Date(latest.created_at).getTime() < Date.now() - Number(days) * 86400000) return false;
+      if (days === 'today') {
+        const d = new Date(latest.created_at);
+        const now = new Date();
+        if (d.getFullYear() !== now.getFullYear() || d.getMonth() !== now.getMonth() || d.getDate() !== now.getDate()) return false;
+      } else if (days !== 'all') {
+        if (new Date(latest.created_at).getTime() < Date.now() - Number(days) * 86400000) return false;
+      }
       return true;
     });
 
