@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Home, Brain, Briefcase, Eye, Bell, Newspaper, Settings, History, MoreHorizontal, PieChart, Sparkles } from 'lucide-react';
+import { Home, Brain, Briefcase, Eye, Bell, Newspaper, Settings, History, MoreHorizontal, PieChart, Sparkles, ClipboardCheck } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { useAuth } from '@/contexts/AuthContext';
@@ -14,6 +14,7 @@ const baseAllSections = [
   { id: 'portfolio', icon: Briefcase, title: 'Portfolio', description: 'Track Holdings' },
   { id: 'watchlist', icon: Eye, title: 'Watchlist', description: 'Monitor Stocks' },
   { id: 'alerts', icon: Bell, title: 'Alerts', description: 'Price Notifications' },
+  { id: 'approvals', icon: ClipboardCheck, title: 'Approvals', description: 'Approve Agent Orders' },
   { id: 'news', icon: Newspaper, title: 'News', description: 'Market Updates' },
   { id: 'history', icon: History, title: 'History', description: 'Activity Log' },
   { id: 'tools', icon: Settings, title: 'Tools', description: 'Export & Utilities' },

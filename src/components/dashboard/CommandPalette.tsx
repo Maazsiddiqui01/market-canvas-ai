@@ -20,6 +20,7 @@ import {
   History,
   Settings,
   Search,
+  ClipboardCheck,
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -30,6 +31,7 @@ const routes = [
   { label: 'Portfolio', path: '/dashboard/portfolio', icon: Briefcase, group: 'Navigate' },
   { label: 'Watchlist', path: '/dashboard/watchlist', icon: Eye, group: 'Navigate' },
   { label: 'Price Alerts', path: '/dashboard/alerts', icon: Bell, group: 'Navigate' },
+  { label: 'Approvals', path: '/dashboard/approvals', icon: ClipboardCheck, group: 'Navigate' },
   { label: 'News', path: '/dashboard/news', icon: Newspaper, group: 'Navigate' },
   { label: 'History', path: '/dashboard/history', icon: History, group: 'Navigate' },
   { label: 'Tools & Export', path: '/dashboard/tools', icon: Settings, group: 'Navigate' },
