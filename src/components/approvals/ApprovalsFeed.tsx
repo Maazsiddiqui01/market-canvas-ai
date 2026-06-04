@@ -74,6 +74,26 @@ export function ApprovalsFeed() {
           });
           if (error) throw error;
         }
+      } else if (approve && a.side === 'SELL' && a.portfolio_id && a.qty) {
+        // SELL approval: reduce or close the holding (RLS-scoped to the owner).
+        const { data: hs, error: herr } = await supabase
+          .from('portfolio_holdings')
+          .select('id,shares')
+          .eq('portfolio_id', a.portfolio_id)
+          .eq('ticker', a.ticker)
+          .limit(1);
+        if (herr) throw herr;
+        if (hs && hs.length) {
+          const o: any = hs[0];
+          const ns = Number(o.shares) - a.qty;
+          if (ns <= 0.0001) {
+            const { error } = await supabase.from('portfolio_holdings').delete().eq('id', o.id);
+            if (error) throw error;
+          } else {
+            const { error } = await supabase.from('portfolio_holdings').update({ shares: ns }).eq('id', o.id);
+            if (error) throw error;
+          }
+        }
       }
       const { error: uerr } = await (supabase as any)
         .from('pending_actions')
@@ -82,7 +102,7 @@ export function ApprovalsFeed() {
       if (uerr) throw uerr;
       setItems((items ?? []).filter((x) => x.id !== a.id));
       toast(approve
-        ? { title: 'Approved', description: `Recorded ${a.qty ?? ''} ${a.ticker} @ ~${a.limit_price ?? ''}. Adjust in Portfolio if your real fill differed.` }
+        ? { title: 'Approved', description: `${a.side === 'SELL' ? 'Sold' : 'Recorded'} ${a.qty ?? ''} ${a.ticker}${a.limit_price ? ` @ ~${a.limit_price}` : ''}. Adjust in Portfolio if your real fill differed.` }
         : { title: 'Rejected', description: `${a.ticker} dismissed — nothing recorded.` });
     } catch (e: any) {
       toast({ title: 'Error', description: e?.message || 'Could not update the order.', variant: 'destructive' });
