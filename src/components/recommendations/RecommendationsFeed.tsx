@@ -36,6 +36,7 @@ interface Rec {
   thesis: string | null;
   sharia_status: string | null;
   data_confidence: string | null;
+  strategy: string | null;
 }
 
 type SigGroup = 'buy' | 'hold' | 'sell';
@@ -78,6 +79,15 @@ function signalStyles(signal: string) {
   };
 }
 
+/** Swing (tactical, dated catalyst) vs long-term core (compounder/dividend). */
+function strategyMeta(strategy: string | null) {
+  if (strategy === 'swing')
+    return { label: '⚡ Swing', cls: 'bg-sky-500/15 text-sky-600 dark:text-sky-400 border border-sky-500/30' };
+  if (strategy === 'long_term')
+    return { label: '⏳ Long-term', cls: 'bg-violet-500/15 text-violet-600 dark:text-violet-400 border border-violet-500/30' };
+  return null;
+}
+
 function ConvictionMeter({ value }: { value: number | null }) {
   const v = Math.max(0, Math.min(5, Math.round(value ?? 0)));
   return (
@@ -103,6 +113,7 @@ function RecCard({ r, history }: { r: Rec; history: Rec[] }) {
   const [expanded, setExpanded] = useState(false);
   const s = signalStyles(r.signal);
   const SignalIcon = s.icon;
+  const strat = strategyMeta(r.strategy);
 
   const upside =
     r.current_price != null && r.target_price != null && r.current_price > 0
@@ -150,11 +161,18 @@ function RecCard({ r, history }: { r: Rec; history: Rec[] }) {
       {/* Conviction + horizon */}
       <div className="mt-4 flex items-center justify-between gap-3">
         <ConvictionMeter value={r.conviction} />
-        {r.horizon && (
-          <span className="rounded-full bg-muted/70 px-2 py-0.5 text-[10px] uppercase tracking-wider text-muted-foreground">
-            {r.horizon}
-          </span>
-        )}
+        <div className="flex items-center gap-1.5">
+          {strat && (
+            <span className={cn('rounded-full px-2 py-0.5 text-[10px] font-medium', strat.cls)}>
+              {strat.label}
+            </span>
+          )}
+          {r.horizon && (
+            <span className="rounded-full bg-muted/70 px-2 py-0.5 text-[10px] uppercase tracking-wider text-muted-foreground">
+              {r.horizon}
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Price row */}
@@ -280,6 +298,12 @@ const FILTERS: { key: 'all' | 'buy' | 'hold' | 'sell'; label: string }[] = [
   { key: 'sell', label: 'Sell' },
 ];
 
+const STRAT_FILTERS: { key: 'all' | 'swing' | 'long_term'; label: string }[] = [
+  { key: 'all', label: 'Any' },
+  { key: 'swing', label: '⚡ Swing' },
+  { key: 'long_term', label: '⏳ Long-term' },
+];
+
 function StatTile({
   label,
   value,
@@ -351,6 +375,7 @@ export function RecommendationsFeed() {
   const [recs, setRecs] = useState<Rec[] | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [sig, setSig] = useState<'all' | 'buy' | 'hold' | 'sell'>('all');
+  const [stratFilter, setStratFilter] = useState<'all' | 'swing' | 'long_term'>('all');
   const [days, setDays] = useState<'today' | '7' | '30' | 'all'>('today');
 
   useEffect(() => {
@@ -391,6 +416,7 @@ export function RecommendationsFeed() {
   const filterGroups = (items: Group[]) =>
     items.filter(({ latest }) => {
       if (sig !== 'all' && SIGNAL_GROUP[latest.signal] !== sig) return false;
+      if (stratFilter !== 'all' && (latest.strategy ?? '') !== stratFilter) return false;
       if (days === 'today') {
         const d = new Date(latest.created_at);
         const now = new Date();
@@ -426,6 +452,19 @@ export function RecommendationsFeed() {
             size="sm"
             variant={sig === f.key ? 'default' : 'ghost'}
             onClick={() => setSig(f.key)}
+            className="h-7 rounded-full px-3 text-xs"
+          >
+            {f.label}
+          </Button>
+        ))}
+      </div>
+      <div className="flex gap-0.5 rounded-full bg-muted/50 p-1">
+        {STRAT_FILTERS.map((f) => (
+          <Button
+            key={f.key}
+            size="sm"
+            variant={stratFilter === f.key ? 'default' : 'ghost'}
+            onClick={() => setStratFilter(f.key)}
             className="h-7 rounded-full px-3 text-xs"
           >
             {f.label}
