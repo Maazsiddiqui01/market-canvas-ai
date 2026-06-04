@@ -1,37 +1,39 @@
-## Goal
+# Plan
 
-Reclaim vertical space by merging the navigation into the top header on desktop, and make the mobile experience feel like a native app with a fixed bottom tab bar.
+## 1. Fix News "Show All" scroll UX (`src/components/NewsWidget.tsx`)
 
-## Desktop changes
+Problem: when expanded, `ScrollArea` is fixed at `h-80`, which on desktop looks like the card *shrinks*, and the Radix scrollbar only appears on hover, so users don't know it's scrollable.
 
-**`DashboardHeader.tsx`** — turn the header into a single row: `[Logo] [Inline nav groups: Markets · My Stuff · Tools] [⌘K search] [Theme] [Avatar]`.
-- Move the grouped pill nav (Markets / My Stuff / Tools) from `NavigationGuide` into the header center, using the same glass pill styling so it looks intentional.
-- Header stays `fixed top-0`. On scroll, shrink padding (`py-3 → py-2`) and logo, but keep nav visible — this is the "sticks slightly so we can see" behavior the user asked for.
-- Drop the separate sticky `NavigationGuide` row on desktop entirely → saves ~56px of vertical space.
+Changes:
+- Remove the fixed `h-80` ScrollArea wrapper when expanded. Instead, render **all** filtered items in the natural flow so the page itself scrolls (no clipped inner panel). Keeps "Show Less" to collapse back to 5.
+- For the search-results case (which can be long), use a responsive max-height (`max-h-[70vh]`) only on `md+`, full flow on mobile.
+- Replace `ScrollArea` with a native scroll container that uses our themed scrollbar (already defined globally in `index.css`) so the scrollbar is always visible when content overflows — works identically light/dark.
+- Add a subtle bottom fade + a small "↓ more" hint that disappears once user scrolls, so it's obvious there's more content.
 
-**`NavigationGuide.tsx`** — desktop branch becomes a small exported `<DesktopNavPill activeTab onTabChange />` consumed by the header. Mobile branch is rewritten (below).
+## 2. Redesign Recommendations page (`src/components/recommendations/RecommendationsFeed.tsx` + `src/pages/dashboard/RecommendationsPage.tsx`)
 
-**`DashboardLayout.tsx`** — remove the desktop `<NavigationGuide>` render from the main content area; pass `activeTab` / `handleTabChange` into `DashboardHeader` instead. Reduce `pt-20` accordingly.
+Goal: turn the current flat list into a visual masterpiece while staying inside Tailwind + design tokens (dark red / light blue dual theme).
 
-## Mobile changes (native-app feel)
+Layout:
+- Hero strip above tabs: 3 stat tiles (Total picks today, Avg conviction, Buy/Hold/Sell split as a thin segmented bar) using glass-subtle surfaces and brand gradient accents.
+- Tabs (PSX / US / All) restyled as pill segmented control, sticky on scroll.
+- Recommendation cards redesigned:
+  - Bento-style grid: `grid-cols-1 md:grid-cols-2 xl:grid-cols-3`.
+  - Each card: large ticker as display font, company subtitle, signal chip top-right with directional icon (TrendingUp/Down/Minus).
+  - Conviction shown as a 5-dot meter + numeric.
+  - Price row: Current → Target with arrow, % upside computed and color-coded.
+  - Stop-loss as a muted secondary line.
+  - Thesis truncated to 3 lines with "Read more" expand.
+  - Sharia + data-confidence as small pill badges in footer.
+  - Subtle gradient border / tint per signal using semantic tokens (no raw colors); BUY = primary/emerald glow, SELL = destructive glow, HOLD = muted.
+  - Hover: lift + shadow-elegant + ticker scale.
+- History drawer per card (kept) but redesigned as a slim timeline with date dots.
+- Empty + loading states upgraded with skeleton cards matching the new layout.
 
-**Bottom tab bar** — replace the current sticky top mobile nav with a fixed bottom tab bar, styled like the reference screenshot:
-- `fixed bottom-0 inset-x-0 z-40`, `glass-strong` background, `hairline-t`, `pb-[env(safe-area-inset-bottom)]` for iPhone home indicator.
-- 5 slots: **Home · AI · Portfolio · Watchlist · More**. Each slot = icon above label, active state shows colored icon + label + a 2px primary underline accent (matching the pink underline in the reference).
-- "More" opens the existing bottom `Sheet` with secondary items (Alerts, News, History, Tools, Analytics).
-- Min tap target 56px height, evenly distributed with `flex-1`.
+Page shell (`RecommendationsPage.tsx`): keep `PageHeader`, add a subtle decorative gradient backdrop behind the hero stats.
 
-**Mobile header** — keep slim top bar with just Logo + Theme + Avatar (no nav, no ⌘K — search lives in pages).
-
-**Layout padding** — add `pb-20` to `<main>` on mobile so content doesn't hide behind the bottom bar. Mobile `PWAInstallPrompt` and any floating elements get bumped above the tab bar.
-
-## Files touched
-
-- `src/components/DashboardHeader.tsx` — add inline desktop nav, accept `activeTab`/`onTabChange`
-- `src/components/dashboard/NavigationGuide.tsx` — export desktop pill as sub-component; rewrite mobile branch as bottom tab bar
-- `src/components/layouts/DashboardLayout.tsx` — stop rendering NavigationGuide on desktop in content flow; wire props to header; add mobile bottom padding
-- (verify) `src/components/PWAInstallPrompt.tsx` — bump above bottom bar on mobile
-
-## Out of scope
-
-n8n, Supabase, edge functions, AI search behavior, page content. Pure nav/chrome refactor.
+## Scope guardrails
+- Pure presentation: no business logic, data fetching, or schema changes.
+- All colors via semantic tokens from `index.css` / `tailwind.config.ts`. No hard-coded hex.
+- Works in both dark (black/red) and light (white/blue) themes.
+- Mobile-first; verify in mobile viewport after build.

@@ -4,7 +4,6 @@ import { Newspaper, Clock, ExternalLink, Search, ChevronDown, ChevronUp } from '
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { fetchPSXNews, NewsItem } from '@/services/newsService';
 
 interface NewsWidgetProps {
@@ -104,7 +103,7 @@ const NewsWidget = ({ refreshTrigger }: NewsWidgetProps) => {
           </div>
         )}
         
-        <ScrollArea className={isExpanded ? "h-80" : "h-auto"}>
+        <div className={isExpanded ? "max-h-[70vh] overflow-y-auto pr-1 themed-scroll" : ""}>
           <div className="space-y-3">
             {filteredNews.map((item, index) => (
               <a 
@@ -137,7 +136,7 @@ const NewsWidget = ({ refreshTrigger }: NewsWidgetProps) => {
               </a>
             ))}
           </div>
-        </ScrollArea>
+        </div>
 
         {!searchTerm && totalFilteredCount > 5 && (
           <Button
