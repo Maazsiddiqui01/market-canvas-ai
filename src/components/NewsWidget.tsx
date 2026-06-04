@@ -103,7 +103,7 @@ const NewsWidget = ({ refreshTrigger }: NewsWidgetProps) => {
           </div>
         )}
         
-        <ScrollArea className={isExpanded ? "h-80" : "h-auto"}>
+        <div className={isExpanded ? "max-h-[70vh] overflow-y-auto pr-1 themed-scroll" : ""}>
           <div className="space-y-3">
             {filteredNews.map((item, index) => (
               <a 
@@ -136,7 +136,7 @@ const NewsWidget = ({ refreshTrigger }: NewsWidgetProps) => {
               </a>
             ))}
           </div>
-        </ScrollArea>
+        </div>
 
         {!searchTerm && totalFilteredCount > 5 && (
           <Button
