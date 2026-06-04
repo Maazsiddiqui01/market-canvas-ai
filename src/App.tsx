@@ -26,6 +26,7 @@ const ToolsPage = React.lazy(() => import("./pages/dashboard/ToolsPage"));
 const HistoryPage = React.lazy(() => import("./pages/dashboard/HistoryPage"));
 const AdminAnalyticsPage = React.lazy(() => import("./pages/dashboard/AdminAnalyticsPage"));
 const RecommendationsPage = React.lazy(() => import("./pages/dashboard/RecommendationsPage"));
+const ApprovalsPage = React.lazy(() => import("./pages/dashboard/ApprovalsPage"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -55,6 +56,7 @@ const AnimatedRoutes = () => {
         <Route path="/dashboard/alerts" element={<Suspense fallback={<LoadingScreen />}><AlertsPage /></Suspense>} />
         <Route path="/dashboard/news" element={<Suspense fallback={<LoadingScreen />}><NewsPage /></Suspense>} />
         <Route path="/dashboard/recommendations" element={<Suspense fallback={<LoadingScreen />}><RecommendationsPage /></Suspense>} />
+        <Route path="/dashboard/approvals" element={<Suspense fallback={<LoadingScreen />}><ApprovalsPage /></Suspense>} />
         <Route path="/dashboard/tools" element={<Suspense fallback={<LoadingScreen />}><ToolsPage /></Suspense>} />
         <Route path="/dashboard/history" element={<Suspense fallback={<LoadingScreen />}><HistoryPage /></Suspense>} />
         <Route path="/dashboard/analytics" element={<Suspense fallback={<LoadingScreen />}><AdminAnalyticsPage /></Suspense>} />

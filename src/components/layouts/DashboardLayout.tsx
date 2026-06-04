@@ -89,6 +89,7 @@ export const DashboardLayout = ({
     if (path === '/dashboard/portfolio') return 'portfolio';
     if (path === '/dashboard/watchlist') return 'watchlist';
     if (path === '/dashboard/alerts') return 'alerts';
+    if (path === '/dashboard/approvals') return 'approvals';
     if (path === '/dashboard/news') return 'news';
     if (path === '/dashboard/history') return 'history';
     if (path === '/dashboard/tools') return 'tools';
@@ -105,6 +106,7 @@ export const DashboardLayout = ({
       'portfolio': '/dashboard/portfolio',
       'watchlist': '/dashboard/watchlist',
       'alerts': '/dashboard/alerts',
+      'approvals': '/dashboard/approvals',
       'news': '/dashboard/news',
       'history': '/dashboard/history',
       'tools': '/dashboard/tools',
