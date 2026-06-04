@@ -434,13 +434,14 @@ export function RecommendationsFeed() {
       </div>
       <select
         value={days}
-        onChange={(e) => setDays(e.target.value as 'all' | '7' | '30')}
+        onChange={(e) => setDays(e.target.value as 'today' | '7' | '30' | 'all')}
         aria-label="Filter by date"
         className="h-8 rounded-full border border-input bg-background px-3 text-xs text-foreground"
       >
-        <option value="all">All dates</option>
+        <option value="today">Today</option>
         <option value="7">Last 7 days</option>
         <option value="30">Last 30 days</option>
+        <option value="all">All time</option>
       </select>
       <span className="ml-auto hidden text-[11px] text-muted-foreground sm:inline-flex items-center gap-1">
         <Sparkles className="h-3 w-3" /> latest per stock · timeline inside each card
