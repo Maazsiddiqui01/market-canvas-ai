@@ -351,7 +351,7 @@ export function RecommendationsFeed() {
   const [recs, setRecs] = useState<Rec[] | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [sig, setSig] = useState<'all' | 'buy' | 'hold' | 'sell'>('all');
-  const [days, setDays] = useState<'all' | '7' | '30'>('all');
+  const [days, setDays] = useState<'today' | '7' | '30' | 'all'>('today');
 
   useEffect(() => {
     let active = true;
@@ -391,7 +391,13 @@ export function RecommendationsFeed() {
   const filterGroups = (items: Group[]) =>
     items.filter(({ latest }) => {
       if (sig !== 'all' && SIGNAL_GROUP[latest.signal] !== sig) return false;
-      if (days !== 'all' && new Date(latest.created_at).getTime() < Date.now() - Number(days) * 86400000) return false;
+      if (days === 'today') {
+        const d = new Date(latest.created_at);
+        const now = new Date();
+        if (d.getFullYear() !== now.getFullYear() || d.getMonth() !== now.getMonth() || d.getDate() !== now.getDate()) return false;
+      } else if (days !== 'all') {
+        if (new Date(latest.created_at).getTime() < Date.now() - Number(days) * 86400000) return false;
+      }
       return true;
     });
 
@@ -428,13 +434,14 @@ export function RecommendationsFeed() {
       </div>
       <select
         value={days}
-        onChange={(e) => setDays(e.target.value as 'all' | '7' | '30')}
+        onChange={(e) => setDays(e.target.value as 'today' | '7' | '30' | 'all')}
         aria-label="Filter by date"
         className="h-8 rounded-full border border-input bg-background px-3 text-xs text-foreground"
       >
-        <option value="all">All dates</option>
+        <option value="today">Today</option>
         <option value="7">Last 7 days</option>
         <option value="30">Last 30 days</option>
+        <option value="all">All time</option>
       </select>
       <span className="ml-auto hidden text-[11px] text-muted-foreground sm:inline-flex items-center gap-1">
         <Sparkles className="h-3 w-3" /> latest per stock · timeline inside each card
