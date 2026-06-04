@@ -14,6 +14,188 @@ export type Database = {
   }
   public: {
     Tables: {
+      agent_learnings: {
+        Row: {
+          active: boolean | null
+          category: string | null
+          created_at: string
+          evidence: Json | null
+          id: string
+          lesson: string
+        }
+        Insert: {
+          active?: boolean | null
+          category?: string | null
+          created_at?: string
+          evidence?: Json | null
+          id?: string
+          lesson: string
+        }
+        Update: {
+          active?: boolean | null
+          category?: string | null
+          created_at?: string
+          evidence?: Json | null
+          id?: string
+          lesson?: string
+        }
+        Relationships: []
+      }
+      agent_recommendations: {
+        Row: {
+          company: string | null
+          conviction: number | null
+          created_at: string
+          current_price: number | null
+          data_confidence: string | null
+          entry_high: number | null
+          entry_low: number | null
+          horizon: string | null
+          id: string
+          market: string | null
+          outcome: Json | null
+          review_date: string | null
+          risks: Json | null
+          run_id: string | null
+          sector: string | null
+          sharia_checked_at: string | null
+          sharia_source: string | null
+          sharia_status: string | null
+          signal: string
+          sources: Json | null
+          status: string
+          stop_loss: number | null
+          suggested_pkr: number | null
+          suggested_shares: number | null
+          target_basis: string | null
+          target_price: number | null
+          target_weight_pct: number | null
+          thesis: string | null
+          ticker: string
+        }
+        Insert: {
+          company?: string | null
+          conviction?: number | null
+          created_at?: string
+          current_price?: number | null
+          data_confidence?: string | null
+          entry_high?: number | null
+          entry_low?: number | null
+          horizon?: string | null
+          id?: string
+          market?: string | null
+          outcome?: Json | null
+          review_date?: string | null
+          risks?: Json | null
+          run_id?: string | null
+          sector?: string | null
+          sharia_checked_at?: string | null
+          sharia_source?: string | null
+          sharia_status?: string | null
+          signal: string
+          sources?: Json | null
+          status?: string
+          stop_loss?: number | null
+          suggested_pkr?: number | null
+          suggested_shares?: number | null
+          target_basis?: string | null
+          target_price?: number | null
+          target_weight_pct?: number | null
+          thesis?: string | null
+          ticker: string
+        }
+        Update: {
+          company?: string | null
+          conviction?: number | null
+          created_at?: string
+          current_price?: number | null
+          data_confidence?: string | null
+          entry_high?: number | null
+          entry_low?: number | null
+          horizon?: string | null
+          id?: string
+          market?: string | null
+          outcome?: Json | null
+          review_date?: string | null
+          risks?: Json | null
+          run_id?: string | null
+          sector?: string | null
+          sharia_checked_at?: string | null
+          sharia_source?: string | null
+          sharia_status?: string | null
+          signal?: string
+          sources?: Json | null
+          status?: string
+          stop_loss?: number | null
+          suggested_pkr?: number | null
+          suggested_shares?: number | null
+          target_basis?: string | null
+          target_price?: number | null
+          target_weight_pct?: number | null
+          thesis?: string | null
+          ticker?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_recommendations_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "agent_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_runs: {
+        Row: {
+          action_taken: boolean | null
+          digest_html: string | null
+          error: string | null
+          finished_at: string | null
+          hold_cash_reason: string | null
+          id: string
+          macro_tilt: number | null
+          market: string | null
+          market_summary: string | null
+          num_recs: number | null
+          run_type: string
+          started_at: string
+          status: string | null
+          tokens_used: number | null
+        }
+        Insert: {
+          action_taken?: boolean | null
+          digest_html?: string | null
+          error?: string | null
+          finished_at?: string | null
+          hold_cash_reason?: string | null
+          id?: string
+          macro_tilt?: number | null
+          market?: string | null
+          market_summary?: string | null
+          num_recs?: number | null
+          run_type: string
+          started_at?: string
+          status?: string | null
+          tokens_used?: number | null
+        }
+        Update: {
+          action_taken?: boolean | null
+          digest_html?: string | null
+          error?: string | null
+          finished_at?: string | null
+          hold_cash_reason?: string | null
+          id?: string
+          macro_tilt?: number | null
+          market?: string | null
+          market_summary?: string | null
+          num_recs?: number | null
+          run_type?: string
+          started_at?: string
+          status?: string | null
+          tokens_used?: number | null
+        }
+        Relationships: []
+      }
       ai_search_cache: {
         Row: {
           created_at: string
@@ -104,6 +286,50 @@ export type Database = {
         }
         Relationships: []
       }
+      digest_log: {
+        Row: {
+          body_preview: string | null
+          channel: string
+          delivered: boolean | null
+          error: string | null
+          id: string
+          recipient: string | null
+          run_id: string | null
+          sent_at: string
+          subject: string | null
+        }
+        Insert: {
+          body_preview?: string | null
+          channel: string
+          delivered?: boolean | null
+          error?: string | null
+          id?: string
+          recipient?: string | null
+          run_id?: string | null
+          sent_at?: string
+          subject?: string | null
+        }
+        Update: {
+          body_preview?: string | null
+          channel?: string
+          delivered?: boolean | null
+          error?: string | null
+          id?: string
+          recipient?: string | null
+          run_id?: string | null
+          sent_at?: string
+          subject?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "digest_log_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "agent_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       newsletter_subscribers: {
         Row: {
           email: string
@@ -152,6 +378,129 @@ export type Database = {
           session_id?: string | null
           user_agent?: string | null
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      paper_book: {
+        Row: {
+          cash: number
+          closed: Json
+          market: string
+          positions: Json
+          realized_pnl: number
+          started_at: string
+          starting_capital: number
+          updated_at: string
+        }
+        Insert: {
+          cash: number
+          closed?: Json
+          market: string
+          positions?: Json
+          realized_pnl?: number
+          started_at?: string
+          starting_capital: number
+          updated_at?: string
+        }
+        Update: {
+          cash?: number
+          closed?: Json
+          market?: string
+          positions?: Json
+          realized_pnl?: number
+          started_at?: string
+          starting_capital?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      paper_trades: {
+        Row: {
+          id: string
+          market: string
+          price: number
+          realized_pnl: number | null
+          reason: string | null
+          rec_id: string | null
+          shares: number
+          side: string
+          ticker: string
+          ts: string
+        }
+        Insert: {
+          id?: string
+          market: string
+          price: number
+          realized_pnl?: number | null
+          reason?: string | null
+          rec_id?: string | null
+          shares: number
+          side: string
+          ticker: string
+          ts?: string
+        }
+        Update: {
+          id?: string
+          market?: string
+          price?: number
+          realized_pnl?: number | null
+          reason?: string | null
+          rec_id?: string | null
+          shares?: number
+          side?: string
+          ticker?: string
+          ts?: string
+        }
+        Relationships: []
+      }
+      pending_actions: {
+        Row: {
+          created_at: string
+          decided_at: string | null
+          id: string
+          limit_price: number | null
+          market: string
+          note: string | null
+          portfolio_id: string | null
+          qty: number | null
+          rec_id: string | null
+          side: string
+          status: string
+          stop_loss: number | null
+          target_price: number | null
+          ticker: string
+        }
+        Insert: {
+          created_at?: string
+          decided_at?: string | null
+          id?: string
+          limit_price?: number | null
+          market: string
+          note?: string | null
+          portfolio_id?: string | null
+          qty?: number | null
+          rec_id?: string | null
+          side: string
+          status?: string
+          stop_loss?: number | null
+          target_price?: number | null
+          ticker: string
+        }
+        Update: {
+          created_at?: string
+          decided_at?: string | null
+          id?: string
+          limit_price?: number | null
+          market?: string
+          note?: string | null
+          portfolio_id?: string | null
+          qty?: number | null
+          rec_id?: string | null
+          side?: string
+          status?: string
+          stop_loss?: number | null
+          target_price?: number | null
+          ticker?: string
         }
         Relationships: []
       }
@@ -577,7 +926,27 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_recommendations: {
+        Row: {
+          company: string | null
+          conviction: number | null
+          created_at: string | null
+          current_price: number | null
+          data_confidence: string | null
+          horizon: string | null
+          id: string | null
+          market: string | null
+          sector: string | null
+          sharia_status: string | null
+          signal: string | null
+          stop_loss: number | null
+          target_basis: string | null
+          target_price: number | null
+          thesis: string | null
+          ticker: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       has_role: {
