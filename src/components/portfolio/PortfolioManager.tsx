@@ -21,7 +21,10 @@ interface Portfolio {
   id: string;
   name: string;
   created_at: string;
+  market?: string;
 }
+
+type Market = 'PSX' | 'US';
 
 interface Holding {
   id: string;
@@ -60,8 +63,12 @@ export const PortfolioManager = () => {
   const [stockSectors, setStockSectors] = useState<Record<string, string>>({});
   const [expandedHoldings, setExpandedHoldings] = useState<Set<string>>(new Set());
   const [selectedPortfolio, setSelectedPortfolio] = useState<string | null>(null);
+  const [selectedMarket, setSelectedMarket] = useState<Market>('PSX');
   const [loading, setLoading] = useState(true);
   const [loadingPrices, setLoadingPrices] = useState(false);
+
+  // Currency follows the selected market.
+  const cur = selectedMarket === 'US' ? '$' : 'PKR';
 
   useEffect(() => {
     if (user) {
@@ -69,9 +76,18 @@ export const PortfolioManager = () => {
     }
   }, [user]);
 
+  // Pick the portfolio matching the selected market (PSX/US); null if the user has none for it.
+  useEffect(() => {
+    if (portfolios.length === 0) { setSelectedPortfolio(null); return; }
+    const match = portfolios.find((p) => (p.market || 'PSX') === selectedMarket);
+    setSelectedPortfolio(match ? match.id : null);
+  }, [portfolios, selectedMarket]);
+
   useEffect(() => {
     if (selectedPortfolio) {
       fetchHoldings(selectedPortfolio);
+    } else {
+      setHoldings([]);
     }
   }, [selectedPortfolio]);
 
@@ -95,9 +111,6 @@ export const PortfolioManager = () => {
     }
 
     setPortfolios(data || []);
-    if (data && data.length > 0 && !selectedPortfolio) {
-      setSelectedPortfolio(data[0].id);
-    }
     setLoading(false);
   };
 
@@ -147,7 +160,7 @@ export const PortfolioManager = () => {
     if (tickers.length === 0) return;
     // Single batched lookup instead of one query per holding (was an N+1).
     const { data, error } = await supabase
-      .from('Stocks' as any)
+      .from((selectedMarket === 'US' ? 'us_stocks' : 'Stocks') as any)
       .select('symbol, sector')
       .in('symbol', tickers);
     if (error) {
@@ -168,7 +181,7 @@ export const PortfolioManager = () => {
     setLoadingPrices(true);
     try {
       const { data, error } = await supabase.functions.invoke('get-stock-prices', {
-        body: { tickers },
+        body: { tickers, market: selectedMarket },
       });
 
       if (error) throw error;
@@ -181,7 +194,7 @@ export const PortfolioManager = () => {
     } finally {
       setLoadingPrices(false);
     }
-  }, [holdings]);
+  }, [holdings, selectedMarket]);
 
   // Fetch prices on initial load and auto-refresh every 30 seconds.
   // Pause polling while the tab is hidden and refresh when it becomes visible
@@ -211,7 +224,7 @@ export const PortfolioManager = () => {
 
     const { data, error } = await supabase
       .from('portfolios')
-      .insert({ user_id: user.id, name: 'My Portfolio' })
+      .insert({ user_id: user.id, name: selectedMarket === 'US' ? 'US Portfolio' : 'My Portfolio', market: selectedMarket })
       .select()
       .single();
 
@@ -222,7 +235,7 @@ export const PortfolioManager = () => {
 
     setPortfolios([data, ...portfolios]);
     setSelectedPortfolio(data.id);
-    toast({ title: 'Success', description: 'Portfolio created!' });
+    toast({ title: 'Success', description: `${selectedMarket} portfolio created!` });
   };
 
   const addHoldingWithPositions = async (
@@ -417,6 +430,25 @@ export const PortfolioManager = () => {
 
   return (
     <div className="space-y-6">
+      {/* Market toggle (PSX / US) */}
+      <div className="flex w-full sm:inline-flex items-center gap-1 rounded-lg border border-border/50 bg-card/60 p-1">
+        {(['PSX', 'US'] as Market[]).map((m) => (
+          <button
+            key={m}
+            type="button"
+            onClick={() => setSelectedMarket(m)}
+            aria-pressed={selectedMarket === m}
+            className={`flex-1 sm:flex-none px-5 py-2 rounded-md text-sm font-semibold transition-colors ${
+              selectedMarket === m
+                ? 'bg-primary text-primary-foreground shadow'
+                : 'text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            {m === 'PSX' ? '🇵🇰 PSX' : '🇺🇸 US'}
+          </button>
+        ))}
+      </div>
+
       {/* Portfolio Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="border-border/50 bg-gradient-to-br from-primary/10 to-accent/10 backdrop-blur-sm">
@@ -424,7 +456,7 @@ export const PortfolioManager = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Current Value</p>
-                <p className="text-2xl font-bold">PKR {totalCurrentValue.toLocaleString()}</p>
+                <p className="text-2xl font-bold">{cur} {totalCurrentValue.toLocaleString()}</p>
               </div>
               <div className="p-3 bg-primary/20 rounded-full">
                 <DollarSign className="h-6 w-6 text-primary" />
@@ -507,7 +539,7 @@ export const PortfolioManager = () => {
 
       {/* Holdings Table */}
       <Card className="border-border/50 bg-card/80 backdrop-blur-sm">
-        <CardHeader className="flex flex-row items-center justify-between">
+        <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <CardTitle className="flex items-center gap-2">
               <Briefcase className="h-5 w-5 text-primary" />
@@ -515,7 +547,7 @@ export const PortfolioManager = () => {
             </CardTitle>
             <CardDescription>Manage your stock holdings with live prices</CardDescription>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <Button 
               variant="outline" 
               size="sm" 
@@ -530,7 +562,14 @@ export const PortfolioManager = () => {
               )}
               Refresh Prices
             </Button>
-            <AddHoldingDialog onAdd={addHoldingWithPositions} />
+            {selectedPortfolio ? (
+              <AddHoldingDialog onAdd={addHoldingWithPositions} market={selectedMarket} />
+            ) : (
+              <Button size="sm" onClick={createPortfolio} className="gap-2">
+                <Plus className="h-4 w-4" />
+                Create {selectedMarket} portfolio
+              </Button>
+            )}
           </div>
         </CardHeader>
         <CardContent>
@@ -559,7 +598,7 @@ export const PortfolioManager = () => {
                     onOpenChange={() => toggleExpanded(holding.id)}
                   >
                     <div className="rounded-lg bg-secondary/50 overflow-hidden">
-                      <div className="flex items-center justify-between p-4 hover:bg-secondary/80 transition-colors">
+                      <div className="flex flex-col gap-3 p-4 hover:bg-secondary/80 transition-colors sm:flex-row sm:items-center sm:justify-between">
                         <div className="flex items-center gap-4">
                           <CollapsibleTrigger asChild>
                             <Button variant="ghost" size="icon" aria-label={isExpanded ? "Collapse" : "Expand"} className="h-8 w-8">
@@ -584,13 +623,13 @@ export const PortfolioManager = () => {
                             <p className="text-sm text-muted-foreground">{holding.stock_name || 'Unknown'}</p>
                           </div>
                         </div>
-                        <div className="flex items-center gap-6">
+                        <div className="flex flex-wrap items-center gap-4 sm:gap-6 justify-between sm:justify-end w-full sm:w-auto">
                           {/* Market Price (from n8n) */}
                           <div className="text-right">
                             <p className="text-xs text-muted-foreground">Market Price</p>
                             {marketPrice !== null ? (
                               <>
-                                <p className="font-medium">PKR {marketPrice.toLocaleString()}</p>
+                                <p className="font-medium">{cur} {marketPrice.toLocaleString()}</p>
                                 {priceData && (
                                   <p className={`text-xs ${priceData.changePercent >= 0 ? 'text-up' : 'text-down'}`}>
                                     {priceData.changePercent >= 0 ? '+' : ''}{priceData.changePercent.toFixed(2)}%
@@ -605,7 +644,7 @@ export const PortfolioManager = () => {
                           <div className="text-right">
                             <p className="font-medium">{holding.shares} shares</p>
                             <p className="text-sm text-muted-foreground">
-                              Avg: PKR {avgBuyPrice.toLocaleString()}
+                              Avg: {cur} {avgBuyPrice.toLocaleString()}
                             </p>
                           </div>
                           {/* P&L = (Market - Avg) * Shares */}
@@ -614,7 +653,7 @@ export const PortfolioManager = () => {
                             {pnl !== null ? (
                               <>
                                 <p className={`font-semibold ${pnl >= 0 ? 'text-up' : 'text-down'}`}>
-                                  {pnl >= 0 ? '+' : ''}PKR {pnl.toLocaleString()}
+                                  {pnl >= 0 ? '+' : ''}{cur} {pnl.toLocaleString()}
                                 </p>
                                 <p className={`text-xs ${pnl >= 0 ? 'text-up' : 'text-down'}`}>
                                   {pnlPercent !== null && (pnlPercent >= 0 ? '+' : '')}{pnlPercent?.toFixed(2)}%

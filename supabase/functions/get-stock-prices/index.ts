@@ -12,6 +12,28 @@ interface StockPrice {
   volume: number;
 }
 
+// US live prices via Yahoo Finance chart API (free, no key). Used when market === 'US'.
+async function fetchYahoo(ticker: string): Promise<StockPrice | null> {
+  try {
+    const r = await fetch(
+      `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?interval=1d&range=1d`,
+      { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' } }
+    );
+    if (!r.ok) return null;
+    const j = await r.json();
+    const meta = j?.chart?.result?.[0]?.meta;
+    if (!meta) return null;
+    const price = Number(meta.regularMarketPrice);
+    const prev = Number(meta.chartPreviousClose ?? meta.previousClose);
+    if (!isFinite(price)) return null;
+    const abs = isFinite(prev) ? price - prev : 0;
+    const pct = isFinite(prev) && prev !== 0 ? (abs / prev) * 100 : 0;
+    return { price, changePercent: pct, absoluteChange: abs, volume: Number(meta.regularMarketVolume) || 0 };
+  } catch (_e) {
+    return null;
+  }
+}
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -19,16 +41,9 @@ serve(async (req) => {
   }
 
   try {
-    const { tickers } = await req.json();
-    const N8N_WEBHOOK = Deno.env.get('N8N_STOCK_PRICE_WEBHOOK');
-
-    if (!N8N_WEBHOOK) {
-      console.error('N8N_STOCK_PRICE_WEBHOOK not configured');
-      return new Response(
-        JSON.stringify({ error: 'Stock price service not configured' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
+    const body = await req.json();
+    const tickers = body?.tickers;
+    const market = (body?.market || 'PSX').toString().toUpperCase();
 
     if (!tickers || !Array.isArray(tickers) || tickers.length === 0) {
       return new Response(
@@ -37,16 +52,37 @@ serve(async (req) => {
       );
     }
 
-    console.log('Fetching prices for tickers:', tickers);
+    console.log('Fetching prices for', market, 'tickers:', tickers);
 
     const prices: Record<string, StockPrice> = {};
     const errors: string[] = [];
 
-    // Fetch prices for each ticker in parallel
+    // ---- US: Yahoo Finance (free) ----
+    if (market === 'US') {
+      await Promise.all(tickers.map(async (ticker: string) => {
+        const p = await fetchYahoo(ticker);
+        if (p) prices[ticker] = p; else errors.push(ticker);
+      }));
+      return new Response(
+        JSON.stringify({ prices, errors: errors.length > 0 ? errors : undefined, timestamp: new Date().toISOString() }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // ---- PSX: existing n8n webhook path (unchanged) ----
+    const N8N_WEBHOOK = Deno.env.get('N8N_STOCK_PRICE_WEBHOOK');
+    if (!N8N_WEBHOOK) {
+      console.error('N8N_STOCK_PRICE_WEBHOOK not configured');
+      return new Response(
+        JSON.stringify({ error: 'Stock price service not configured' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     const fetchPromises = tickers.map(async (ticker: string) => {
       try {
         const symbol = ticker.startsWith('PSX:') ? ticker : `PSX:${ticker}`;
-        
+
         const response = await fetch(N8N_WEBHOOK, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -62,8 +98,6 @@ serve(async (req) => {
         const data = await response.json();
         console.log(`Response for ${ticker}:`, JSON.stringify(data));
 
-        // Parse the n8n response format:
-        // [{ "totalCount": 1, "data": [{ "s": "PSX:MEBL", "d": [444, 0.45, 1.99, 1758817] }] }]
         if (Array.isArray(data) && data[0]?.data?.[0]?.d) {
           const [price, changePercent, absoluteChange, volume] = data[0].data[0].d;
           prices[ticker] = {
@@ -87,8 +121,8 @@ serve(async (req) => {
     console.log('Prices fetched successfully:', Object.keys(prices).length);
 
     return new Response(
-      JSON.stringify({ 
-        prices, 
+      JSON.stringify({
+        prices,
         errors: errors.length > 0 ? errors : undefined,
         timestamp: new Date().toISOString(),
       }),

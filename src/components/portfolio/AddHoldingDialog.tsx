@@ -21,9 +21,11 @@ interface AddHoldingDialogProps {
     stockName: string,
     positions: Array<{ shares: number; buyPrice: number; buyDate?: string; notes?: string }>
   ) => Promise<void>;
+  market?: 'PSX' | 'US';
 }
 
-export const AddHoldingDialog = ({ onAdd }: AddHoldingDialogProps) => {
+export const AddHoldingDialog = ({ onAdd, market = 'PSX' }: AddHoldingDialogProps) => {
+  const cur = market === 'US' ? '$' : 'PKR';
   const [open, setOpen] = useState(false);
   const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
   const [positions, setPositions] = useState<PositionEntry[]>([
@@ -125,6 +127,7 @@ export const AddHoldingDialog = ({ onAdd }: AddHoldingDialogProps) => {
               value={selectedStock}
               onChange={setSelectedStock}
               placeholder="Search by ticker or company name..."
+              market={market}
             />
           </div>
 
@@ -180,7 +183,7 @@ export const AddHoldingDialog = ({ onAdd }: AddHoldingDialogProps) => {
                       />
                     </div>
                     <div className="space-y-1">
-                      <Label className="text-xs">Buy Price (PKR) *</Label>
+                      <Label className="text-xs">Buy Price ({cur}) *</Label>
                       <Input
                         type="number"
                         step="0.01"
@@ -231,11 +234,11 @@ export const AddHoldingDialog = ({ onAdd }: AddHoldingDialogProps) => {
                 </div>
                 <div>
                   <p className="text-muted-foreground text-xs">Weighted Avg Price</p>
-                  <p className="font-semibold">PKR {weightedAvg.toFixed(2)}</p>
+                  <p className="font-semibold">{cur} {weightedAvg.toFixed(2)}</p>
                 </div>
                 <div>
                   <p className="text-muted-foreground text-xs">Total Cost</p>
-                  <p className="font-semibold">PKR {totalCost.toLocaleString()}</p>
+                  <p className="font-semibold">{cur} {totalCost.toLocaleString()}</p>
                 </div>
               </div>
             </div>

@@ -11,9 +11,10 @@ interface StockSelectorProps {
   onChange: (stock: Stock) => void;
   placeholder?: string;
   disabled?: boolean;
+  market?: 'PSX' | 'US';
 }
 
-export const StockSelector = ({ value, onChange, placeholder = "Search stocks...", disabled }: StockSelectorProps) => {
+export const StockSelector = ({ value, onChange, placeholder = "Search stocks...", disabled, market = 'PSX' }: StockSelectorProps) => {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Stock[]>([]);
@@ -37,7 +38,7 @@ export const StockSelector = ({ value, onChange, placeholder = "Search stocks...
       if (query.trim().length >= 1) {
         setLoading(true);
         try {
-          const stocks = await searchStocks(query);
+          const stocks = await searchStocks(query, market);
           setResults(stocks);
           setHighlightIndex(0);
         } catch (error) {
@@ -52,7 +53,7 @@ export const StockSelector = ({ value, onChange, placeholder = "Search stocks...
     }, 300);
 
     return () => clearTimeout(searchTimeout);
-  }, [query]);
+  }, [query, market]);
 
   const handleSelect = (stock: Stock) => {
     onChange(stock);

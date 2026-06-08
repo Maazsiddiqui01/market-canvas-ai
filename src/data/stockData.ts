@@ -104,10 +104,16 @@ export const getStocksBySector = async (sector: string): Promise<Stock[]> => {
   }
 };
 
-export const searchStocks = async (query: string, selectedSector?: string): Promise<Stock[]> => {
+export const searchStocks = async (
+  query: string,
+  market: 'PSX' | 'US' = 'PSX',
+  selectedSector?: string
+): Promise<Stock[]> => {
   try {
+    // PSX stocks live in "Stocks"; US stocks in "us_stocks" (same shape).
+    const table = market === 'US' ? 'us_stocks' : 'Stocks';
     let supabaseQuery = supabase
-      .from('Stocks' as any)
+      .from(table as any)
       .select('symbol, name, sector');
 
     // Add sector filter if provided
