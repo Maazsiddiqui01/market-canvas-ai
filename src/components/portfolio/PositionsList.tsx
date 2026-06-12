@@ -15,9 +15,10 @@ interface PositionsListProps {
   positions: Position[];
   currentPrice: number | null;
   onDelete: (positionId: string) => void;
+  cur?: string;
 }
 
-export const PositionsList = ({ positions, currentPrice, onDelete }: PositionsListProps) => {
+export const PositionsList = ({ positions, currentPrice, onDelete, cur = 'PKR' }: PositionsListProps) => {
   if (positions.length === 0) {
     return (
       <div className="text-sm text-muted-foreground py-2 pl-4">
@@ -42,7 +43,7 @@ export const PositionsList = ({ positions, currentPrice, onDelete }: PositionsLi
           >
             <div className="flex items-center gap-4">
               <div>
-                <p className="font-medium">{position.shares} shares @ PKR {position.buy_price.toLocaleString()}</p>
+                <p className="font-medium">{position.shares} shares @ {cur} {position.buy_price.toLocaleString()}</p>
                 <div className="flex items-center gap-3 text-xs text-muted-foreground mt-1">
                   {position.buy_date && (
                     <span className="flex items-center gap-1">
@@ -61,10 +62,10 @@ export const PositionsList = ({ positions, currentPrice, onDelete }: PositionsLi
             </div>
             <div className="flex items-center gap-4">
               <div className="text-right">
-                <p className="text-muted-foreground">Cost: PKR {positionCost.toLocaleString()}</p>
+                <p className="text-muted-foreground">Cost: {cur} {positionCost.toLocaleString()}</p>
                 {pnl !== null ? (
                   <p className={`text-xs font-medium ${pnl >= 0 ? 'text-up' : 'text-down'}`}>
-                    P&L: {pnl >= 0 ? '+' : ''}PKR {pnl.toLocaleString()} ({pnlPercent?.toFixed(2)}%)
+                    P&L: {pnl >= 0 ? '+' : ''}{cur} {pnl.toLocaleString()} ({pnlPercent?.toFixed(2)}%)
                   </p>
                 ) : (
                   <p className="text-xs text-muted-foreground">P&L: --</p>

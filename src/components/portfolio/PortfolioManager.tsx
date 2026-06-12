@@ -287,6 +287,27 @@ export const PortfolioManager = () => {
     logActivity({ activityType: 'portfolio_action', description: `Added holding ${ticker.toUpperCase()}`, ticker: ticker.toUpperCase() });
   };
 
+  // The lots (portfolio_positions) are the source of truth. Derive the holding's aggregate
+  // (total shares + weighted-avg buy price) from ALL its lots, so the header total can never
+  // drift out of sync with the lots — e.g. after a position is added OR deleted.
+  const recomputeHoldingAggregate = async (holdingId: string) => {
+    const { data: rows, error } = await supabase
+      .from('portfolio_positions')
+      .select('shares, buy_price')
+      .eq('holding_id', holdingId);
+    if (error) {
+      console.error('Error recomputing holding aggregate:', error);
+      return;
+    }
+    const totalShares = (rows || []).reduce((s, p) => s + Number(p.shares), 0);
+    const totalCost = (rows || []).reduce((s, p) => s + Number(p.shares) * Number(p.buy_price), 0);
+    const avgPrice = totalShares > 0 ? totalCost / totalShares : 0;
+    await supabase
+      .from('portfolio_holdings')
+      .update({ shares: totalShares, avg_buy_price: avgPrice })
+      .eq('id', holdingId);
+  };
+
   const addPosition = async (holdingId: string, shares: number, buyPrice: number, buyDate?: string, notes?: string) => {
     const { error } = await supabase.from('portfolio_positions').insert({
       holding_id: holdingId,
@@ -301,31 +322,13 @@ export const PortfolioManager = () => {
       return;
     }
 
-    // Update holding's total shares and average price
-    const holding = holdings.find(h => h.id === holdingId);
-    if (holding) {
-      const newTotalShares = holding.shares + shares;
-      if (newTotalShares <= 0) {
-        toast({ title: 'Invalid', description: 'Total share count must be greater than zero.', variant: 'destructive' });
-        return;
-      }
-      const currentCost = holding.shares * (holding.avg_buy_price || 0);
-      const newCost = shares * buyPrice;
-      const newAvgPrice = (currentCost + newCost) / newTotalShares;
-
-      await supabase
-        .from('portfolio_holdings')
-        .update({ shares: newTotalShares, avg_buy_price: newAvgPrice })
-        .eq('id', holdingId);
-
-      fetchHoldings(selectedPortfolio!);
-    }
-
+    await recomputeHoldingAggregate(holdingId);
+    if (selectedPortfolio) fetchHoldings(selectedPortfolio);
     fetchAllPositions();
     toast({ title: 'Success', description: 'Position added!' });
   };
 
-  const deletePosition = async (positionId: string) => {
+  const deletePosition = async (positionId: string, holdingId: string) => {
     const { error } = await supabase
       .from('portfolio_positions')
       .delete()
@@ -336,6 +339,10 @@ export const PortfolioManager = () => {
       return;
     }
 
+    // Keep the holding aggregate in sync with the remaining lots. (Previously this step was
+    // missing, leaving a phantom share in the header total after a lot was deleted.)
+    await recomputeHoldingAggregate(holdingId);
+    if (selectedPortfolio) fetchHoldings(selectedPortfolio);
     fetchAllPositions();
     toast({ title: 'Success', description: 'Position removed!' });
   };
@@ -508,8 +515,9 @@ export const PortfolioManager = () => {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Holdings</p>
-                <p className="text-2xl font-bold">{holdings.length}</p>
+                <p className="text-sm text-muted-foreground">Invested</p>
+                <p className="text-2xl font-bold">{cur} {totalCostBasis.toLocaleString()}</p>
+                <p className="text-xs text-muted-foreground">{holdings.length} holding{holdings.length === 1 ? '' : 's'}</p>
               </div>
               <div className="p-3 bg-secondary rounded-full">
                 <PieChart className="h-6 w-6 text-muted-foreground" />
@@ -546,6 +554,22 @@ export const PortfolioManager = () => {
               Portfolio Holdings
             </CardTitle>
             <CardDescription>Manage your stock holdings with live prices</CardDescription>
+            {holdings.length > 0 && (
+              <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-sm">
+                <span className="text-muted-foreground">
+                  Invested <span className="font-semibold text-foreground">{cur} {totalCostBasis.toLocaleString()}</span>
+                </span>
+                <span className="text-muted-foreground">
+                  Value <span className="font-semibold text-foreground">{cur} {totalCurrentValue.toLocaleString()}</span>
+                </span>
+                <span className="text-muted-foreground">
+                  P&L{' '}
+                  <span className={`font-semibold ${totalPnL >= 0 ? 'text-up' : 'text-down'}`}>
+                    {totalPnL >= 0 ? '+' : ''}{cur} {totalPnL.toLocaleString(undefined, { maximumFractionDigits: 2 })} ({totalPnL >= 0 ? '+' : ''}{totalPnLPercent.toFixed(2)}%)
+                  </span>
+                </span>
+              </div>
+            )}
           </div>
           <div className="flex items-center gap-2 flex-wrap">
             <Button 
@@ -687,7 +711,8 @@ export const PortfolioManager = () => {
                           <PositionsList
                             positions={holdingPositions}
                             currentPrice={priceData?.price ?? null}
-                            onDelete={deletePosition}
+                            cur={cur}
+                            onDelete={(posId) => deletePosition(posId, holding.id)}
                           />
                         </div>
                       </CollapsibleContent>
