@@ -69,6 +69,9 @@ export const PortfolioManager = () => {
 
   // Currency follows the selected market.
   const cur = selectedMarket === 'US' ? '$' : 'PKR';
+  // Display formatter: everything rounded to 2 decimals (shares, prices, values) for a clean look.
+  const fmt = (n: number | null | undefined) =>
+    Number(n ?? 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
   useEffect(() => {
     if (user) {
@@ -463,7 +466,7 @@ export const PortfolioManager = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Current Value</p>
-                <p className="text-2xl font-bold">{cur} {totalCurrentValue.toLocaleString()}</p>
+                <p className="text-2xl font-bold">{cur} {fmt(totalCurrentValue)}</p>
               </div>
               <div className="p-3 bg-primary/20 rounded-full">
                 <DollarSign className="h-6 w-6 text-primary" />
@@ -478,7 +481,7 @@ export const PortfolioManager = () => {
               <div>
                 <p className="text-sm text-muted-foreground">Total P&L</p>
                 <p className={`text-2xl font-bold ${totalPnL >= 0 ? 'text-up' : 'text-down'}`}>
-                  {totalPnL >= 0 ? '+' : ''}{totalPnL.toLocaleString()}
+                  {totalPnL >= 0 ? '+' : ''}{cur} {fmt(totalPnL)}
                 </p>
                 <p className={`text-xs ${totalPnL >= 0 ? 'text-up' : 'text-down'}`}>
                   {totalPnL >= 0 ? '+' : ''}{totalPnLPercent.toFixed(2)}%
@@ -501,7 +504,7 @@ export const PortfolioManager = () => {
               <div>
                 <p className="text-sm text-muted-foreground">Today's Change</p>
                 <p className={`text-2xl font-bold ${todayChange >= 0 ? 'text-up' : 'text-down'}`}>
-                  {todayChange >= 0 ? '+' : ''}{todayChange.toLocaleString()}
+                  {todayChange >= 0 ? '+' : ''}{cur} {fmt(todayChange)}
                 </p>
               </div>
               <div className="p-3 bg-secondary rounded-full">
@@ -516,7 +519,7 @@ export const PortfolioManager = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Invested</p>
-                <p className="text-2xl font-bold">{cur} {totalCostBasis.toLocaleString()}</p>
+                <p className="text-2xl font-bold">{cur} {fmt(totalCostBasis)}</p>
                 <p className="text-xs text-muted-foreground">{holdings.length} holding{holdings.length === 1 ? '' : 's'}</p>
               </div>
               <div className="p-3 bg-secondary rounded-full">
@@ -557,15 +560,15 @@ export const PortfolioManager = () => {
             {holdings.length > 0 && (
               <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-sm">
                 <span className="text-muted-foreground">
-                  Invested <span className="font-semibold text-foreground">{cur} {totalCostBasis.toLocaleString()}</span>
+                  Invested <span className="font-semibold text-foreground">{cur} {fmt(totalCostBasis)}</span>
                 </span>
                 <span className="text-muted-foreground">
-                  Value <span className="font-semibold text-foreground">{cur} {totalCurrentValue.toLocaleString()}</span>
+                  Value <span className="font-semibold text-foreground">{cur} {fmt(totalCurrentValue)}</span>
                 </span>
                 <span className="text-muted-foreground">
                   P&L{' '}
                   <span className={`font-semibold ${totalPnL >= 0 ? 'text-up' : 'text-down'}`}>
-                    {totalPnL >= 0 ? '+' : ''}{cur} {totalPnL.toLocaleString(undefined, { maximumFractionDigits: 2 })} ({totalPnL >= 0 ? '+' : ''}{totalPnLPercent.toFixed(2)}%)
+                    {totalPnL >= 0 ? '+' : ''}{cur} {fmt(totalPnL)} ({totalPnL >= 0 ? '+' : ''}{totalPnLPercent.toFixed(2)}%)
                   </span>
                 </span>
               </div>
@@ -653,7 +656,7 @@ export const PortfolioManager = () => {
                             <p className="text-xs text-muted-foreground">Market Price</p>
                             {marketPrice !== null ? (
                               <>
-                                <p className="font-medium">{cur} {marketPrice.toLocaleString()}</p>
+                                <p className="font-medium">{cur} {fmt(marketPrice)}</p>
                                 {priceData && (
                                   <p className={`text-xs ${priceData.changePercent >= 0 ? 'text-up' : 'text-down'}`}>
                                     {priceData.changePercent >= 0 ? '+' : ''}{priceData.changePercent.toFixed(2)}%
@@ -666,9 +669,9 @@ export const PortfolioManager = () => {
                           </div>
                           {/* Shares & Avg Buy Price */}
                           <div className="text-right">
-                            <p className="font-medium">{holding.shares} shares</p>
+                            <p className="font-medium">{fmt(holding.shares)} shares</p>
                             <p className="text-sm text-muted-foreground">
-                              Avg: {cur} {avgBuyPrice.toLocaleString()}
+                              Avg: {cur} {fmt(avgBuyPrice)}
                             </p>
                           </div>
                           {/* P&L = (Market - Avg) * Shares */}
@@ -677,7 +680,7 @@ export const PortfolioManager = () => {
                             {pnl !== null ? (
                               <>
                                 <p className={`font-semibold ${pnl >= 0 ? 'text-up' : 'text-down'}`}>
-                                  {pnl >= 0 ? '+' : ''}{cur} {pnl.toLocaleString()}
+                                  {pnl >= 0 ? '+' : ''}{cur} {fmt(pnl)}
                                 </p>
                                 <p className={`text-xs ${pnl >= 0 ? 'text-up' : 'text-down'}`}>
                                   {pnlPercent !== null && (pnlPercent >= 0 ? '+' : '')}{pnlPercent?.toFixed(2)}%
