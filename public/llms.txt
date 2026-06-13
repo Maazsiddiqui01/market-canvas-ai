@@ -1,0 +1,16 @@
+# Market Canvas AI
+
+> Free AI-powered analysis of Sharia-compliant (halal) stocks on the Pakistan Stock Exchange (PSX) and US markets. Live prices, portfolio tracking, smart alerts, and weekly Sharia-screened stock picks.
+
+Market Canvas AI helps Muslim and value-focused investors find, screen, and track halal (Sharia-compliant) stocks. Every stock is screened against AAOIFI / KMI (Meezan / KSE Meezan Index) Sharia standards — checking interest-bearing debt ratios and impermissible income thresholds. The platform covers the Pakistan Stock Exchange (PSX) and major US markets (NYSE / NASDAQ).
+
+## Key pages
+- [Home](https://market-canvas-ai.lovable.app/): Platform overview, features, and free sign-up.
+- [Best Sharia-Compliant Stocks on PSX](https://market-canvas-ai.lovable.app/halal-stocks-psx/): Curated, KMI-screened list of halal Pakistani stocks by sector.
+- [Blog & guides](https://market-canvas-ai.lovable.app/blog/): How Sharia stock screening works, halal investing in Pakistan, KMI-30 vs KSE-100, and weekly market outlook.
+
+## About
+- Sharia screening methodology: AAOIFI / KMI All-Share (interest-bearing debt / market cap and non-compliant income thresholds).
+- Markets covered: Pakistan Stock Exchange (PSX) and US markets (NYSE, NASDAQ).
+- Audience: Muslim retail investors and anyone seeking halal, ethical, low-leverage equity exposure.
+- Disclaimer: Educational and research tool — not licensed financial advice. Verify Sharia status against the latest official screen before investing.
