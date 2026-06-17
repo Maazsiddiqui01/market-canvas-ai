@@ -65,7 +65,7 @@ const DashboardHeader = ({ activeTab, onTabChange }: DashboardHeaderProps) => {
 
           {/* Shared resource nav -> learn site (matches the learn site's top bar exactly) */}
           {!(activeTab && onTabChange) && (
-            <nav className="hidden md:flex flex-1 items-center justify-center gap-5 lg:gap-7 text-sm">
+            <nav className="hidden md:flex ml-auto items-center gap-5 lg:gap-7 text-sm">
               {RESOURCE_LINKS.map((l) => (
                 <a key={l.href} href={l.href} className="whitespace-nowrap text-muted-foreground hover:text-foreground transition-colors">{l.label}</a>
               ))}
