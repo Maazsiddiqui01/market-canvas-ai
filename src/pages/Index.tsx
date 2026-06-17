@@ -1,4 +1,6 @@
 import React from 'react';
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import DashboardHeader from '../components/DashboardHeader';
 import HeroSection from '../components/HeroSection';
@@ -11,10 +13,16 @@ import ScrollReveal from '../components/landing/ScrollReveal';
 
 
 const Index = () => {
+  const { user, loading } = useAuth();
   useDocumentTitle(
     'Market Canvas AI — AI-Powered PSX Stock Analytics & Trading Intelligence',
     'AI-powered Pakistan Stock Exchange analytics with real-time market data, portfolio tracking, price alerts, and intelligent trading recommendations.'
   );
+
+  // Logged-in users always land on their dashboard, not the marketing page.
+  if (!loading && user) {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   return (
     <main className="min-h-dvh bg-background relative overflow-hidden">
