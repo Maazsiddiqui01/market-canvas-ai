@@ -165,7 +165,7 @@ export const SearchHero = ({ onTickerChange, selectedTicker }: SearchHeroProps) 
       
       setLoadingSuggestions(true);
       try {
-        const results = await searchStocks(searchQuery, selectedSector === 'all' ? undefined : selectedSector);
+        const results = await searchStocks(searchQuery, 'PSX', selectedSector === 'all' ? undefined : selectedSector);
         setSuggestions(results.slice(0, 8));
       } catch (error) {
         console.error('Error fetching suggestions:', error);
