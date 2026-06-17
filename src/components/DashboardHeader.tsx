@@ -25,7 +25,6 @@ interface DashboardHeaderProps {
 const RESOURCE_LINKS = [
   { label: 'Learn', href: 'https://learn.marketcanvasai.com/learn/' },
   { label: 'Tools', href: 'https://learn.marketcanvasai.com/tools/' },
-  { label: 'Shariah-Compliant PSX Stocks', href: 'https://learn.marketcanvasai.com/halal-stocks-psx/' },
   { label: 'Picks', href: 'https://learn.marketcanvasai.com/stock-picks/' },
   { label: 'Blog', href: 'https://learn.marketcanvasai.com/blog/' },
 ];
