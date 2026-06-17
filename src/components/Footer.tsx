@@ -64,10 +64,12 @@ const Footer = () => {
                 </a>
               </Button>
             </div>
-            <nav className="mt-5 flex flex-col gap-1.5 text-sm" aria-label="Resources">
-              <a href="/halal-stocks-psx/" className="text-muted-foreground hover:text-primary transition-colors">Halal stocks on PSX</a>
-              <a href="/stock-picks/" className="text-muted-foreground hover:text-primary transition-colors">This week's halal picks</a>
-              <a href="/blog/" className="text-muted-foreground hover:text-primary transition-colors">Halal investing blog</a>
+            <nav className="mt-5 flex flex-col gap-1.5 text-sm" aria-label="Learn and resources">
+              <a href="https://learn.marketcanvasai.com/learn/" className="text-muted-foreground hover:text-primary transition-colors">Learn to invest (free guides)</a>
+              <a href="https://learn.marketcanvasai.com/tools/" className="text-muted-foreground hover:text-primary transition-colors">Free calculators &amp; tools</a>
+              <a href="https://learn.marketcanvasai.com/halal-stocks-psx/" className="text-muted-foreground hover:text-primary transition-colors">Halal stocks on PSX</a>
+              <a href="https://learn.marketcanvasai.com/stock-picks/" className="text-muted-foreground hover:text-primary transition-colors">This week's halal picks</a>
+              <a href="https://learn.marketcanvasai.com/blog/" className="text-muted-foreground hover:text-primary transition-colors">Halal investing blog</a>
             </nav>
           </div>
 

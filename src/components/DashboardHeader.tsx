@@ -55,6 +55,16 @@ const DashboardHeader = ({ activeTab, onTabChange }: DashboardHeaderProps) => {
             </div>
           </Link>
 
+          {/* Resource nav -> learn site (shown on the landing / outside the dashboard tab view) */}
+          {!(activeTab && onTabChange) && (
+            <nav className="hidden md:flex flex-1 items-center justify-center gap-5 lg:gap-7 text-sm">
+              <a href="https://learn.marketcanvasai.com/learn/" className="text-muted-foreground hover:text-foreground transition-colors">Learn</a>
+              <a href="https://learn.marketcanvasai.com/tools/" className="text-muted-foreground hover:text-foreground transition-colors">Tools</a>
+              <a href="https://learn.marketcanvasai.com/halal-stocks-psx/" className="text-muted-foreground hover:text-foreground transition-colors">Halal Stocks</a>
+              <a href="https://learn.marketcanvasai.com/blog/" className="text-muted-foreground hover:text-foreground transition-colors">Blog</a>
+            </nav>
+          )}
+
           {/* Desktop inline nav */}
           {user && activeTab && onTabChange && (
             <div className="hidden md:flex flex-1 justify-center min-w-0">
