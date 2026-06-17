@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User, LogOut, LayoutDashboard, Search, Command, Menu } from 'lucide-react';
+import { User, LogOut, LayoutDashboard, Search, Command, Menu, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 import ThemeToggle from './ThemeToggle';
@@ -20,6 +20,15 @@ interface DashboardHeaderProps {
   activeTab?: string;
   onTabChange?: (tab: string) => void;
 }
+
+// Single source of truth for the shared resource nav (mirrors the learn site's top bar).
+const RESOURCE_LINKS = [
+  { label: 'Learn', href: 'https://learn.marketcanvasai.com/learn/' },
+  { label: 'Tools', href: 'https://learn.marketcanvasai.com/tools/' },
+  { label: 'Shariah-Compliant PSX Stocks', href: 'https://learn.marketcanvasai.com/halal-stocks-psx/' },
+  { label: 'Picks', href: 'https://learn.marketcanvasai.com/stock-picks/' },
+  { label: 'Blog', href: 'https://learn.marketcanvasai.com/blog/' },
+];
 
 const DashboardHeader = ({ activeTab, onTabChange }: DashboardHeaderProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -58,11 +67,9 @@ const DashboardHeader = ({ activeTab, onTabChange }: DashboardHeaderProps) => {
           {/* Shared resource nav -> learn site (matches the learn site's top bar exactly) */}
           {!(activeTab && onTabChange) && (
             <nav className="hidden md:flex flex-1 items-center justify-center gap-5 lg:gap-7 text-sm">
-              <a href="https://learn.marketcanvasai.com/learn/" className="text-muted-foreground hover:text-foreground transition-colors">Learn</a>
-              <a href="https://learn.marketcanvasai.com/tools/" className="text-muted-foreground hover:text-foreground transition-colors">Tools</a>
-              <a href="https://learn.marketcanvasai.com/halal-stocks-psx/" className="text-muted-foreground hover:text-foreground transition-colors">Halal PSX Stocks</a>
-              <a href="https://learn.marketcanvasai.com/stock-picks/" className="text-muted-foreground hover:text-foreground transition-colors">Picks</a>
-              <a href="https://learn.marketcanvasai.com/blog/" className="text-muted-foreground hover:text-foreground transition-colors">Blog</a>
+              {RESOURCE_LINKS.map((l) => (
+                <a key={l.href} href={l.href} className="whitespace-nowrap text-muted-foreground hover:text-foreground transition-colors">{l.label}</a>
+              ))}
             </nav>
           )}
 
@@ -75,24 +82,41 @@ const DashboardHeader = ({ activeTab, onTabChange }: DashboardHeaderProps) => {
 
           {/* Right side: Mobile menu + ⌘K + Theme + Auth */}
           <div className="flex items-center gap-2 shrink-0">
-            {/* Mobile resource menu (same links as the learn site) */}
-            {!(activeTab && onTabChange) && (
-              <div className="md:hidden">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" aria-label="Open menu">
-                      <Menu className="h-5 w-5" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-52">
-                    <DropdownMenuItem asChild><a href="https://learn.marketcanvasai.com/learn/" className="w-full cursor-pointer">Learn</a></DropdownMenuItem>
-                    <DropdownMenuItem asChild><a href="https://learn.marketcanvasai.com/tools/" className="w-full cursor-pointer">Tools</a></DropdownMenuItem>
-                    <DropdownMenuItem asChild><a href="https://learn.marketcanvasai.com/halal-stocks-psx/" className="w-full cursor-pointer">Halal PSX Stocks</a></DropdownMenuItem>
-                    <DropdownMenuItem asChild><a href="https://learn.marketcanvasai.com/stock-picks/" className="w-full cursor-pointer">Picks</a></DropdownMenuItem>
-                    <DropdownMenuItem asChild><a href="https://learn.marketcanvasai.com/blog/" className="w-full cursor-pointer">Blog</a></DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
+            {/* Mobile resource menu (same links as the learn site) — always available, incl. inside the dashboard */}
+            <div className="md:hidden">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" aria-label="Open menu">
+                    <Menu className="h-5 w-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  {RESOURCE_LINKS.map((l) => (
+                    <DropdownMenuItem asChild key={l.href}>
+                      <a href={l.href} className="w-full cursor-pointer">{l.label}</a>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+
+            {/* Desktop "Learn" dropdown inside the dashboard so resources stay reachable behind the auth gate */}
+            {activeTab && onTabChange && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="hidden md:inline-flex text-muted-foreground hover:text-foreground">
+                    Learn
+                    <ChevronDown className="ml-1 h-3.5 w-3.5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  {RESOURCE_LINKS.map((l) => (
+                    <DropdownMenuItem asChild key={l.href}>
+                      <a href={l.href} className="w-full cursor-pointer">{l.label}</a>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
             )}
             {user && (
               <button
