@@ -14,6 +14,7 @@ import {
 import { SECTORS, searchStocks, getStocksBySector, getAllStocks, type Stock } from '@/data/stockData';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useActivityLog } from '@/hooks/useActivityLog';
 
@@ -35,6 +36,7 @@ interface ParsedSections {
 
 export const SearchHero = ({ onTickerChange, selectedTicker }: SearchHeroProps) => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const { toast } = useToast();
   const { logActivity } = useActivityLog();
   
@@ -312,6 +314,15 @@ export const SearchHero = ({ onTickerChange, selectedTicker }: SearchHeroProps) 
   };
 
   const handleSearch = async (isRefresh = false) => {
+    // Require login to run analysis (saves results + blocks bots from burning AI quota).
+    if (!user) {
+      toast({
+        title: 'Create a free account to search',
+        description: 'Sign up free to run a full stock analysis and save your results.',
+      });
+      navigate('/auth');
+      return;
+    }
     const ticker = selectedStock?.ticker || searchQuery.trim();
     if (!ticker) {
       setError('Please select or enter a stock ticker');
