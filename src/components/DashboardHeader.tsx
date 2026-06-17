@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User, LogOut, LayoutDashboard, Search, Command, Menu, ChevronDown } from 'lucide-react';
+import { User, LogOut, LayoutDashboard, Search, Command, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 import ThemeToggle from './ThemeToggle';
@@ -99,24 +99,6 @@ const DashboardHeader = ({ activeTab, onTabChange }: DashboardHeaderProps) => {
               </DropdownMenu>
             </div>
 
-            {/* Desktop "Learn" dropdown inside the dashboard so resources stay reachable behind the auth gate */}
-            {activeTab && onTabChange && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="hidden md:inline-flex text-muted-foreground hover:text-foreground">
-                    Learn
-                    <ChevronDown className="ml-1 h-3.5 w-3.5" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  {RESOURCE_LINKS.map((l) => (
-                    <DropdownMenuItem asChild key={l.href}>
-                      <a href={l.href} className="w-full cursor-pointer">{l.label}</a>
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
             {user && (
               <button
                 onClick={() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }))}
