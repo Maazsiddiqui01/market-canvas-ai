@@ -1,10 +1,17 @@
-## Plan: Full Error Check & Verification
+## Goal
+Confirm the homepage header renders the Learn / Tools / Picks / Blog nav (already coded in `src/components/DashboardHeader.tsx`), and force the preview to pick up the latest build.
 
-1. Run TypeScript check across the project (`tsc --noEmit`) to surface any type errors.
-2. Run the linter (`eslint`) to catch code-quality issues.
-3. Scan dependencies for high/critical vulnerabilities.
-4. Check Supabase linter for DB/RLS issues.
-5. Review recent runtime errors and console logs from the preview.
-6. Report findings grouped by severity. If any blocking errors exist, fix them in-place (TS/lint fixes only — no feature changes). If everything passes, confirm clean build.
+## Findings
+- `src/components/DashboardHeader.tsx` already defines `RESOURCE_LINKS` (Learn, Tools, Picks, Blog → `learn.marketcanvasai.com`) and renders them in the desktop `<nav>` plus the mobile hamburger sheet when not in dashboard mode.
+- `src/pages/Index.tsx` already mounts `<DashboardHeader />`.
+- No code changes needed — the issue is a stale preview build.
 
-No feature or UI changes will be made unless an error requires it.
+## Steps
+1. Restart the dev server to clear any stale Vite cache and force a fresh build.
+2. Open the homepage `/` in the preview at desktop width (e.g. 1280) and confirm the four links appear in the top nav and each points to the correct `learn.marketcanvasai.com` URL.
+3. Resize to mobile width (e.g. 390) and confirm the hamburger menu shows the same four links inside the sheet.
+4. Check console for any runtime errors; if found, report back before touching code.
+5. If links still don't appear after a clean rebuild, inspect the rendered DOM via the browser tool to determine whether `isDashboardMode` is incorrectly true on `/` and only then propose a code fix.
+
+## Out of scope
+No new nav, no duplicate links, no edits to `DashboardHeader.tsx` or `Index.tsx` unless step 5 uncovers a real bug.
