@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Home, Brain, Briefcase, Eye, Bell, Newspaper, Settings, History, MoreHorizontal, PieChart, Sparkles, ClipboardCheck } from 'lucide-react';
+import { Home, Brain, Briefcase, Newspaper, Settings, MoreHorizontal, PieChart, Sparkles, ClipboardCheck, GraduationCap, Calculator, BookOpen } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { useAuth } from '@/contexts/AuthContext';
@@ -12,12 +12,16 @@ const baseAllSections = [
   { id: 'ai-search', icon: Brain, title: 'AI Tools', description: 'AI Stock Research' },
   { id: 'recommendations', icon: Sparkles, title: 'Picks', description: "Today's Picks" },
   { id: 'portfolio', icon: Briefcase, title: 'Portfolio', description: 'Track Holdings' },
-  { id: 'watchlist', icon: Eye, title: 'Watchlist', description: 'Monitor Stocks' },
-  { id: 'alerts', icon: Bell, title: 'Alerts', description: 'Price Notifications' },
   { id: 'approvals', icon: ClipboardCheck, title: 'Approvals', description: 'Approve Agent Orders' },
   { id: 'news', icon: Newspaper, title: 'News', description: 'Market Updates' },
-  { id: 'history', icon: History, title: 'History', description: 'Activity Log' },
   { id: 'tools', icon: Settings, title: 'Tools', description: 'Export & Utilities' },
+];
+
+// External links to the learning site, surfaced inside the app header.
+const LEARN_LINKS = [
+  { label: 'Learn', href: 'https://learn.marketcanvasai.com/learn/', icon: GraduationCap },
+  { label: 'Calculators', href: 'https://learn.marketcanvasai.com/tools/', icon: Calculator },
+  { label: 'Blog', href: 'https://learn.marketcanvasai.com/blog/', icon: BookOpen },
 ];
 
 interface NavigationGuideProps {
@@ -41,7 +45,7 @@ function useAllSections() {
 export const DesktopNavPill = ({ activeTab, onTabChange }: NavigationGuideProps) => {
   const allSections = useAllSections();
   const groupMarkets = allSections.filter(s => ['home', 'ai-search', 'recommendations', 'news'].includes(s.id));
-  const groupMine = allSections.filter(s => ['portfolio', 'watchlist', 'alerts', 'history'].includes(s.id));
+  const groupMine = allSections.filter(s => ['portfolio'].includes(s.id));
   const groupTools = allSections.filter(s => ['tools', 'analytics'].includes(s.id));
 
   const renderGroup = (items: typeof allSections) => (
@@ -71,6 +75,25 @@ export const DesktopNavPill = ({ activeTab, onTabChange }: NavigationGuideProps)
     </div>
   );
 
+  const renderLearn = () => (
+    <div className="flex items-center gap-0.5">
+      {LEARN_LINKS.map((l) => {
+        const Icon = l.icon;
+        return (
+          <a
+            key={l.href}
+            href={l.href}
+            aria-label={`Open ${l.label} on the learn site`}
+            className="relative flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg transition-all duration-200 whitespace-nowrap text-muted-foreground hover:text-foreground hover:bg-foreground/5"
+          >
+            <Icon className="h-4 w-4" />
+            <span className="font-medium text-xs">{l.label}</span>
+          </a>
+        );
+      })}
+    </div>
+  );
+
   return (
     <div className="flex items-center gap-1.5 glass rounded-2xl px-1.5 py-1">
       {renderGroup(groupMarkets)}
@@ -78,6 +101,8 @@ export const DesktopNavPill = ({ activeTab, onTabChange }: NavigationGuideProps)
       {renderGroup(groupMine)}
       {groupTools.length > 0 && <span className="h-5 w-px bg-foreground/10" />}
       {renderGroup(groupTools)}
+      <span className="h-5 w-px bg-foreground/10" />
+      {renderLearn()}
     </div>
   );
 };
@@ -90,8 +115,8 @@ export const MobileBottomNav = ({ activeTab, onTabChange }: NavigationGuideProps
   const primary = [
     { id: 'home', icon: Home, title: 'Home' },
     { id: 'ai-search', icon: Brain, title: 'AI' },
+    { id: 'recommendations', icon: Sparkles, title: 'Picks' },
     { id: 'portfolio', icon: Briefcase, title: 'Portfolio' },
-    { id: 'watchlist', icon: Eye, title: 'Watchlist' },
   ];
   const secondary = allSections.filter(s => !primary.some(p => p.id === s.id));
   const isSecondaryActive = secondary.some(s => s.id === activeTab);
