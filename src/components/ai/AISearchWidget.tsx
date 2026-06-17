@@ -9,6 +9,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { useActivityLog } from '@/hooks/useActivityLog';
 import { Brain, Search, Sparkles, Loader2, ExternalLink, TrendingUp, Globe, Copy, Check } from 'lucide-react';
 
@@ -32,6 +33,7 @@ const generalSuggestions = ['Banking sector outlook', 'Best dividend stocks in P
 export const AISearchWidget = forwardRef<AISearchWidgetRef, AISearchWidgetProps>(
   ({ onSearchComplete }, ref) => {
     const { user } = useAuth();
+    const navigate = useNavigate();
     const { toast } = useToast();
     const { logActivity } = useActivityLog();
     const [query, setQuery] = useState('');
@@ -51,6 +53,16 @@ export const AISearchWidget = forwardRef<AISearchWidgetRef, AISearchWidgetProps>
 
     const handleSearchWithQuery = async (searchQuery: string, type: 'stock' | 'general') => {
       if (!searchQuery.trim()) return;
+
+      // Require login to run a search (saves results + blocks bots from burning AI quota).
+      if (!user) {
+        toast({
+          title: 'Create a free account to search',
+          description: 'Sign up free to run AI searches and save your results.',
+        });
+        navigate('/auth');
+        return;
+      }
 
       setIsSearching(true);
       setResult(null);

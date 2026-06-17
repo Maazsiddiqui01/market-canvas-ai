@@ -25,6 +25,8 @@ interface DashboardLayoutProps {
   children: React.ReactNode;
   showSearch?: boolean;
   showMarketOverview?: boolean;
+  /** When true, logged-out visitors can view this page instead of being redirected to /auth. */
+  allowAnonymous?: boolean;
   onTickerChange?: (ticker: string) => void;
   selectedTicker?: string;
   /** Page header props — when provided, a unified header is rendered above content */
@@ -39,6 +41,7 @@ export const DashboardLayout = ({
   children, 
   showSearch = false,
   showMarketOverview = false,
+  allowAnonymous = false,
   onTickerChange: externalTickerChange,
   selectedTicker: externalTicker,
   pageTitle,
@@ -129,10 +132,10 @@ export const DashboardLayout = ({
   }, [externalTickerChange, setSelectedTicker]);
 
   useEffect(() => {
-    if (!loading && !user) {
+    if (!loading && !user && !allowAnonymous) {
       navigate('/auth');
     }
-  }, [user, loading, navigate]);
+  }, [user, loading, navigate, allowAnonymous]);
 
   if (loading) {
     return (
@@ -145,14 +148,14 @@ export const DashboardLayout = ({
     );
   }
 
-  if (!user) {
+  if (!user && !allowAnonymous) {
     return null;
   }
 
   return (
     <div ref={containerRef} className="min-h-dvh bg-background flex flex-col">
-      <CommandPalette />
-      <CommandHint />
+      {user && <CommandPalette />}
+      {user && <CommandHint />}
       <DashboardHeader
         onTickerChange={handleTickerChange}
         activeTab={getActiveTab()}
