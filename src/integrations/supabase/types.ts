@@ -65,6 +65,7 @@ export type Database = {
           sources: Json | null
           status: string
           stop_loss: number | null
+          strategy: string | null
           suggested_pkr: number | null
           suggested_shares: number | null
           target_basis: string | null
@@ -96,6 +97,7 @@ export type Database = {
           sources?: Json | null
           status?: string
           stop_loss?: number | null
+          strategy?: string | null
           suggested_pkr?: number | null
           suggested_shares?: number | null
           target_basis?: string | null
@@ -127,6 +129,7 @@ export type Database = {
           sources?: Json | null
           status?: string
           stop_loss?: number | null
+          strategy?: string | null
           suggested_pkr?: number | null
           suggested_shares?: number | null
           target_basis?: string | null
@@ -223,6 +226,30 @@ export type Database = {
         }
         Relationships: []
       }
+      analyst_playbook: {
+        Row: {
+          id: string
+          principles: string
+          scope: string | null
+          topic: string
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          principles: string
+          scope?: string | null
+          topic: string
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          principles?: string
+          scope?: string | null
+          topic?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       automation_leads: {
         Row: {
           created_at: string
@@ -250,6 +277,114 @@ export type Database = {
           name?: string
           updated_at?: string
           workflow_description?: string
+        }
+        Relationships: []
+      }
+      brain_daily_cards: {
+        Row: {
+          consumed: boolean
+          conviction: number | null
+          created_at: string
+          data_confidence: string | null
+          horizon: string | null
+          id: number
+          market: string
+          opportunity: string | null
+          raw: Json | null
+          regime_label: string | null
+          risks: Json | null
+          run_date: string
+          sharia_status: string | null
+          signal: string | null
+          stop_loss: number | null
+          strategy: string | null
+          target_basis: string | null
+          target_price: number | null
+          thesis: string | null
+          ticker: string
+        }
+        Insert: {
+          consumed?: boolean
+          conviction?: number | null
+          created_at?: string
+          data_confidence?: string | null
+          horizon?: string | null
+          id?: never
+          market: string
+          opportunity?: string | null
+          raw?: Json | null
+          regime_label?: string | null
+          risks?: Json | null
+          run_date: string
+          sharia_status?: string | null
+          signal?: string | null
+          stop_loss?: number | null
+          strategy?: string | null
+          target_basis?: string | null
+          target_price?: number | null
+          thesis?: string | null
+          ticker: string
+        }
+        Update: {
+          consumed?: boolean
+          conviction?: number | null
+          created_at?: string
+          data_confidence?: string | null
+          horizon?: string | null
+          id?: never
+          market?: string
+          opportunity?: string | null
+          raw?: Json | null
+          regime_label?: string | null
+          risks?: Json | null
+          run_date?: string
+          sharia_status?: string | null
+          signal?: string | null
+          stop_loss?: number | null
+          strategy?: string | null
+          target_basis?: string | null
+          target_price?: number | null
+          thesis?: string | null
+          ticker?: string
+        }
+        Relationships: []
+      }
+      broker_targets: {
+        Row: {
+          broker: string
+          id: string
+          market: string
+          rating: string | null
+          report_date: string | null
+          source_url: string | null
+          target_price: number | null
+          thesis: string | null
+          ticker: string
+          updated_at: string | null
+        }
+        Insert: {
+          broker: string
+          id?: string
+          market: string
+          rating?: string | null
+          report_date?: string | null
+          source_url?: string | null
+          target_price?: number | null
+          thesis?: string | null
+          ticker: string
+          updated_at?: string | null
+        }
+        Update: {
+          broker?: string
+          id?: string
+          market?: string
+          rating?: string | null
+          report_date?: string | null
+          source_url?: string | null
+          target_price?: number | null
+          thesis?: string | null
+          ticker?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -329,6 +464,51 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      material_events: {
+        Row: {
+          catalyst_type: string | null
+          created_at: string | null
+          dedup_key: string | null
+          direction: string | null
+          event_date: string | null
+          headline: string
+          id: string
+          magnitude: string | null
+          market: string
+          rationale: string | null
+          source_url: string | null
+          ticker: string
+        }
+        Insert: {
+          catalyst_type?: string | null
+          created_at?: string | null
+          dedup_key?: string | null
+          direction?: string | null
+          event_date?: string | null
+          headline: string
+          id?: string
+          magnitude?: string | null
+          market: string
+          rationale?: string | null
+          source_url?: string | null
+          ticker: string
+        }
+        Update: {
+          catalyst_type?: string | null
+          created_at?: string | null
+          dedup_key?: string | null
+          direction?: string | null
+          event_date?: string | null
+          headline?: string
+          id?: string
+          magnitude?: string | null
+          market?: string
+          rationale?: string | null
+          source_url?: string | null
+          ticker?: string
+        }
+        Relationships: []
       }
       newsletter_subscribers: {
         Row: {
@@ -631,6 +811,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          market: string
           name: string
           updated_at: string
           user_id: string
@@ -638,6 +819,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          market?: string
           name?: string
           updated_at?: string
           user_id: string
@@ -645,6 +827,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          market?: string
           name?: string
           updated_at?: string
           user_id?: string
@@ -792,6 +975,36 @@ export type Database = {
         }
         Relationships: []
       }
+      stock_knowledge: {
+        Row: {
+          data: Json | null
+          id: string
+          market: string
+          sources: Json | null
+          summary: string | null
+          ticker: string
+          updated_at: string | null
+        }
+        Insert: {
+          data?: Json | null
+          id?: string
+          market: string
+          sources?: Json | null
+          summary?: string | null
+          ticker: string
+          updated_at?: string | null
+        }
+        Update: {
+          data?: Json | null
+          id?: string
+          market?: string
+          sources?: Json | null
+          summary?: string | null
+          ticker?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       Stocks: {
         Row: {
           created_at: string | null
@@ -816,6 +1029,51 @@ export type Database = {
           sector?: string | null
           symbol?: string | null
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      testimonials: {
+        Row: {
+          approved: boolean
+          category: string
+          company: string | null
+          created_at: string
+          featured: boolean
+          id: string
+          name: string
+          permission: boolean
+          project: string | null
+          quote: string
+          rating: number
+          title: string | null
+        }
+        Insert: {
+          approved?: boolean
+          category?: string
+          company?: string | null
+          created_at?: string
+          featured?: boolean
+          id?: string
+          name: string
+          permission?: boolean
+          project?: string | null
+          quote: string
+          rating?: number
+          title?: string | null
+        }
+        Update: {
+          approved?: boolean
+          category?: string
+          company?: string | null
+          created_at?: string
+          featured?: boolean
+          id?: string
+          name?: string
+          permission?: boolean
+          project?: string | null
+          quote?: string
+          rating?: number
+          title?: string | null
         }
         Relationships: []
       }
@@ -845,6 +1103,33 @@ export type Database = {
           name?: string | null
           source?: string
           source_details?: Json | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      us_stocks: {
+        Row: {
+          created_at: string
+          id: string
+          name: string | null
+          sector: string | null
+          symbol: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id: string
+          name?: string | null
+          sector?: string | null
+          symbol: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string | null
+          sector?: string | null
+          symbol?: string
           updated_at?: string
         }
         Relationships: []
@@ -940,6 +1225,7 @@ export type Database = {
           sharia_status: string | null
           signal: string | null
           stop_loss: number | null
+          strategy: string | null
           target_basis: string | null
           target_price: number | null
           thesis: string | null
