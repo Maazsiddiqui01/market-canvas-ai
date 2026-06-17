@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User, LogOut, LayoutDashboard, Search, Command } from 'lucide-react';
+import { User, LogOut, LayoutDashboard, Search, Command, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 import ThemeToggle from './ThemeToggle';
@@ -55,12 +55,13 @@ const DashboardHeader = ({ activeTab, onTabChange }: DashboardHeaderProps) => {
             </div>
           </Link>
 
-          {/* Resource nav -> learn site (shown on the landing / outside the dashboard tab view) */}
+          {/* Shared resource nav -> learn site (matches the learn site's top bar exactly) */}
           {!(activeTab && onTabChange) && (
             <nav className="hidden md:flex flex-1 items-center justify-center gap-5 lg:gap-7 text-sm">
               <a href="https://learn.marketcanvasai.com/learn/" className="text-muted-foreground hover:text-foreground transition-colors">Learn</a>
               <a href="https://learn.marketcanvasai.com/tools/" className="text-muted-foreground hover:text-foreground transition-colors">Tools</a>
-              <a href="https://learn.marketcanvasai.com/halal-stocks-psx/" className="text-muted-foreground hover:text-foreground transition-colors">Halal Stocks</a>
+              <a href="https://learn.marketcanvasai.com/halal-stocks-psx/" className="text-muted-foreground hover:text-foreground transition-colors">Halal PSX Stocks</a>
+              <a href="https://learn.marketcanvasai.com/stock-picks/" className="text-muted-foreground hover:text-foreground transition-colors">Picks</a>
               <a href="https://learn.marketcanvasai.com/blog/" className="text-muted-foreground hover:text-foreground transition-colors">Blog</a>
             </nav>
           )}
@@ -72,8 +73,27 @@ const DashboardHeader = ({ activeTab, onTabChange }: DashboardHeaderProps) => {
             </div>
           )}
 
-          {/* Right side: ⌘K + Theme + Auth */}
+          {/* Right side: Mobile menu + ⌘K + Theme + Auth */}
           <div className="flex items-center gap-2 shrink-0">
+            {/* Mobile resource menu (same links as the learn site) */}
+            {!(activeTab && onTabChange) && (
+              <div className="md:hidden">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" aria-label="Open menu">
+                      <Menu className="h-5 w-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-52">
+                    <DropdownMenuItem asChild><a href="https://learn.marketcanvasai.com/learn/" className="w-full cursor-pointer">Learn</a></DropdownMenuItem>
+                    <DropdownMenuItem asChild><a href="https://learn.marketcanvasai.com/tools/" className="w-full cursor-pointer">Tools</a></DropdownMenuItem>
+                    <DropdownMenuItem asChild><a href="https://learn.marketcanvasai.com/halal-stocks-psx/" className="w-full cursor-pointer">Halal PSX Stocks</a></DropdownMenuItem>
+                    <DropdownMenuItem asChild><a href="https://learn.marketcanvasai.com/stock-picks/" className="w-full cursor-pointer">Picks</a></DropdownMenuItem>
+                    <DropdownMenuItem asChild><a href="https://learn.marketcanvasai.com/blog/" className="w-full cursor-pointer">Blog</a></DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            )}
             {user && (
               <button
                 onClick={() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }))}
