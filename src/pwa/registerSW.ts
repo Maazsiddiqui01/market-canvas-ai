@@ -55,11 +55,12 @@ if (isRefusedContext()) {
   void unregisterMatching();
 } else {
   // Dynamic import so the virtual module is only evaluated in real production contexts.
-  import('virtual:pwa-register')
-    .then(({ registerSW }) => {
-      registerSW({ immediate: true });
+  import(/* @vite-ignore */ 'virtual:pwa-register')
+    .then((mod: { registerSW: (opts?: { immediate?: boolean }) => void }) => {
+      mod.registerSW({ immediate: true });
     })
     .catch(() => {
       // Plugin not available — ignore.
     });
 }
+
