@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,6 +13,7 @@ import Logo from '@/components/Logo';
 import { Separator } from '@/components/ui/separator';
 import ThemeToggle from '@/components/ThemeToggle';
 
+
 const emailSchema = z.string().email('Please enter a valid email address');
 const passwordSchema = z.string().min(6, 'Password must be at least 6 characters');
 
@@ -22,9 +24,14 @@ const trustPoints = [
 ];
 
 const Auth = () => {
+  useDocumentTitle(
+    'Sign In or Create Account | Market Canvas AI',
+    'Sign in or create your free Market Canvas AI account to access AI-powered PSX and US stock analytics, portfolios, watchlists, and alerts.'
+  );
   const navigate = useNavigate();
   const { user, signIn, signUp, signInWithGoogle, loading } = useAuth();
   const { toast } = useToast();
+
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
