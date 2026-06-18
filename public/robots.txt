@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://market-canvas-ai.lovable.app/sitemap.xml
+Sitemap: https://marketcanvasai.com/sitemap.xml
