@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useToast } from '@/hooks/use-toast';
 import { AddPositionDialog } from './AddPositionDialog';
+import { SellDialog } from './SellDialog';
 import { AddHoldingDialog } from './AddHoldingDialog';
 import { PositionsList } from './PositionsList';
 import { PortfolioCharts } from './PortfolioCharts';
@@ -348,6 +349,59 @@ export const PortfolioManager = () => {
     if (selectedPortfolio) fetchHoldings(selectedPortfolio);
     fetchAllPositions();
     toast({ title: 'Success', description: 'Position removed!' });
+  };
+
+  const sellPosition = async (holdingId: string, sharesToSell: number, sellPrice: number, sellDate?: string) => {
+    // Record a sale: reduce lots oldest-first (FIFO), recompute the aggregate, and close the holding
+    // if everything is sold. Reports the realized profit/loss vs the lots' cost.
+    const holding = holdings.find(h => h.id === holdingId);
+    const { data: lots, error } = await supabase
+      .from('portfolio_positions')
+      .select('id, shares, buy_price, buy_date, created_at')
+      .eq('holding_id', holdingId)
+      .order('buy_date', { ascending: true, nullsFirst: true })
+      .order('created_at', { ascending: true });
+    if (error) {
+      toast({ title: 'Error', description: 'Failed to load positions', variant: 'destructive' });
+      return;
+    }
+    let remaining = sharesToSell;
+    let realizedCost = 0;
+    for (const lot of (lots || [])) {
+      if (remaining <= 1e-9) break;
+      const lotShares = Number(lot.shares);
+      if (lotShares <= remaining + 1e-9) {
+        realizedCost += lotShares * Number(lot.buy_price);
+        remaining -= lotShares;
+        await supabase.from('portfolio_positions').delete().eq('id', lot.id);
+      } else {
+        realizedCost += remaining * Number(lot.buy_price);
+        await supabase.from('portfolio_positions').update({ shares: lotShares - remaining }).eq('id', lot.id);
+        remaining = 0;
+      }
+    }
+    await recomputeHoldingAggregate(holdingId);
+    // If no lots remain, the position is fully closed — remove the holding.
+    const { data: left } = await supabase
+      .from('portfolio_positions').select('id').eq('holding_id', holdingId).limit(1);
+    if (!left || left.length === 0) {
+      await supabase.from('portfolio_holdings').delete().eq('id', holdingId);
+    }
+    if (selectedPortfolio) fetchHoldings(selectedPortfolio);
+    fetchAllPositions();
+    const soldShares = sharesToSell - Math.max(0, remaining);
+    const realizedPnl = soldShares * sellPrice - realizedCost;
+    toast({
+      title: 'Sale recorded',
+      description: `Sold ${soldShares} ${holding?.ticker || ''} — realized ${realizedPnl >= 0 ? '+' : ''}${cur} ${realizedPnl.toFixed(2)}`,
+    });
+    if (holding) {
+      logActivity({
+        activityType: 'portfolio_action',
+        description: `Sold ${soldShares} ${holding.ticker} @ ${cur} ${sellPrice} (realized ${realizedPnl >= 0 ? '+' : ''}${cur} ${realizedPnl.toFixed(2)})`,
+        ticker: holding.ticker,
+      });
+    }
   };
 
   const removeHolding = async (holdingId: string) => {
@@ -697,8 +751,15 @@ export const PortfolioManager = () => {
                               ticker={holding.ticker}
                               onAdd={addPosition}
                             />
-                            <Button 
-                              variant="ghost" 
+                            <SellDialog
+                              holdingId={holding.id}
+                              ticker={holding.ticker}
+                              maxShares={holding.shares}
+                              cur={cur}
+                              onSell={sellPosition}
+                            />
+                            <Button
+                              variant="ghost"
                               size="icon"
                               aria-label="Remove holding"
                               onClick={() => removeHolding(holding.id)}
