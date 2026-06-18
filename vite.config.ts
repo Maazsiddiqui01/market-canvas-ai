@@ -15,6 +15,8 @@ export default defineConfig(({ mode }) => ({
     mode === 'development' && componentTagger(),
     VitePWA({
       registerType: 'autoUpdate',
+      injectRegister: null,
+      devOptions: { enabled: false },
       includeAssets: ['favicon.ico', 'pwa-192x192.png', 'pwa-512x512.png', 'apple-touch-icon.png'],
       manifest: {
         name: 'Market Canvas AI',
@@ -46,9 +48,21 @@ export default defineConfig(({ mode }) => ({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        globPatterns: ['**/*.{js,css,ico,png,svg,woff2}'],
         navigateFallbackDenylist: [/^\/~oauth/],
+        clientsClaim: true,
+        skipWaiting: true,
         runtimeCaching: [
+          {
+            // Always try network first for HTML navigations so a new deploy wins.
+            urlPattern: ({ request }) => request.mode === 'navigate',
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'html-navigations',
+              networkTimeoutSeconds: 3,
+              expiration: { maxEntries: 20, maxAgeSeconds: 60 * 60 * 24 },
+            },
+          },
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
             handler: 'CacheFirst',
@@ -70,6 +84,7 @@ export default defineConfig(({ mode }) => ({
         ],
       },
     }),
+
   ].filter(Boolean),
   resolve: {
     alias: {
