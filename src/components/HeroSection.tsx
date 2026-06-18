@@ -99,7 +99,7 @@ const HeroSection = () => {
                 <div className="bg-gradient-to-br from-primary/20 to-accent/20 p-4 rounded-xl w-fit mb-6 group-hover:from-primary/30 group-hover:to-accent/30 transition-colors">
                   <Zap className="h-8 w-8 text-primary" />
                 </div>
-                <h3 className="text-xl font-display font-semibold text-foreground mb-3">AI-Powered Research</h3>
+                <h2 className="text-xl font-display font-semibold text-foreground mb-3">AI-Powered Research</h2>
                 <p className="text-muted-foreground leading-relaxed">
                   Get instant answers to complex market questions with our advanced AI assistant trained on financial data
                 </p>
@@ -113,7 +113,7 @@ const HeroSection = () => {
                 <div className="bg-gradient-to-br from-primary/20 to-accent/20 p-4 rounded-xl w-fit mb-6 group-hover:from-primary/30 group-hover:to-accent/30 transition-colors">
                   <Target className="h-8 w-8 text-primary" />
                 </div>
-                <h3 className="text-xl font-display font-semibold text-foreground mb-3">Real-time Insights</h3>
+                <h2 className="text-xl font-display font-semibold text-foreground mb-3">Real-time Insights</h2>
                 <p className="text-muted-foreground leading-relaxed">
                   Live market data, technical analysis, and sentiment tracking updated in real-time at your fingertips
                 </p>
@@ -127,7 +127,7 @@ const HeroSection = () => {
                 <div className="bg-gradient-to-br from-primary/20 to-accent/20 p-4 rounded-xl w-fit mb-6 group-hover:from-primary/30 group-hover:to-accent/30 transition-colors">
                   <Shield className="h-8 w-8 text-primary" />
                 </div>
-                <h3 className="text-xl font-display font-semibold text-foreground mb-3">Portfolio Tracking</h3>
+                <h2 className="text-xl font-display font-semibold text-foreground mb-3">Portfolio Tracking</h2>
                 <p className="text-muted-foreground leading-relaxed">
                   Manage your investments with personalized watchlists, alerts, and comprehensive portfolio analytics
                 </p>
