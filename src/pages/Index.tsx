@@ -15,9 +15,10 @@ import ScrollReveal from '../components/landing/ScrollReveal';
 const Index = () => {
   const { user, loading } = useAuth();
   useDocumentTitle(
-    'Market Canvas AI — AI-Powered PSX Stock Analytics & Trading Intelligence',
+    'Market Canvas AI — AI Stock Analytics for PSX & US',
     'AI-powered Pakistan Stock Exchange analytics with real-time market data, portfolio tracking, price alerts, and intelligent trading recommendations.'
   );
+
 
   // Logged-in users always land on their dashboard, not the marketing page.
   if (!loading && user) {

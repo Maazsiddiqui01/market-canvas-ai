@@ -10,14 +10,19 @@ import TradingViewHeatmap from '@/components/TradingViewHeatmap';
 import TopBottom5 from '@/components/TopBottom5';
 
 const DashboardHomePage = () => {
-  useDocumentTitle('Market | Market Canvas AI');
+  useDocumentTitle(
+    'Market Overview | Market Canvas AI',
+    'Live PSX market overview, heatmap, top movers, and AI-powered ticker analysis for the Pakistan Stock Exchange.'
+  );
   const { selectedTicker, setSelectedTicker } = useSelectedTicker();
   const { user } = useAuth();
 
   return (
     <DashboardLayout showMarketOverview allowAnonymous>
+      <h1 className="sr-only">Market Overview Dashboard</h1>
       <div className="space-y-6 md:space-y-8">
         {user && <OnboardingChecklist />}
+
 
         {/* Hero — n8n stock picker (default) + Ask AI tab */}
         <AISearchHero
