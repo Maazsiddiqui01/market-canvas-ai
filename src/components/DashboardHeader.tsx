@@ -54,10 +54,10 @@ const DashboardHeader = ({ activeTab, onTabChange }: DashboardHeaderProps) => {
         ? 'glass-strong hairline-b py-1.5'
         : 'bg-background/40 backdrop-blur-md hairline-b py-2.5'
     }`}>
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between gap-4">
+      <div className="container mx-auto px-3 sm:px-4 overflow-hidden">
+        <div className="flex items-center justify-between gap-2 min-w-0">
           {/* Logo */}
-          <Link to="/" className="flex items-center group shrink-0">
+          <Link to="/" className="flex items-center group shrink-0 min-w-0">
             <div className={`transition-all duration-300 ${isScrolled ? 'scale-90' : 'scale-100'}`}>
               <Logo size="sm" />
             </div>
@@ -80,12 +80,12 @@ const DashboardHeader = ({ activeTab, onTabChange }: DashboardHeaderProps) => {
           )}
 
           {/* Right side: Mobile menu + ⌘K + Theme + Auth */}
-          <div className="flex items-center gap-2 shrink-0">
-            {/* Mobile resource menu (same links as the learn site) — always available, incl. inside the dashboard */}
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            {/* Mobile resource menu — always available, incl. inside the dashboard */}
             <div className="md:hidden">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" aria-label="Open menu">
+                  <Button variant="ghost" size="icon" aria-label="Open menu" className="h-9 w-9">
                     <Menu className="h-5 w-5" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -95,6 +95,14 @@ const DashboardHeader = ({ activeTab, onTabChange }: DashboardHeaderProps) => {
                       <a href={l.href} className="w-full cursor-pointer">{l.label}</a>
                     </DropdownMenuItem>
                   ))}
+                  {!user && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link to="/auth" className="w-full cursor-pointer">Sign In</Link>
+                      </DropdownMenuItem>
+                    </>
+                  )}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -121,7 +129,7 @@ const DashboardHeader = ({ activeTab, onTabChange }: DashboardHeaderProps) => {
                     variant="ghost" 
                     size="icon" 
                     aria-label="User menu"
-                    className="rounded-full bg-primary/10 hover:bg-primary/20 hover:scale-105 transition-all duration-300"
+                    className="shrink-0 h-9 w-9 rounded-full bg-primary/10 hover:bg-primary/20 hover:scale-105 transition-all duration-300"
                   >
                     <User className="h-5 w-5 text-primary" />
                   </Button>
@@ -145,20 +153,21 @@ const DashboardHeader = ({ activeTab, onTabChange }: DashboardHeaderProps) => {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <div className="flex items-center gap-2">
-                <Link to="/auth">
+              <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                <Link to="/auth" className="hidden sm:inline-flex">
                   <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
                     Sign In
                   </Button>
                 </Link>
-                <Link to="/auth">
-                  <Button size="sm" className="btn-professional">
+                <Link to="/auth" className="shrink-0">
+                  <Button size="sm" className="btn-professional px-3 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                     Get Started
                   </Button>
                 </Link>
               </div>
             )}
           </div>
+
         </div>
       </div>
     </header>
