@@ -1,38 +1,55 @@
-## Problem
+## Root cause of "I keep seeing the previous version"
 
-On mobile (≤390px), the top navigation packs Logo + Menu icon + Theme toggle + "Sign In" + "Get Started" into one row. There isn't enough horizontal space, so the "Get Started" button gets clipped by the viewport edge. The same crowding affects the logged-in state (Menu + ⌘K placeholder + Theme + User avatar) on narrower devices.
+The project uses `vite-plugin-pwa` (see `vite.config.ts`) with `registerType: 'autoUpdate'` and the plugin's default auto-injected registration. Two things go wrong from that setup:
 
-## Fix Plan
+1. **No preview/dev guard.** The service worker registers in every context, including Lovable's `id-preview--*.lovable.app` iframe and dev preview. Once it installs, it keeps serving its cached HTML/JS even after you ship new code.
+2. **HTML is precached, not network-first.** The Workbox config only sets `globPatterns` + font runtime caching — it does not override the default navigation handler. The precached `index.html` wins on revisit, so users see the old shell pointing at chunks that may no longer exist (the "previous version" / occasional white screen / stale UI you're describing).
 
-### 1. `src/components/DashboardHeader.tsx` — make the right cluster mobile-safe
+There is no manual `serviceWorker.register` in `src/`, so the auto-injected registration from `vite-plugin-pwa` is the only registrar — which means we control it entirely from `vite.config.ts` + one wrapper module.
 
-- Logged-out state on mobile:
-  - Hide the standalone "Sign In" ghost button below `sm` (it already lives inside the mobile dropdown as a fallback — I'll add a "Sign In" entry to the mobile `DropdownMenu` so it stays reachable).
-  - Keep "Get Started" visible but compact (`size="sm"`, `px-3`, `text-xs` on mobile, normal on `sm+`), and use `shrink-0` + reduced `gap-1.5` on the right cluster so nothing overflows.
-- Logged-in state on mobile:
-  - Confirm the user avatar + theme + menu fit; tighten gap to `gap-1.5` and ensure `shrink-0` on the avatar trigger.
-- Wrap the whole header row in `min-w-0` and add `overflow-hidden` on the inner container to guarantee no horizontal bleed.
-- Add "Sign In" / "Get Started" links to the mobile dropdown menu (only when logged out) so the CTA is never lost.
+## Fix plan (follows the built-in PWA skill)
 
-### 2. Native-app experience audit (mobile)
+### 1. `vite.config.ts` — make the SW safe and network-first
 
-Quick pass focused on the landing + auth + dashboard shells:
+- `injectRegister: null` so the plugin stops injecting its own registration.
+- `devOptions: { enabled: false }` so no SW is emitted in dev.
+- Keep `registerType: 'autoUpdate'` and the existing manifest/icons.
+- Add an explicit Workbox `NetworkFirst` runtime route for HTML navigations (`request.mode === 'navigate'`) with a short network timeout, so new HTML always wins when online and only falls back to cache offline.
+- Keep `navigateFallbackDenylist: [/^\/~oauth/]`.
+- Keep `CacheFirst` only for same-origin hashed built assets (the existing `globPatterns` precache is fine for hashed JS/CSS/images).
 
-- Verify `viewport-fit=cover` and safe-area padding (`env(safe-area-inset-*)`) on the fixed header and bottom nav so notch/home-indicator don't overlap content.
-- Ensure all tap targets in the header ≥ 44×44px (icon buttons already use shadcn `size="icon"` = 40px — bump to `h-11 w-11` on mobile where needed).
-- Replace any `h-screen` on full-height mobile views with `h-dvh` to avoid the iOS URL-bar jump.
-- Confirm the existing fixed bottom nav doesn't overlap the last item in scrollable lists (add `pb-[env(safe-area-inset-bottom)]` + bottom padding on main scroll containers).
-- Sanity-check the hero CTA stack on 320–390px widths (no horizontal scroll, no clipped buttons).
+### 2. New `src/pwa/registerSW.ts` — single guarded registration wrapper
 
-I'll only touch the header + small CSS tweaks for safe-area / dvh — no business-logic changes.
+Refuses to register when any of these are true (and unregisters any matching `/sw.js` it finds):
 
-## Files to edit
+- `!import.meta.env.PROD`
+- `window.top !== window.self` (inside an iframe — Lovable preview)
+- hostname starts with `id-preview--` or `preview--`
+- hostname is or ends with `.lovableproject.com`, `.lovableproject-dev.com`, `.beta.lovable.dev`
+- URL contains `?sw=off` (kill switch)
 
-- `src/components/DashboardHeader.tsx` (header layout + mobile dropdown CTAs)
-- `index.html` (viewport meta — add `viewport-fit=cover` if missing)
-- `src/index.css` (safe-area utility class if not already present)
-- Targeted `h-screen → h-dvh` swaps in landing/auth/dashboard shells if found
+Otherwise calls `registerSW({ immediate: true })` from `virtual:pwa-register`.
 
-## Verification
+### 3. `src/main.tsx` — import the wrapper once
 
-After edits I'll open the preview at 390×797 and 320×640, screenshot the header in both logged-out and logged-in states, and confirm no clipping or overflow.
+Single `import './pwa/registerSW'` so the guarded registrar runs exactly once at boot.
+
+### 4. Cleanup for users already stuck on the old SW
+
+Because the SW path stays at `/sw.js`, the new Workbox build will replace the old registration on next visit. With `registerType: 'autoUpdate'` + `clientsClaim` + `skipWaiting` (Workbox defaults under autoUpdate) and the new NetworkFirst HTML rule, the next load fetches fresh HTML, the new SW activates, and the old precache is purged.
+
+I'll also document the manual escape hatch in chat: visit `https://marketcanvasai.com/?sw=off` once to force-unregister, or hard-reload (DevTools → Application → Service Workers → Unregister) — useful if you want to clear your own browser immediately rather than wait for the auto-update.
+
+### 5. Verification
+
+- Build locally to confirm `sw.js` is generated and `virtual:pwa-register` resolves.
+- Inspect the generated SW to confirm the NetworkFirst navigation route is present.
+- Confirm in Lovable preview that no SW is registered (DevTools → Application → Service Workers should be empty inside the iframe).
+
+## Files to change
+
+- `vite.config.ts` (PWA options: `injectRegister`, `devOptions`, navigation NetworkFirst route)
+- `src/pwa/registerSW.ts` (new — guarded wrapper)
+- `src/main.tsx` (import the wrapper)
+
+No other code paths, no business logic, no UI changes.
