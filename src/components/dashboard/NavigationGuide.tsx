@@ -114,8 +114,8 @@ export const MobileBottomNav = ({ activeTab, onTabChange }: NavigationGuideProps
 
   const primary = [
     { id: 'home', icon: Home, title: 'Home' },
-    { id: 'ai-search', icon: Brain, title: 'AI' },
     { id: 'recommendations', icon: Sparkles, title: 'Picks' },
+    { id: 'ai-search', icon: Brain, title: 'AI' },
     { id: 'portfolio', icon: Briefcase, title: 'Portfolio' },
   ];
   const secondary = allSections.filter(s => !primary.some(p => p.id === s.id));
