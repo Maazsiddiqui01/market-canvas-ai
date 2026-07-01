@@ -22,6 +22,7 @@ interface Portfolio {
   id: string;
   name: string;
   created_at: string;
+  updated_at?: string;
   market?: string;
 }
 
@@ -242,6 +243,15 @@ export const PortfolioManager = () => {
     toast({ title: 'Success', description: `${selectedMarket} portfolio created!` });
   };
 
+  // Stamp the portfolio's last-modified time on every change (add / add-position / sell / delete)
+  // so the user can see exactly when they last touched it. Updates local state immediately.
+  const touchPortfolio = async (id: string | null) => {
+    if (!id) return;
+    const ts = new Date().toISOString();
+    await supabase.from('portfolios').update({ updated_at: ts }).eq('id', id);
+    setPortfolios((prev) => prev.map((p) => (p.id === id ? { ...p, updated_at: ts } : p)));
+  };
+
   const addHoldingWithPositions = async (
     ticker: string, 
     stockName: string, 
@@ -287,6 +297,7 @@ export const PortfolioManager = () => {
     await supabase.from('portfolio_positions').insert(positionInserts);
 
     fetchHoldings(selectedPortfolio);
+    touchPortfolio(selectedPortfolio);
     toast({ title: 'Success', description: 'Holding added with all positions!' });
     logActivity({ activityType: 'portfolio_action', description: `Added holding ${ticker.toUpperCase()}`, ticker: ticker.toUpperCase() });
   };
@@ -329,6 +340,7 @@ export const PortfolioManager = () => {
     await recomputeHoldingAggregate(holdingId);
     if (selectedPortfolio) fetchHoldings(selectedPortfolio);
     fetchAllPositions();
+    touchPortfolio(selectedPortfolio);
     toast({ title: 'Success', description: 'Position added!' });
   };
 
@@ -348,6 +360,7 @@ export const PortfolioManager = () => {
     await recomputeHoldingAggregate(holdingId);
     if (selectedPortfolio) fetchHoldings(selectedPortfolio);
     fetchAllPositions();
+    touchPortfolio(selectedPortfolio);
     toast({ title: 'Success', description: 'Position removed!' });
   };
 
@@ -389,6 +402,7 @@ export const PortfolioManager = () => {
     }
     if (selectedPortfolio) fetchHoldings(selectedPortfolio);
     fetchAllPositions();
+    touchPortfolio(selectedPortfolio);
     const soldShares = sharesToSell - Math.max(0, remaining);
     const realizedPnl = soldShares * sellPrice - realizedCost;
     toast({
@@ -417,6 +431,7 @@ export const PortfolioManager = () => {
 
     const removed = holdings.find(h => h.id === holdingId);
     setHoldings(holdings.filter(h => h.id !== holdingId));
+    touchPortfolio(selectedPortfolio);
     toast({ title: 'Success', description: 'Holding removed!' });
     if (removed) logActivity({ activityType: 'portfolio_action', description: `Removed holding ${removed.ticker}`, ticker: removed.ticker });
   };
@@ -469,6 +484,9 @@ export const PortfolioManager = () => {
     const bv = b.shares * (prices[b.ticker]?.price ?? b.avg_buy_price ?? 0);
     return bv - av;
   });
+
+  // When the user last changed this portfolio (bumped on every add/sell/delete via touchPortfolio).
+  const lastUpdated = portfolios.find((p) => p.id === selectedPortfolio)?.updated_at || null;
 
   if (loading) {
     return (
@@ -633,6 +651,11 @@ export const PortfolioManager = () => {
                     {totalPnL >= 0 ? '+' : ''}{cur} {fmt(totalPnL)} ({totalPnL >= 0 ? '+' : ''}{totalPnLPercent.toFixed(2)}%)
                   </span>
                 </span>
+              </div>
+            )}
+            {lastUpdated && (
+              <div className="mt-1 text-xs text-muted-foreground">
+                Last updated {new Date(lastUpdated).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
               </div>
             )}
           </div>
