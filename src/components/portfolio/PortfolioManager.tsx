@@ -462,6 +462,14 @@ export const PortfolioManager = () => {
     currentPrice: prices[h.ticker]?.price ?? null,
   }));
 
+  // Always list holdings by current market value (shares × live price) descending, so the biggest
+  // positions sit on top. Falls back to cost basis for any holding whose price hasn't loaded yet.
+  const sortedHoldings = [...holdings].sort((a, b) => {
+    const av = a.shares * (prices[a.ticker]?.price ?? a.avg_buy_price ?? 0);
+    const bv = b.shares * (prices[b.ticker]?.price ?? b.avg_buy_price ?? 0);
+    return bv - av;
+  });
+
   if (loading) {
     return (
       <Card className="border-border/50 bg-card/80 backdrop-blur-sm">
@@ -660,7 +668,7 @@ export const PortfolioManager = () => {
             </div>
           ) : (
             <div className="space-y-3">
-              {holdings.map((holding) => {
+              {sortedHoldings.map((holding) => {
                 const priceData = prices[holding.ticker];
                 const marketPrice = priceData?.price ?? null;
                 const avgBuyPrice = holding.avg_buy_price || 0;
@@ -727,6 +735,15 @@ export const PortfolioManager = () => {
                             <p className="text-sm text-muted-foreground">
                               Avg: {cur} {fmt(avgBuyPrice)}
                             </p>
+                          </div>
+                          {/* Total value = shares * market price (the position's worth today) */}
+                          <div className="text-right min-w-[90px]">
+                            <p className="text-xs text-muted-foreground">Value</p>
+                            {currentValue !== null ? (
+                              <p className="font-semibold">{cur} {fmt(currentValue)}</p>
+                            ) : (
+                              <p className="text-sm text-muted-foreground">—</p>
+                            )}
                           </div>
                           {/* P&L = (Market - Avg) * Shares */}
                           <div className="text-right min-w-[100px]">
