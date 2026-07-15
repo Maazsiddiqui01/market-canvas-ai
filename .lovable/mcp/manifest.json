@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "sdk_version": "0.22.0",
+  "path": "/functions/v1/mcp",
+  "auth": {
+    "type": "none"
+  },
+  "mcp": {
+    "server": {
+      "name": "market-canvas-ai-mcp",
+      "version": "0.1.0",
+      "title": "Market Canvas AI"
+    },
+    "tools": [
+      {
+        "name": "search_stocks",
+        "title": "Search stocks",
+        "description": "Search the public Market Canvas AI catalog of PSX (Pakistan Stock Exchange) or US stocks by ticker symbol or company name. Returns up to 20 matches.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Text to match against ticker symbol or company name."
+            },
+            "market": {
+              "default": "PSX",
+              "description": "Which market to search in.",
+              "type": "string",
+              "enum": [
+                "PSX",
+                "US"
+              ]
+            }
+          },
+          "required": [
+            "query"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_stock_price",
+        "title": "Get stock price",
+        "description": "Get the latest price, absolute change, and percent change for a PSX (Pakistan Stock Exchange) or US stock ticker.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": true
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "ticker": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Ticker symbol, e.g. \"OGDC\" for PSX or \"AAPL\" for US."
+            },
+            "market": {
+              "default": "PSX",
+              "description": "Which market the ticker belongs to.",
+              "type": "string",
+              "enum": [
+                "PSX",
+                "US"
+              ]
+            }
+          },
+          "required": [
+            "ticker"
+          ]
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
