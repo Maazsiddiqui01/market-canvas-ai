@@ -421,6 +421,168 @@ export type Database = {
         }
         Relationships: []
       }
+      demo_voice_accounts: {
+        Row: {
+          account_number: string
+          balance_due_usd: number
+          created_at: string
+          full_name: string
+          id: string
+          monthly_fee_usd: number
+          notes: string | null
+          outage_area: boolean
+          plan: string
+          status: string
+        }
+        Insert: {
+          account_number: string
+          balance_due_usd?: number
+          created_at?: string
+          full_name: string
+          id?: string
+          monthly_fee_usd: number
+          notes?: string | null
+          outage_area?: boolean
+          plan: string
+          status?: string
+        }
+        Update: {
+          account_number?: string
+          balance_due_usd?: number
+          created_at?: string
+          full_name?: string
+          id?: string
+          monthly_fee_usd?: number
+          notes?: string | null
+          outage_area?: boolean
+          plan?: string
+          status?: string
+        }
+        Relationships: []
+      }
+      demo_voice_appointments: {
+        Row: {
+          call_id: string | null
+          confirmation_code: string
+          created_at: string
+          customer_name: string | null
+          id: string
+          service: string | null
+          slot_start: string
+          status: string
+        }
+        Insert: {
+          call_id?: string | null
+          confirmation_code?: string
+          created_at?: string
+          customer_name?: string | null
+          id?: string
+          service?: string | null
+          slot_start: string
+          status?: string
+        }
+        Update: {
+          call_id?: string | null
+          confirmation_code?: string
+          created_at?: string
+          customer_name?: string | null
+          id?: string
+          service?: string | null
+          slot_start?: string
+          status?: string
+        }
+        Relationships: []
+      }
+      demo_voice_calls: {
+        Row: {
+          agent_key: string | null
+          call_id: string
+          created_at: string
+          duration_seconds: number | null
+          id: string
+          sentiment: string | null
+          successful: boolean | null
+          summary: string | null
+        }
+        Insert: {
+          agent_key?: string | null
+          call_id: string
+          created_at?: string
+          duration_seconds?: number | null
+          id?: string
+          sentiment?: string | null
+          successful?: boolean | null
+          summary?: string | null
+        }
+        Update: {
+          agent_key?: string | null
+          call_id?: string
+          created_at?: string
+          duration_seconds?: number | null
+          id?: string
+          sentiment?: string | null
+          successful?: boolean | null
+          summary?: string | null
+        }
+        Relationships: []
+      }
+      demo_voice_slots: {
+        Row: {
+          id: string
+          is_booked: boolean
+          slot_end: string
+          slot_start: string
+        }
+        Insert: {
+          id?: string
+          is_booked?: boolean
+          slot_end: string
+          slot_start: string
+        }
+        Update: {
+          id?: string
+          is_booked?: boolean
+          slot_end?: string
+          slot_start?: string
+        }
+        Relationships: []
+      }
+      demo_voice_tickets: {
+        Row: {
+          account_number: string | null
+          call_id: string | null
+          category: string
+          created_at: string
+          id: string
+          priority: string
+          status: string
+          summary: string | null
+          ticket_number: string
+        }
+        Insert: {
+          account_number?: string | null
+          call_id?: string | null
+          category?: string
+          created_at?: string
+          id?: string
+          priority?: string
+          status?: string
+          summary?: string | null
+          ticket_number?: string
+        }
+        Update: {
+          account_number?: string | null
+          call_id?: string | null
+          category?: string
+          created_at?: string
+          id?: string
+          priority?: string
+          status?: string
+          summary?: string | null
+          ticket_number?: string
+        }
+        Relationships: []
+      }
       digest_log: {
         Row: {
           body_preview: string | null
@@ -464,6 +626,107 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      listenup_books: {
+        Row: {
+          audio: string | null
+          author: string | null
+          batch: number | null
+          blurb: string | null
+          created_at: string | null
+          duration: string | null
+          genre: string | null
+          slug: string
+          sort: number | null
+          status: string
+          title: string
+          voice: string | null
+        }
+        Insert: {
+          audio?: string | null
+          author?: string | null
+          batch?: number | null
+          blurb?: string | null
+          created_at?: string | null
+          duration?: string | null
+          genre?: string | null
+          slug: string
+          sort?: number | null
+          status?: string
+          title: string
+          voice?: string | null
+        }
+        Update: {
+          audio?: string | null
+          author?: string | null
+          batch?: number | null
+          blurb?: string | null
+          created_at?: string | null
+          duration?: string | null
+          genre?: string | null
+          slug?: string
+          sort?: number | null
+          status?: string
+          title?: string
+          voice?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "listenup_books_genre_fkey"
+            columns: ["genre"]
+            isOneToOne: false
+            referencedRelation: "listenup_genres"
+            referencedColumns: ["name"]
+          },
+        ]
+      }
+      listenup_genres: {
+        Row: {
+          color: string
+          name: string
+          soft: string | null
+          sort: number | null
+        }
+        Insert: {
+          color: string
+          name: string
+          soft?: string | null
+          sort?: number | null
+        }
+        Update: {
+          color?: string
+          name?: string
+          soft?: string | null
+          sort?: number | null
+        }
+        Relationships: []
+      }
+      listenup_progress: {
+        Row: {
+          done: boolean | null
+          dur: number | null
+          slug: string
+          t: number | null
+          updated_at: string | null
+          user_key: string
+        }
+        Insert: {
+          done?: boolean | null
+          dur?: number | null
+          slug: string
+          t?: number | null
+          updated_at?: string | null
+          user_key?: string
+        }
+        Update: {
+          done?: boolean | null
+          dur?: number | null
+          slug?: string
+          t?: number | null
+          updated_at?: string | null
+          user_key?: string
+        }
+        Relationships: []
       }
       material_events: {
         Row: {
@@ -1242,6 +1505,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      voice_demo_reset: { Args: never; Returns: undefined }
     }
     Enums: {
       app_role: "user" | "premium" | "admin"
