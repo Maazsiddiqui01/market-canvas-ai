@@ -1,21 +1,26 @@
 import React from 'react';
 import ScrollReveal from './ScrollReveal';
 
+// Stocks our research COVERS — deliberately Sharia-compliant names, to match the product's screen.
+// (The previous list showed conventional banks, which this platform's own Sharia screen excludes.)
 const companies = [
-  { name: 'NBP', initial: 'NBP' },
-  { name: 'HBL', initial: 'HBL' },
-  { name: 'UBL', initial: 'UBL' },
-  { name: 'MCB', initial: 'MCB' },
-  { name: 'JS Bank', initial: 'JS' },
-  { name: 'Meezan', initial: 'MZ' },
+  { name: 'OGDC', initial: 'OGDC' },
+  { name: 'Mari', initial: 'MARI' },
+  { name: 'Lucky', initial: 'LUCK' },
+  { name: 'FFC', initial: 'FFC' },
+  { name: 'Meezan', initial: 'MEBL' },
+  { name: 'Systems', initial: 'SYS' },
 ];
 
 const TrustedBy = () => {
   return (
     <ScrollReveal>
       <div className="py-12 border-y border-border/30 bg-card/50 dark:bg-transparent">
-        <p className="text-center text-sm text-muted-foreground mb-8 uppercase tracking-widest font-medium">
-          Covering Pakistan's leading listed companies
+        <p className="text-center text-sm text-muted-foreground mb-2 uppercase tracking-widest font-medium">
+          A few of the Sharia-compliant stocks we analyse
+        </p>
+        <p className="text-center text-xs text-muted-foreground/70 mb-8 px-4">
+          Companies covered by our research — not clients, partners or endorsements.
         </p>
         <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16">
           {companies.map((company) => (

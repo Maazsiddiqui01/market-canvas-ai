@@ -51,8 +51,8 @@ const HeroSection = () => {
               </span>
             </h1>
             <p className="text-base md:text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light px-2">
-              Real-time market analysis, predictive insights, and intelligent recommendations 
-              powered by advanced AI technology. Make smarter decisions, faster.
+              AI-powered research for Pakistan (PSX) and US stocks — with every idea screened for
+              Sharia compliance. Live prices, portfolio tracking and daily analysis in one place.
             </p>
           </div>
 

@@ -8,6 +8,7 @@ import Footer from '../components/Footer';
 import TrustedBy from '../components/landing/TrustedBy';
 import CTASection from '../components/landing/CTASection';
 import FeaturesSection from '../components/landing/FeaturesSection';
+import FAQSection from '../components/landing/FAQSection';
 import AnimatedCounter from '../components/landing/AnimatedCounter';
 import ScrollReveal from '../components/landing/ScrollReveal';
 
@@ -52,7 +53,10 @@ const Index = () => {
           
           {/* Trusted By Section */}
           <TrustedBy />
-          
+
+          {/* FAQ — clear the real objections (advice? sharia? privacy?) right before the final ask */}
+          <FAQSection />
+
           {/* CTA Section */}
           <CTASection />
           
